@@ -1,11 +1,10 @@
 import { defineCollection, defineConfig } from "@content-collections/core";
 import { compileMDX } from "@content-collections/mdx";
 import readingTime from "reading-time";
-import rehypeSlug from "rehype-slug";
-import remarkGfm from "remark-gfm";
 import { z } from "zod";
 
 import { extractExcerpt } from "./lib/markdown-utils";
+import { rehypePlugins, remarkPlugins } from "./lib/mdx-plugins";
 
 const posts = defineCollection({
   name: "posts",
@@ -26,8 +25,8 @@ const posts = defineCollection({
   transform: async (document, context) => {
     const stats = readingTime(document.content);
     const mdx = await compileMDX(context, document, {
-      remarkPlugins: [remarkGfm],
-      rehypePlugins: [rehypeSlug],
+      remarkPlugins,
+      rehypePlugins,
     });
 
     return {
@@ -51,8 +50,8 @@ const spec = defineCollection({
   transform: async (document, context) => ({
     ...document,
     mdx: await compileMDX(context, document, {
-      remarkPlugins: [remarkGfm],
-      rehypePlugins: [rehypeSlug],
+      remarkPlugins,
+      rehypePlugins,
     }),
   }),
 });
