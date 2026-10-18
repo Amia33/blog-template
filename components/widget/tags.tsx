@@ -1,0 +1,31 @@
+import Link from "next/link";
+
+import Collapsible from "@/components/widget/collapsible";
+import { getTags } from "@/lib/content";
+import { i18n, I18nKey } from "@/lib/i18n";
+import { getTagUrl } from "@/lib/utils";
+
+export default function Tags() {
+  const tags = getTags();
+  if (tags.length === 0) return null;
+
+  return (
+    <Collapsible
+      title={i18n(I18nKey.tags)}
+      icon="tag"
+      defaultCollapsed={tags.length >= 20}
+    >
+      <div className="flex flex-wrap gap-2">
+        {tags.map((tag) => (
+          <Link
+            key={tag.name}
+            href={getTagUrl(tag.name)}
+            className="badge badge-lg badge-ghost transition-colors hover:bg-primary hover:text-primary-content"
+          >
+            {tag.name}
+          </Link>
+        ))}
+      </div>
+    </Collapsible>
+  );
+}

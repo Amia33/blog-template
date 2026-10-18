@@ -1,28 +1,176 @@
 @import "tailwindcss";
 
 @plugin "daisyui";
+@plugin "@tailwindcss/typography";
 
-:root {
-  --background: #fff;
-  --foreground: #171717;
+@plugin "daisyui/theme" {
+  name: "fuwari";
+  default: true;
+  color-scheme: light;
+
+  --color-base-100: oklch(100% 0 0deg);
+  --color-base-200: oklch(96% 0.01 250deg);
+  --color-base-300: oklch(92% 0.02 250deg);
+  --color-base-content: oklch(35% 0.02 250deg);
+  --color-primary: oklch(70% 0.14 250deg);
+  --color-primary-content: oklch(98% 0.01 250deg);
+  --color-secondary: oklch(70% 0.12 200deg);
+  --color-secondary-content: oklch(98% 0.01 200deg);
+  --color-accent: oklch(70% 0.12 320deg);
+  --color-accent-content: oklch(98% 0.01 320deg);
+  --color-neutral: oklch(45% 0.02 250deg);
+  --color-neutral-content: oklch(98% 0.01 250deg);
+  --color-info: oklch(70% 0.14 230deg);
+  --color-info-content: oklch(98% 0.01 230deg);
+  --color-success: oklch(70% 0.14 150deg);
+  --color-success-content: oklch(98% 0.01 150deg);
+  --color-warning: oklch(78% 0.14 70deg);
+  --color-warning-content: oklch(25% 0.03 70deg);
+  --color-error: oklch(62% 0.2 25deg);
+  --color-error-content: oklch(98% 0.01 25deg);
+  --radius-selector: 0.5rem;
+  --radius-field: 0.5rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+@plugin "daisyui/theme" {
+  name: "fuwari-dark";
+  prefersdark: true;
+  color-scheme: dark;
+
+  --color-base-100: oklch(23% 0.015 250deg);
+  --color-base-200: oklch(20% 0.015 250deg);
+  --color-base-300: oklch(16% 0.014 250deg);
+  --color-base-content: oklch(90% 0.01 250deg);
+  --color-primary: oklch(75% 0.14 250deg);
+  --color-primary-content: oklch(22% 0.03 250deg);
+  --color-secondary: oklch(75% 0.1 200deg);
+  --color-secondary-content: oklch(22% 0.03 200deg);
+  --color-accent: oklch(75% 0.1 320deg);
+  --color-accent-content: oklch(22% 0.03 320deg);
+  --color-neutral: oklch(30% 0.02 250deg);
+  --color-neutral-content: oklch(92% 0.01 250deg);
+  --color-info: oklch(75% 0.14 230deg);
+  --color-info-content: oklch(22% 0.03 230deg);
+  --color-success: oklch(75% 0.14 150deg);
+  --color-success-content: oklch(22% 0.03 150deg);
+  --color-warning: oklch(80% 0.14 70deg);
+  --color-warning-content: oklch(25% 0.03 70deg);
+  --color-error: oklch(68% 0.2 25deg);
+  --color-error-content: oklch(22% 0.03 25deg);
+  --radius-selector: 0.5rem;
+  --radius-field: 0.5rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans:
+    var(--font-noto-sans), ui-sans-serif, system-ui, "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-mono:
+    var(--font-noto-mono), var(--font-noto-sans), ui-monospace, sfmono-regular,
+    menlo, consolas, monospace;
+  --leading-relaxed: 1.75;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --page-width: 75rem;
+  --content-delay: 150ms;
+}
+
+@layer base {
+  html {
+    font-size: 14px;
+  }
+
+  @media (width >= 768px) {
+    html {
+      font-size: 16px;
+    }
+  }
+
+  body {
+    line-height: 1.75;
+    text-autospace: normal;
+    text-spacing-trim: space-first;
+    -webkit-font-smoothing: antialiased;
+    overflow-wrap: break-word;
+    word-break: normal;
+    line-break: strict;
+  }
+
+  code,
+  pre,
+  kbd,
+  samp {
+    font-family: var(--font-mono);
+    font-feature-settings: normal;
+  }
+
+  :lang(zh),
+  :lang(ja),
+  :lang(ko) {
+    line-height: 1.8;
+    font-feature-settings: "palt" 1;
+  }
+
+  ::selection {
+    background-color: color-mix(
+      in oklch,
+      var(--color-primary) 30%,
+      transparent
+    );
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes fade-in-up {
+  from {
+    transform: translateY(2rem);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.onload-animation {
+  opacity: 0;
+  animation: 300ms fade-in-up;
+  animation-fill-mode: forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .onload-animation {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+.prose {
+  --tw-prose-bullets: var(--color-primary);
+}
+
+.prose :where(h1, h2, h3, h4, h5, h6) {
+  line-height: 1.4;
+}
+
+.prose :where(img, iframe) {
+  border-radius: var(--radius-box);
+}
+
+.prose :where(code)::before,
+.prose :where(code)::after {
+  content: none;
 }

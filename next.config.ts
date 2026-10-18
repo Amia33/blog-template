@@ -1,8 +1,8 @@
-import type { NextConfig } from "next";
+import { withContentCollections } from "@content-collections/next";
 import { withBotId } from "botid/next/config";
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {
@@ -15,4 +15,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withBotId(nextConfig);
+export default withContentCollections(withBotId(nextConfig));
