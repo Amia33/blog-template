@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { Icon } from "@/components/ui/icon";
-import { i18n, I18nKey } from "@/lib/i18n";
+import { t } from "@/lib/strings";
 import { formatDateToYYYYMMDD, getCategoryUrl, getTagUrl } from "@/lib/utils";
 
 export default function PostMeta({
@@ -38,7 +38,7 @@ export default function PostMeta({
         className="flex items-center gap-1 hover:text-primary"
       >
         <Icon name="category" className="text-base" />
-        {category || i18n(I18nKey.uncategorized)}
+        {category || t("uncategorized")}
       </Link>
       {tags.length > 0 ? (
         <span className="flex flex-wrap items-center gap-1">

@@ -4,7 +4,7 @@ import { useState, type ReactNode } from "react";
 
 import { Icon } from "@/components/ui/icon";
 import type { IconName } from "@/lib/icons";
-import { i18n, I18nKey } from "@/lib/i18n";
+import { t } from "@/lib/strings";
 
 export default function Collapsible({
   title,
@@ -40,7 +40,7 @@ export default function Collapsible({
           className="btn btn-ghost btn-sm mt-2 w-full text-primary"
         >
           <Icon name="more" className="text-lg" />
-          {i18n(I18nKey.more)}
+          {t("more")}
         </button>
       ) : null}
     </section>

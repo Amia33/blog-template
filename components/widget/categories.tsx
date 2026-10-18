@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import Collapsible from "@/components/widget/collapsible";
 import { getCategories } from "@/lib/content";
-import { i18n, I18nKey } from "@/lib/i18n";
+import { t } from "@/lib/strings";
 
 export default function Categories() {
   const categories = getCategories();
@@ -10,7 +10,7 @@ export default function Categories() {
 
   return (
     <Collapsible
-      title={i18n(I18nKey.categories)}
+      title={t("categories")}
       icon="category"
       defaultCollapsed={categories.length >= 5}
     >

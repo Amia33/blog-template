@@ -9,7 +9,7 @@ export default function ProfileCard() {
     <section className="card bg-base-100 p-3">
       <Link
         href="/about"
-        aria-label="Go to About page"
+        aria-label="このサイトについて"
         className="relative mx-auto mb-3 block max-w-[12rem] overflow-hidden rounded-box lg:max-w-none"
       >
         <Image

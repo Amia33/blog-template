@@ -10,7 +10,7 @@ export default function NavMenu({ links }: { links: NavBarLink[] }) {
         tabIndex={0}
         role="button"
         className="btn btn-ghost btn-square"
-        aria-label="Menu"
+        aria-label="メニュー"
       >
         <Icon name="menu" className="text-xl" />
       </div>

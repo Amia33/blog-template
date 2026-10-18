@@ -9,7 +9,7 @@ import {
   LIGHT_MODE,
   THEME_STORAGE_KEY,
 } from "@/lib/constants";
-import { i18n, I18nKey } from "@/lib/i18n";
+import { t } from "@/lib/strings";
 
 type ThemeMode = typeof LIGHT_MODE | typeof DARK_MODE | typeof AUTO_MODE;
 
@@ -18,9 +18,9 @@ const modes: {
   label: string;
   icon: "lightMode" | "darkMode" | "systemMode";
 }[] = [
-  { mode: LIGHT_MODE, label: i18n(I18nKey.lightMode), icon: "lightMode" },
-  { mode: DARK_MODE, label: i18n(I18nKey.darkMode), icon: "darkMode" },
-  { mode: AUTO_MODE, label: i18n(I18nKey.systemMode), icon: "systemMode" },
+  { mode: LIGHT_MODE, label: t("lightMode"), icon: "lightMode" },
+  { mode: DARK_MODE, label: t("darkMode"), icon: "darkMode" },
+  { mode: AUTO_MODE, label: t("systemMode"), icon: "systemMode" },
 ];
 
 const listeners = new Set<() => void>();
@@ -84,7 +84,7 @@ export default function ThemeSwitch() {
         tabIndex={0}
         role="button"
         className="btn btn-ghost btn-square"
-        aria-label="Theme"
+        aria-label="テーマ"
       >
         <Icon name={current.icon} className="text-xl" />
       </div>

@@ -1,6 +1,6 @@
 import { Icon } from "@/components/ui/icon";
 import { licenseConfig, profileConfig } from "@/lib/config";
-import { i18n, I18nKey } from "@/lib/i18n";
+import { t } from "@/lib/strings";
 import { formatDateToYYYYMMDD } from "@/lib/utils";
 
 export default function License({
@@ -22,15 +22,15 @@ export default function License({
       </a>
       <div className="mt-3 flex flex-wrap gap-6 text-sm">
         <div>
-          <div className="opacity-60">{i18n(I18nKey.author)}</div>
+          <div className="opacity-60">{t("author")}</div>
           <div>{profileConfig.name}</div>
         </div>
         <div>
-          <div className="opacity-60">{i18n(I18nKey.publishedAt)}</div>
+          <div className="opacity-60">{t("publishedAt")}</div>
           <div>{formatDateToYYYYMMDD(pubDate)}</div>
         </div>
         <div>
-          <div className="opacity-60">{i18n(I18nKey.license)}</div>
+          <div className="opacity-60">{t("license")}</div>
           <a
             href={licenseConfig.url}
             target="_blank"

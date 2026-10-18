@@ -17,7 +17,7 @@ export default function BackToTop() {
   return (
     <button
       type="button"
-      aria-label="Back to top"
+      aria-label="トップへ戻る"
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       className={`btn btn-circle btn-primary fixed right-6 bottom-8 z-40 shadow-lg transition-all duration-300 ${
         visible

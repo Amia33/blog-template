@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import Collapsible from "@/components/widget/collapsible";
 import { getTags } from "@/lib/content";
-import { i18n, I18nKey } from "@/lib/i18n";
+import { t } from "@/lib/strings";
 import { getTagUrl } from "@/lib/utils";
 
 export default function Tags() {
@@ -11,7 +11,7 @@ export default function Tags() {
 
   return (
     <Collapsible
-      title={i18n(I18nKey.tags)}
+      title={t("tags")}
       icon="tag"
       defaultCollapsed={tags.length >= 20}
     >

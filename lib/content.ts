@@ -1,6 +1,6 @@
 import { allPosts, allSpecs } from "content-collections";
 
-import { i18n, I18nKey } from "@/lib/i18n";
+import { t } from "@/lib/strings";
 import { getCategoryUrl } from "@/lib/utils";
 
 export type Post = (typeof allPosts)[number];
@@ -68,7 +68,7 @@ export function getCategories(): Category[] {
     const name =
       post.category && post.category.trim() !== ""
         ? post.category.trim()
-        : i18n(I18nKey.uncategorized);
+        : t("uncategorized");
     countMap[name] = (countMap[name] ?? 0) + 1;
   }
 

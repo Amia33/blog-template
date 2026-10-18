@@ -8,20 +8,21 @@ import {
 
 export const siteConfig: SiteConfig = {
   title: "Fuwari",
-  subtitle: "Demo Site",
-  lang: "en",
+  subtitle: "デモサイト",
+  lang: "ja",
+  url: "https://example.com",
   themeColor: {
     hue: 250,
     fixed: false,
   },
   banner: {
-    enable: false,
-    src: "",
+    enable: true,
+    src: "/banner.jpg",
     position: "center",
     credit: {
-      enable: false,
-      text: "",
-      url: "",
+      enable: true,
+      text: "Fuwari",
+      url: "https://github.com/saicaca/fuwari",
     },
   },
   toc: {
@@ -46,7 +47,7 @@ export const navBarConfig: NavBarConfig = {
 export const profileConfig: ProfileConfig = {
   avatar: "/avatar.png",
   name: "Lorem Ipsum",
-  bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  bio: "Fuwari テーマのデモサイトです。日々の学びを書き留めています。",
   links: [
     {
       name: "Twitter",

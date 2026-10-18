@@ -1,4 +1,4 @@
-import { i18n, I18nKey } from "@/lib/i18n";
+import { t } from "@/lib/strings";
 
 export function pathsEqual(path1: string, path2: string): boolean {
   const normalize = (p: string) => p.replace(/^\/|\/$/g, "").toLowerCase();
@@ -27,7 +27,7 @@ export function getCategoryUrl(category: string | null): string {
   if (
     !category ||
     category.trim() === "" ||
-    category.trim().toLowerCase() === i18n(I18nKey.uncategorized).toLowerCase()
+    category.trim().toLowerCase() === t("uncategorized").toLowerCase()
   ) {
     return url("/archive?uncategorized=true");
   }
