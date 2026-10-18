@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <title>Fuwari</title>
+  <style>
+    .bg {
+      fill: #6d86f0;
+    }
+    .fg {
+      fill: #ffffff;
+    }
+    @media (prefers-color-scheme: dark) {
+      .bg {
+        fill: #2b3350;
+      }
+      .fg {
+        fill: #9db4ff;
+      }
+    }
+  </style>
+  <rect class="bg" width="32" height="32" rx="8" />
+  <circle class="fg" cx="16" cy="16" r="6.5" />
+</svg>
