@@ -9,13 +9,14 @@ import remarkMath from "remark-math";
 
 import { expressiveCodeOptions } from "@/lib/expressive-code";
 import { rehypeAlertOptions, rehypeGithubAlerts } from "@/lib/rehype-alerts";
+import { rehypeImages } from "@/lib/rehype-images";
 import { remarkDirectives } from "@/lib/remark-directives";
 
 // Order matters:
 //   remark: gfm -> math -> directive -> our directive shim (alerts / spoilers)
 //   rehype: katex (must run before expressive-code so `math` nodes are not
 //           mistaken for code blocks) -> expressive-code -> slug -> alerts ->
-//           autolink (needs the slugs)
+//           autolink (needs the slugs) -> images (works on the final tree)
 export const remarkPlugins: NonNullable<Options["remarkPlugins"]> = [
   remarkGfm,
   remarkMath,
@@ -40,3 +41,13 @@ export const rehypePlugins: NonNullable<Options["rehypePlugins"]> = [
     },
   ],
 ];
+
+/**
+ * `rehypeImages` needs the collection's directory, which the document's `_meta`
+ * does not carry, so each collection gets its own copy of the plugin list.
+ */
+export function createRehypePlugins(
+  collectionDir: string,
+): NonNullable<Options["rehypePlugins"]> {
+  return [...rehypePlugins, [rehypeImages, { collectionDir }]];
+}

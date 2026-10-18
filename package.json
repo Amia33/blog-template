@@ -37,6 +37,7 @@
     "remark-directive": "^4.0.0",
     "remark-gfm": "^4.0.1",
     "remark-math": "^6.0.0",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4.3.3",
     "zod": "^4.6.7"
   },

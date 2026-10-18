@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 
+import PostCover from "@/components/post/post-cover";
 import PostMeta from "@/components/post/post-meta";
 import type { Post } from "@/lib/content";
 import { t } from "@/lib/strings";
@@ -39,18 +39,17 @@ export default function PostCard({ post }: { post: Post }) {
             {t(post.readingTime === 1 ? "minuteCount" : "minutesCount")}
           </div>
         </div>
-        {post.image ? (
+        {post.cover ? (
           <Link
             href={href}
             aria-label={post.title}
             transitionTypes={["nav-forward"]}
             className="block w-full shrink-0 overflow-hidden rounded-box md:w-56"
           >
-            <Image
-              src={post.image}
+            <PostCover
+              cover={post.cover}
               alt=""
-              width={640}
-              height={360}
+              sizes="(min-width: 768px) 224px, 100vw"
               className="h-40 w-full object-cover md:h-full"
             />
           </Link>

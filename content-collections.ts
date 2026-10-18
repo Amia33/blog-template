@@ -4,11 +4,15 @@ import readingTime from "reading-time";
 import { z } from "zod";
 
 import { extractExcerpt } from "./lib/markdown-utils";
-import { rehypePlugins, remarkPlugins } from "./lib/mdx-plugins";
+import { createRehypePlugins, remarkPlugins } from "./lib/mdx-plugins";
+import { resolveCover } from "./lib/images";
+
+const POSTS_DIRECTORY = "content/posts";
+const SPEC_DIRECTORY = "content/spec";
 
 const posts = defineCollection({
   name: "posts",
-  directory: "content/posts",
+  directory: POSTS_DIRECTORY,
   include: "**/*.{md,mdx}",
   schema: z.object({
     title: z.string(),
@@ -26,13 +30,18 @@ const posts = defineCollection({
     const stats = readingTime(document.content);
     const mdx = await compileMDX(context, document, {
       remarkPlugins,
-      rehypePlugins,
+      rehypePlugins: createRehypePlugins(POSTS_DIRECTORY),
     });
 
     return {
       ...document,
       slug: document._meta.path.replace(/\/index$/, ""),
       mdx,
+      cover: await resolveCover(
+        document.image,
+        document._meta,
+        POSTS_DIRECTORY,
+      ),
       excerpt: extractExcerpt(document.content),
       readingTime: Math.max(1, Math.round(stats.minutes)),
       words: stats.words,
@@ -42,7 +51,7 @@ const posts = defineCollection({
 
 const spec = defineCollection({
   name: "spec",
-  directory: "content/spec",
+  directory: SPEC_DIRECTORY,
   include: "*.{md,mdx}",
   schema: z.object({
     content: z.string(),
@@ -51,7 +60,7 @@ const spec = defineCollection({
     ...document,
     mdx: await compileMDX(context, document, {
       remarkPlugins,
-      rehypePlugins,
+      rehypePlugins: createRehypePlugins(SPEC_DIRECTORY),
     }),
   }),
 });
