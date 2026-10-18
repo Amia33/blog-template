@@ -1,8 +1,4 @@
-import {
-  ALERT_KEYWORDS,
-  ALERT_TITLE,
-  alertClassNames,
-} from "@/lib/rehype-alerts";
+import { ALERT_KEYWORDS } from "@/lib/rehype-alerts";
 
 type Node = {
   type: string;
@@ -41,27 +37,18 @@ function walk(parent: Node): void {
       node.name !== undefined &&
       ALERT_NAMES.has(node.name)
     ) {
-      const keyword = node.name.toUpperCase();
+      const variant = node.name.toLowerCase();
       const label = takeLabel(node);
-      const title = label ? textOf(label) : ALERT_TITLE[keyword];
 
+      // `Alert` is resolved through the MDX component map, same as the alerts
+      // rehype-github-alerts produces for `> [!NOTE]` blocks.
       const alert: Node = {
         type: "blockquote",
         data: {
-          hName: "div",
-          hProperties: { className: alertClassNames(keyword) },
+          hName: "Alert",
+          hProperties: label ? { variant, title: textOf(label) } : { variant },
         },
-        children: [
-          {
-            type: "paragraph",
-            data: {
-              hName: "span",
-              hProperties: { className: ["font-bold"] },
-            },
-            children: [{ type: "text", value: title }],
-          },
-          ...(node.children ?? []),
-        ],
+        children: node.children ?? [],
       };
 
       children[index] = alert;

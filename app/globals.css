@@ -208,6 +208,17 @@
   margin-block: 1rem;
 }
 
+/* Prose margins would otherwise push the body away from the title and pad the
+   bottom of the alert, which the two columns should not inherit. */
+
+.prose .alert p {
+  margin-block: 0;
+}
+
+.prose .alert p + p {
+  margin-block-start: 0.5rem;
+}
+
 /* daisyUI 5 ships color modifiers for info/success/warning/error only. */
 
 .alert-primary {
