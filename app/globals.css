@@ -195,6 +195,15 @@
   margin-block: 1rem;
 }
 
+/* daisyUI 5 ships color modifiers for info/success/warning/error only. */
+
+.alert-primary {
+  --alert-border-color: var(--color-primary);
+  --alert-color: var(--color-primary);
+
+  color: var(--color-primary-content);
+}
+
 /* --- Heading anchors (rehype-autolink-headings) ------------------------- */
 
 .prose .anchor {

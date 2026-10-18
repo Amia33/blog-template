@@ -5,14 +5,6 @@ import {
   type IOptions,
 } from "rehype-github-alerts";
 
-export const ALERT_VARIANT: Record<string, string> = {
-  NOTE: "info",
-  TIP: "success",
-  IMPORTANT: "primary",
-  WARNING: "warning",
-  CAUTION: "error",
-};
-
 export const ALERT_TITLE: Record<string, string> = {
   NOTE: "補足",
   TIP: "ヒント",
@@ -21,9 +13,23 @@ export const ALERT_TITLE: Record<string, string> = {
   CAUTION: "警告",
 };
 
+// Kept as complete string literals so Tailwind's scanner can discover the
+// daisyUI class names. These classes are only ever produced for markdown
+// content, which lives in gitignored build output, so a computed
+// `alert-${variant}` would never be generated.
+const ALERT_CLASS: Record<string, string> = {
+  NOTE: "alert alert-info alert-vertical items-start my-4",
+  TIP: "alert alert-success alert-vertical items-start my-4",
+  IMPORTANT: "alert alert-primary alert-vertical items-start my-4",
+  WARNING: "alert alert-warning alert-vertical items-start my-4",
+  CAUTION: "alert alert-error alert-vertical items-start my-4",
+};
+
+export const ALERT_KEYWORDS = Object.keys(ALERT_CLASS);
+
 export function alertClassNames(keyword: string): string[] {
-  const variant = ALERT_VARIANT[keyword.toUpperCase()] ?? "info";
-  return ["alert", `alert-${variant}`, "alert-vertical", "items-start", "my-4"];
+  const classes = ALERT_CLASS[keyword.toUpperCase()] ?? ALERT_CLASS.NOTE;
+  return classes.split(" ");
 }
 
 function alertElement(

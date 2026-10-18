@@ -1,6 +1,6 @@
 import {
+  ALERT_KEYWORDS,
   ALERT_TITLE,
-  ALERT_VARIANT,
   alertClassNames,
 } from "@/lib/rehype-alerts";
 
@@ -13,7 +13,7 @@ type Node = {
 };
 
 const ALERT_NAMES = new Set(
-  Object.keys(ALERT_VARIANT).map((keyword) => keyword.toLowerCase()),
+  ALERT_KEYWORDS.map((keyword) => keyword.toLowerCase()),
 );
 
 function textOf(node: Node): string {
