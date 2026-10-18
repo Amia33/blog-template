@@ -1,5 +1,5 @@
-// Regenerates every raster icon from app/icon.svg, which is the single source of
-// truth for the mark. Run after editing that file:
+// Generates app/icon.svg from the react-icons mark, then derives every raster
+// icon from it. Run after changing the mark or the palette:
 //
 //   node scripts/generate-icons.mjs
 //
@@ -9,14 +9,68 @@
 // here are the fallbacks (`.ico` for Safari and legacy requests), the iOS home
 // screen icon, and the manifest install icons.
 
-import { readFile, writeFile } from "node:fs/promises";
+import { writeFile } from "node:fs/promises";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { GiBowTieRibbon } from "react-icons/gi";
 import sharp from "sharp";
 
-const SRC = "app/icon.svg";
+const ICON_SVG = "app/icon.svg";
 
-// Must match the light palette in app/icon.svg; used for the masked icon, which
-// is generated rather than derived so the mark stays inside the safe zone.
-const BRAND = { bg: "#6d86f0", fg: "#ffffff" };
+// The plate stays on the site accent; the mark carries the brand colour.
+const PLATE = { light: "#6d86f0", dark: "#2b3350", mark: "#DDAACC" };
+
+// Fraction of the canvas the mark covers, leaving even padding around it.
+const MARK_RATIO = 0.625;
+
+const CANVAS = 32;
+const RADIUS = 8;
+
+// Rendering the real component keeps the icon from drifting away from the mark
+// it is drawn from; only the glyph path and its viewBox are taken from it.
+const markup = renderToStaticMarkup(
+  createElement(GiBowTieRibbon, { color: PLATE.mark }),
+);
+const viewBox = markup
+  .match(/viewBox="([^"]+)"/)[1]
+  .split(/\s+/)
+  .map(Number);
+const VIEW_BOX_WIDTH = viewBox[2];
+const MARK_PATH = markup.replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, "");
+
+function markGroup(size, ratio = MARK_RATIO) {
+  const scale = (size * ratio) / VIEW_BOX_WIDTH;
+  const offset = (size - size * ratio) / 2;
+  return `<g transform="translate(${offset} ${offset}) scale(${scale})" fill="${PLATE.mark}">${MARK_PATH}</g>`;
+}
+
+function iconSvg() {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${CANVAS} ${CANVAS}" width="${CANVAS}" height="${CANVAS}">
+  <title>Fuwari</title>
+  <style>
+    .plate {
+      fill: ${PLATE.light};
+    }
+    @media (prefers-color-scheme: dark) {
+      .plate {
+        fill: ${PLATE.dark};
+      }
+    }
+  </style>
+  <rect class="plate" width="${CANVAS}" height="${CANVAS}" rx="${RADIUS}" />
+  ${markGroup(CANVAS)}
+</svg>
+`;
+}
+
+// Full-bleed square with the mark inside Android's 80% safe circle, which it
+// crops to whatever shape the launcher asks for.
+function maskableSvg(size) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}">
+  <rect width="${size}" height="${size}" fill="${PLATE.light}"/>
+  ${markGroup(size, 0.55)}
+</svg>`;
+}
 
 async function render(svg, size) {
   return sharp(Buffer.from(svg), { density: 384 })
@@ -50,17 +104,8 @@ function encodeIco(images) {
   return Buffer.concat([header, directory, ...images.map((i) => i.data)]);
 }
 
-// Full-bleed square with the mark inside the 80% safe zone, for Android's
-// adaptive icon masking.
-function maskableSvg(size) {
-  const radius = Math.round(size * 0.14);
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}">
-  <rect width="${size}" height="${size}" fill="${BRAND.bg}"/>
-  <circle cx="${size / 2}" cy="${size / 2}" r="${radius}" fill="${BRAND.fg}"/>
-</svg>`;
-}
-
-const svg = await readFile(SRC, "utf8");
+const svg = iconSvg();
+await writeFile(ICON_SVG, svg);
 
 await writeFile("app/apple-icon.png", await render(svg, 180));
 await writeFile("public/favicon/favicon-32.png", await render(svg, 32));
@@ -68,9 +113,7 @@ await writeFile("public/favicon/icon-192.png", await render(svg, 192));
 await writeFile("public/favicon/icon-512.png", await render(svg, 512));
 await writeFile(
   "public/favicon/icon-maskable-512.png",
-  await sharp(Buffer.from(maskableSvg(512)), { density: 384 })
-    .png({ compressionLevel: 9 })
-    .toBuffer(),
+  await render(maskableSvg(512), 512),
 );
 
 await writeFile(
