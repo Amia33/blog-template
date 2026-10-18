@@ -52,7 +52,9 @@ draft: false
 
 インライン数式は $\omega = d\phi / dt$ のように書けます。ディスプレイ数式は独立した行に置きます。
 
-$$I = \int \rho R^{2} dV$$
+$$
+I = \int \rho R^{2} dV
+$$
 
 $$
 \begin{equation*}
