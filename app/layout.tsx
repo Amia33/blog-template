@@ -6,6 +6,7 @@ import { mPlus1, mPlus1Code, notoSansSC } from "@/app/fonts";
 import AppShell from "@/components/layout/app-shell";
 import JsonLd from "@/components/ui/json-ld";
 import { siteConfig } from "@/lib/config";
+import { getExpressiveCodeJsModules } from "@/lib/expressive-code";
 
 import "./globals.css";
 import "katex/dist/katex.css";
@@ -40,7 +41,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const expressiveCodeModules = await getExpressiveCodeJsModules();
+
   return (
     <html
       lang={siteConfig.lang.replace("_", "-")}
@@ -61,6 +64,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           }}
         />
         <AppShell>{children}</AppShell>
+        {expressiveCodeModules.map((module, index) => (
+          <script
+            key={`expressive-code-${index}`}
+            type="module"
+            dangerouslySetInnerHTML={{ __html: module }}
+          />
+        ))}
         <SpeedInsights />
         <Analytics />
       </body>
