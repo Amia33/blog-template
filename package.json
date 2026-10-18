@@ -1,0 +1,48 @@
+{
+  "name": "blog-template",
+  "version": "26.10.18",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "@tailwindcss/turbopack": "^4.3.3",
+    "next": "^16.4.2",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.4.2",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "jiti": "^2.7.0",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.10",
+    "stylelint": "^17.16.0",
+    "stylelint-config-standard": "^40.0.0",
+    "typescript": "^6.0.3"
+  },
+  "packageManager": "pnpm@12.14.0",
+  "lint-staged": {
+    "*.css": [
+      "stylelint",
+      "prettier --write --ignore-unknown"
+    ],
+    "*.{js,jsx,ts,tsx,mjs}": [
+      "eslint",
+      "prettier --write --ignore-unknown"
+    ],
+    "!(*.{css,js,jsx,ts,tsx,mjs})": [
+      "prettier --write --ignore-unknown"
+    ]
+  }
+}
