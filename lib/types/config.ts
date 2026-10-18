@@ -4,6 +4,7 @@ export type SiteConfig = {
   title: string;
   subtitle: string;
   lang: string;
+  url: string;
   themeColor: {
     hue: number;
     fixed: boolean;
