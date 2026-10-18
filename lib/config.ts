@@ -10,7 +10,7 @@ export const siteConfig: SiteConfig = {
   title: "Fuwari",
   subtitle: "デモサイト",
   lang: "ja",
-  url: "https://example.com",
+  url: "https://446256.xyz",
   themeColor: {
     hue: 250,
     fixed: false,

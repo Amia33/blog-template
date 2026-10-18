@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import Banner from "@/components/layout/banner";
@@ -6,6 +7,8 @@ import Pagination from "@/components/post/pagination";
 import PostCard from "@/components/post/post-card";
 import { PAGE_SIZE } from "@/lib/constants";
 import { getSortedPosts } from "@/lib/content";
+import { pageAlternates } from "@/lib/seo";
+import { t } from "@/lib/strings";
 
 export const ensureStatic = "navigation";
 
@@ -24,6 +27,22 @@ export function generateStaticParams() {
     }),
   );
   return [{ page: [] }, ...pages];
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ page?: string[] }>;
+}): Promise<Metadata> {
+  const { page } = await params;
+  const currentPage = page && page.length > 0 ? Number(page[0]) : 1;
+
+  return {
+    alternates: pageAlternates(currentPage > 1 ? `/${currentPage}` : "/"),
+    ...(currentPage > 1
+      ? { title: `${t("home")}（${currentPage}ページ目）` }
+      : {}),
+  };
 }
 
 export default async function HomePage({

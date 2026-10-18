@@ -3,10 +3,14 @@ import { Suspense } from "react";
 import DirectionalTransition from "@/components/layout/directional-transition";
 import ArchiveList, { type ArchivePost } from "@/components/post/archive-list";
 import { getSortedPosts } from "@/lib/content";
+import { pageAlternates, pageOpenGraph, pageTwitter } from "@/lib/seo";
 import { t } from "@/lib/strings";
 
 export const metadata = {
   title: t("archive"),
+  alternates: pageAlternates("/archive"),
+  openGraph: pageOpenGraph({ url: "/archive", title: t("archive") }),
+  twitter: pageTwitter({ title: t("archive") }),
 };
 
 export default function ArchivePage() {

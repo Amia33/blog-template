@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -8,11 +7,13 @@ import License from "@/components/post/license";
 import Lightbox from "@/components/post/lightbox";
 import Markdown from "@/components/post/markdown";
 import MdxContent from "@/components/post/mdx-content";
+import PostCover from "@/components/post/post-cover";
 import PostMeta from "@/components/post/post-meta";
 import { Icon } from "@/components/ui/icon";
 import JsonLd from "@/components/ui/json-ld";
-import { profileConfig, siteConfig } from "@/lib/config";
 import { getPostBySlug, getSortedPosts } from "@/lib/content";
+import { ogImageUrl, pageAlternates } from "@/lib/seo";
+import { postJsonLd } from "@/lib/structured-data";
 import { t } from "@/lib/strings";
 import { getPostUrlBySlug } from "@/lib/utils";
 
@@ -30,9 +31,30 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = getPostBySlug(slug.join("/"));
   if (!post) return {};
+
+  const description = post.description || post.excerpt;
+  const image = ogImageUrl(post);
+
   return {
     title: post.title,
-    description: post.description || post.excerpt,
+    description,
+    alternates: pageAlternates(getPostUrlBySlug(post.slug)),
+    openGraph: {
+      type: "article",
+      title: post.title,
+      description,
+      url: getPostUrlBySlug(post.slug),
+      publishedTime: post.published.toISOString(),
+      modifiedTime: (post.updated ?? post.published).toISOString(),
+      tags: post.tags,
+      images: [{ url: image, alt: post.title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description,
+      images: [image],
+    },
   };
 }
 
@@ -50,19 +72,7 @@ export default async function PostPage({
 
   return (
     <DirectionalTransition>
-      <JsonLd
-        data={{
-          "@context": "https://schema.org",
-          "@type": "BlogPosting",
-          headline: post.title,
-          description: post.description || post.excerpt,
-          datePublished: post.published.toISOString(),
-          dateModified: (post.updated ?? post.published).toISOString(),
-          author: { "@type": "Person", name: profileConfig.name },
-          image: post.image ? `${siteConfig.url}${post.image}` : undefined,
-          mainEntityOfPage: `${siteConfig.url}${postUrl}`,
-        }}
-      />
+      <JsonLd data={postJsonLd(post)} />
       <Lightbox>
         <article className="card bg-base-100 p-6 md:p-9">
           <div className="mb-3 flex gap-5 text-sm text-base-content/50">
@@ -87,12 +97,12 @@ export default async function PostPage({
             className="mb-5"
           />
 
-          {post.image ? (
-            <Image
-              src={post.image}
+          {post.cover ? (
+            <PostCover
+              cover={post.cover}
               alt={post.title}
-              width={1200}
-              height={630}
+              sizes="(min-width: 768px) 768px, 100vw"
+              priority
               className="mb-6 h-auto w-full rounded-box object-cover"
             />
           ) : (

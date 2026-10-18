@@ -3,11 +3,19 @@ import Lightbox from "@/components/post/lightbox";
 import Markdown from "@/components/post/markdown";
 import MdxContent from "@/components/post/mdx-content";
 import { getAbout } from "@/lib/content";
+import { pageAlternates, pageOpenGraph, pageTwitter } from "@/lib/seo";
 import { t } from "@/lib/strings";
 
 export const metadata = {
   title: t("about"),
   description: t("about"),
+  alternates: pageAlternates("/about"),
+  openGraph: pageOpenGraph({
+    url: "/about",
+    title: t("about"),
+    description: t("about"),
+  }),
+  twitter: pageTwitter({ title: t("about"), description: t("about") }),
 };
 
 export default function AboutPage() {
