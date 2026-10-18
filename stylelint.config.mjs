@@ -4,7 +4,7 @@ const stylelintConfig = {
   extends: ["stylelint-config-standard"],
   rules: {
     "import-notation": "string",
-    "at-rule-no-unknown": [true, { ignoreAtRules: ["theme"] }],
+    "at-rule-no-unknown": [true, { ignoreAtRules: ["theme", "plugin"] }],
   },
 };
 
