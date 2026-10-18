@@ -49,13 +49,17 @@ export default function Pagination({
   if (right < lastPage) pages.push(lastPage);
 
   return (
-    <nav aria-label="Pagination" className={`flex justify-center ${className}`}>
+    <nav
+      aria-label="ページネーション"
+      className={`flex justify-center ${className}`}
+    >
       <div className="join">
         {currentPage > 1 ? (
           <Link
             href={getPageUrl(currentPage - 1)}
+            transitionTypes={["nav-back"]}
             className="join-item btn"
-            aria-label="Previous page"
+            aria-label="前のページ"
           >
             <Icon name="chevronLeft" className="text-xl" />
           </Link>
@@ -63,7 +67,7 @@ export default function Pagination({
           <button
             type="button"
             className="btn join-item btn-disabled"
-            aria-label="Previous page"
+            aria-label="前のページ"
           >
             <Icon name="chevronLeft" className="text-xl" />
           </button>
@@ -90,8 +94,11 @@ export default function Pagination({
             <Link
               key={page}
               href={getPageUrl(page)}
+              transitionTypes={[
+                page > currentPage ? "nav-forward" : "nav-back",
+              ]}
               className="join-item btn"
-              aria-label={`Page ${page}`}
+              aria-label={`${page} ページ目`}
             >
               {page}
             </Link>
@@ -100,8 +107,9 @@ export default function Pagination({
         {currentPage < lastPage ? (
           <Link
             href={getPageUrl(currentPage + 1)}
+            transitionTypes={["nav-forward"]}
             className="join-item btn"
-            aria-label="Next page"
+            aria-label="次のページ"
           >
             <Icon name="chevronRight" className="text-xl" />
           </Link>
@@ -109,7 +117,7 @@ export default function Pagination({
           <button
             type="button"
             className="btn join-item btn-disabled"
-            aria-label="Next page"
+            aria-label="次のページ"
           >
             <Icon name="chevronRight" className="text-xl" />
           </button>

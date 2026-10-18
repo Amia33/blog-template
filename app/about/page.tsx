@@ -1,30 +1,31 @@
-import MainGridLayout from "@/components/layout/main-grid";
+import DirectionalTransition from "@/components/layout/directional-transition";
+import Lightbox from "@/components/post/lightbox";
 import Markdown from "@/components/post/markdown";
 import MdxContent from "@/components/post/mdx-content";
 import { getAbout } from "@/lib/content";
-import { i18n, I18nKey } from "@/lib/i18n";
-import { getPostHeadings } from "@/lib/toc";
+import { t } from "@/lib/strings";
 
 export const metadata = {
-  title: i18n(I18nKey.about),
-  description: i18n(I18nKey.about),
+  title: t("about"),
+  description: t("about"),
 };
 
 export default function AboutPage() {
   const about = getAbout();
-  const headings = about ? getPostHeadings(about.content) : [];
 
   return (
-    <MainGridLayout headings={headings}>
+    <DirectionalTransition>
       <div className="card bg-base-100 p-6 md:p-9">
-        <Markdown>
-          {about ? (
-            <MdxContent code={about.mdx} />
-          ) : (
-            <p>About content not found.</p>
-          )}
-        </Markdown>
+        <Lightbox>
+          <Markdown>
+            {about ? (
+              <MdxContent code={about.mdx} />
+            ) : (
+              <p>このサイトについての情報が見つかりません。</p>
+            )}
+          </Markdown>
+        </Lightbox>
       </div>
-    </MainGridLayout>
+    </DirectionalTransition>
   );
 }

@@ -1,12 +1,12 @@
 import { Suspense } from "react";
 
-import MainGridLayout from "@/components/layout/main-grid";
+import DirectionalTransition from "@/components/layout/directional-transition";
 import ArchiveList, { type ArchivePost } from "@/components/post/archive-list";
 import { getSortedPosts } from "@/lib/content";
-import { i18n, I18nKey } from "@/lib/i18n";
+import { t } from "@/lib/strings";
 
 export const metadata = {
-  title: i18n(I18nKey.archive),
+  title: t("archive"),
 };
 
 export default function ArchivePage() {
@@ -19,16 +19,16 @@ export default function ArchivePage() {
   }));
 
   return (
-    <MainGridLayout>
+    <DirectionalTransition>
       <Suspense
         fallback={
           <div className="card bg-base-100 p-8 text-center opacity-70">
-            Loading&hellip;
+            読み込み中&hellip;
           </div>
         }
       >
         <ArchiveList posts={posts} />
       </Suspense>
-    </MainGridLayout>
+    </DirectionalTransition>
   );
 }

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 
-import MainGridLayout from "@/components/layout/main-grid";
+import Banner from "@/components/layout/banner";
+import DirectionalTransition from "@/components/layout/directional-transition";
 import Pagination from "@/components/post/pagination";
 import PostCard from "@/components/post/post-card";
 import { PAGE_SIZE } from "@/lib/constants";
@@ -49,7 +50,8 @@ export default async function HomePage({
   );
 
   return (
-    <MainGridLayout>
+    <DirectionalTransition>
+      {currentPage === 1 ? <Banner /> : null}
       <div className="flex flex-col gap-4">
         {pagePosts.map((post) => (
           <PostCard key={post.slug} post={post} />
@@ -60,6 +62,6 @@ export default async function HomePage({
         lastPage={lastPage}
         className="mt-4"
       />
-    </MainGridLayout>
+    </DirectionalTransition>
   );
 }

@@ -75,10 +75,10 @@
 
 @theme inline {
   --font-sans:
-    var(--font-noto-sans), ui-sans-serif, system-ui, "PingFang SC",
-    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    var(--font-mplus), var(--font-noto-sc), ui-sans-serif, system-ui,
+    "Hiragino Kaku Gothic ProN", "Yu Gothic", meiryo, sans-serif;
   --font-mono:
-    var(--font-noto-mono), var(--font-noto-sans), ui-monospace, sfmono-regular,
+    var(--font-mplus-code), var(--font-noto-sc), ui-monospace, sfmono-regular,
     menlo, consolas, monospace;
   --leading-relaxed: 1.75;
 }
@@ -91,11 +91,20 @@
 @layer base {
   html {
     font-size: 14px;
+    scroll-padding-top: 5rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-base-300) transparent;
   }
 
   @media (width >= 768px) {
     html {
       font-size: 16px;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
     }
   }
 
@@ -122,6 +131,10 @@
   :lang(ko) {
     line-height: 1.8;
     font-feature-settings: "palt" 1;
+  }
+
+  [id] {
+    scroll-margin-top: 5rem;
   }
 
   ::selection {
@@ -158,12 +171,15 @@
   }
 }
 
+/* --- Prose tweaks ------------------------------------------------------- */
+
 .prose {
   --tw-prose-bullets: var(--color-primary);
 }
 
 .prose :where(h1, h2, h3, h4, h5, h6) {
   line-height: 1.4;
+  position: relative;
 }
 
 .prose :where(img, iframe) {
@@ -173,4 +189,144 @@
 .prose :where(code)::before,
 .prose :where(code)::after {
   content: none;
+}
+
+.prose .alert {
+  margin-block: 1rem;
+}
+
+/* --- Heading anchors (rehype-autolink-headings) ------------------------- */
+
+.prose .anchor {
+  margin-inline-start: 0.35em;
+  opacity: 0;
+  text-decoration: none;
+  transition: opacity 150ms ease;
+}
+
+.prose :where(h1, h2, h3, h4, h5, h6):hover .anchor,
+.prose .anchor:focus-visible {
+  opacity: 0.45;
+}
+
+/* --- Spoilers (`:spoiler[…]`) ------------------------------------------ */
+
+.spoiler {
+  filter: blur(0.35rem);
+  cursor: pointer;
+  transition: filter 150ms ease;
+}
+
+.spoiler:hover,
+.spoiler:focus-visible {
+  filter: none;
+}
+
+/* --- KaTeX display math ------------------------------------------------- */
+
+.katex-display {
+  overflow: auto hidden;
+  padding-block: 0.5rem;
+}
+
+/* --- View transitions (React <ViewTransition>) -------------------------- */
+
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes vt-fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-slide-in-right {
+  from {
+    transform: translateX(2rem);
+    opacity: 0;
+  }
+
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes vt-slide-out-left {
+  from {
+    transform: none;
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(-2rem);
+    opacity: 0;
+  }
+}
+
+@keyframes vt-slide-in-left {
+  from {
+    transform: translateX(-2rem);
+    opacity: 0;
+  }
+
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes vt-slide-out-right {
+  from {
+    transform: none;
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(2rem);
+    opacity: 0;
+  }
+}
+
+::view-transition-old(.fade-out) {
+  animation: 150ms ease-out both vt-fade-out;
+}
+
+::view-transition-new(.fade-in) {
+  animation: 150ms ease-in both vt-fade-in;
+}
+
+::view-transition-new(.slide-in-right) {
+  animation: 250ms ease both vt-slide-in-right;
+}
+
+::view-transition-old(.slide-out-left) {
+  animation: 250ms ease both vt-slide-out-left;
+}
+
+::view-transition-new(.slide-in-left) {
+  animation: 250ms ease both vt-slide-in-left;
+}
+
+::view-transition-old(.slide-out-right) {
+  animation: 250ms ease both vt-slide-out-right;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none;
+  }
 }

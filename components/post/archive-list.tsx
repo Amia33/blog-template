@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 
-import { i18n, I18nKey } from "@/lib/i18n";
+import { t } from "@/lib/strings";
 import { getPostUrlBySlug } from "@/lib/utils";
 
 export type ArchivePost = {
@@ -62,7 +62,7 @@ export default function ArchiveList({ posts }: { posts: ArchivePost[] }) {
   if (groups.length === 0) {
     return (
       <div className="card bg-base-100 p-8 text-center opacity-70">
-        No posts found.
+        記事が見つかりません。
       </div>
     );
   }
@@ -77,11 +77,7 @@ export default function ArchiveList({ posts }: { posts: ArchivePost[] }) {
             </span>
             <span className="text-sm opacity-50">
               {group.items.length}{" "}
-              {i18n(
-                group.items.length === 1
-                  ? I18nKey.postCount
-                  : I18nKey.postsCount,
-              )}
+              {t(group.items.length === 1 ? "postCount" : "postsCount")}
             </span>
           </div>
           <ul className="menu w-full p-0 py-1">
@@ -90,6 +86,7 @@ export default function ArchiveList({ posts }: { posts: ArchivePost[] }) {
                 <Link
                   href={getPostUrlBySlug(post.slug)}
                   aria-label={post.title}
+                  transitionTypes={["nav-forward"]}
                   className="flex-wrap gap-x-4"
                 >
                   <span className="w-14 shrink-0 text-sm tabular-nums opacity-60">
