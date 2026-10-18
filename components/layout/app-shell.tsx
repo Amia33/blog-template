@@ -13,11 +13,18 @@ export default function AppShell({ children }: { children: ReactNode }) {
       <Navbar />
       <div className="mx-auto w-full max-w-[var(--page-width)] px-2 md:px-4">
         <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-[17.5rem_minmax(0,1fr)]">
-          <Sidebar />
-          <main className="min-w-0">
+          <main className="order-1 min-w-0 lg:order-2">
             {children}
-            <Footer />
+            <div className="hidden lg:block">
+              <Footer />
+            </div>
           </main>
+          <Sidebar />
+        </div>
+        {/* Narrow screens put the sidebar below the content, so the footer has
+            to follow the sidebar instead of separating the two. */}
+        <div className="lg:hidden">
+          <Footer />
         </div>
       </div>
       {siteConfig.toc.enable ? <Toc /> : null}
