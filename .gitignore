@@ -42,3 +42,5 @@ next-env.d.ts
 
 # custom
 .commandcode
+.content-collections
+/public/content
