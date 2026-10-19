@@ -18,6 +18,26 @@ export function getPostUrlBySlug(slug: string): string {
   return url(`/posts/${slug}`);
 }
 
+export function getMomentUrl(id: string): string {
+  return url(`/moments#${id}`);
+}
+
+export function getAlbumUrl(slug: string): string {
+  return url(`/albums/${slug}`);
+}
+
+export function getTimelineUrl(): string {
+  return url("/timeline");
+}
+
+export function getCategoriesUrl(): string {
+  return url("/categories");
+}
+
+export function getTagsUrl(): string {
+  return url("/tags");
+}
+
 export function getTagUrl(tag: string): string {
   if (!tag) return url("/archive");
   return url(`/archive?tag=${encodeURIComponent(tag.trim())}`);
@@ -36,4 +56,8 @@ export function getCategoryUrl(category: string | null): string {
 
 export function formatDateToYYYYMMDD(date: Date): string {
   return date.toISOString().substring(0, 10);
+}
+
+export function formatDateToYYYYMM(date: Date): string {
+  return date.toISOString().substring(0, 7);
 }

@@ -1,9 +1,13 @@
-import { allPosts, allSpecs } from "content-collections";
+import "server-only";
+
+import { allAlbums, allMoments, allPosts, allSpecs } from "content-collections";
 
 import { t } from "@/lib/strings";
 import { getCategoryUrl } from "@/lib/utils";
 
 export type Post = (typeof allPosts)[number];
+export type Moment = (typeof allMoments)[number];
+export type Album = (typeof allAlbums)[number];
 
 export type PostWithNav = Post & {
   prevSlug?: string;
@@ -17,7 +21,11 @@ const isProduction = process.env.NODE_ENV === "production";
 export function getSortedPosts(): Post[] {
   return allPosts
     .filter((post) => (isProduction ? !post.draft : true))
-    .sort((a, b) => (a.published > b.published ? -1 : 1));
+    .sort((a, b) => {
+      if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
+      const byDate = b.published.getTime() - a.published.getTime();
+      return byDate !== 0 ? byDate : a.slug.localeCompare(b.slug);
+    });
 }
 
 export function getSortedPostsWithNav(): PostWithNav[] {
@@ -36,6 +44,23 @@ export function getPostBySlug(slug: string): PostWithNav | undefined {
   return getSortedPostsWithNav().find((post) => post.slug === slug);
 }
 
+export function getLatestPostDate(): Date {
+  return getSortedPosts().reduce((latest, post) => {
+    const date = post.updated ?? post.published;
+    return date > latest ? date : latest;
+  }, new Date(0));
+}
+
+export function getSortedMoments(): Moment[] {
+  return allMoments
+    .filter((moment) => (isProduction ? !moment.draft : true))
+    .sort((a, b) => {
+      if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
+      const byDate = b.published.getTime() - a.published.getTime();
+      return byDate !== 0 ? byDate : a.slug.localeCompare(b.slug);
+    });
+}
+
 export type Tag = {
   name: string;
   count: number;
@@ -46,6 +71,20 @@ export function getTags(): Tag[] {
 
   for (const post of getSortedPosts()) {
     for (const tag of post.tags) {
+      countMap[tag] = (countMap[tag] ?? 0) + 1;
+    }
+  }
+
+  return Object.keys(countMap)
+    .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
+    .map((name) => ({ name, count: countMap[name] }));
+}
+
+export function getMomentTags(): Tag[] {
+  const countMap: Record<string, number> = {};
+
+  for (const moment of getSortedMoments()) {
+    for (const tag of moment.tags) {
       countMap[tag] = (countMap[tag] ?? 0) + 1;
     }
   }
@@ -79,6 +118,45 @@ export function getCategories(): Category[] {
       count: countMap[name],
       url: getCategoryUrl(name),
     }));
+}
+
+export function getAlbums(): Album[] {
+  return allAlbums
+    .filter((album) => !album.hidden)
+    .sort((a, b) => {
+      const byDate = b.date.getTime() - a.date.getTime();
+      return byDate !== 0 ? byDate : a.slug.localeCompare(b.slug);
+    });
+}
+
+export function getAlbumBySlug(slug: string): Album | undefined {
+  return allAlbums.find((album) => album.slug === slug);
+}
+
+export type AlbumIndexItem = {
+  slug: string;
+  title: string;
+  description: string;
+  cover: Album["cover"];
+  date: string;
+  tags: string[];
+  encrypted: boolean;
+  photoCount: number;
+};
+
+export function toAlbumIndexItem(album: Album): AlbumIndexItem {
+  return {
+    slug: album.slug,
+    title: album.title,
+    description: album.description,
+    cover: album.cover,
+    date: album.date.toISOString(),
+    tags: album.tags,
+    encrypted: album.encrypted,
+    photoCount: album.encrypted
+      ? album.protectedPhotos.length
+      : album.photos.length,
+  };
 }
 
 export function getAbout() {
