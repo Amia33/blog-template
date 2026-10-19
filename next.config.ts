@@ -11,6 +11,9 @@ const nextConfig: NextConfig = {
     // Next 16 restricts quality values to this list, defaulting to [75].
     qualities: [75, 90],
   },
+  outputFileTracingIncludes: {
+    "/api/protected/**": ["./content/albums/**/photos/**/*"],
+  },
   turbopack: {
     rules: {
       "*.css": {

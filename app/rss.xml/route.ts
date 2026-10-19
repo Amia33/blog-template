@@ -9,7 +9,9 @@ async function buildRssFeed(): Promise<string> {
   "use cache";
   cacheLife("max");
 
-  const posts = getSortedPosts();
+  // Protected posts are intentionally excluded. Their body is server-gated, so
+  // publishing even a summary here would leak more than the site exposes.
+  const posts = getSortedPosts().filter((post) => !post.encrypted);
 
   const feed = new Feed({
     title: siteConfig.title,

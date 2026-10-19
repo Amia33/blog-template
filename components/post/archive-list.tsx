@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 
+import { Icon } from "@/components/ui/icon";
 import { t } from "@/lib/strings";
 import { getPostUrlBySlug } from "@/lib/utils";
 
@@ -13,6 +14,8 @@ export type ArchivePost = {
   tags: string[];
   category: string | null;
   published: Date;
+  pinned: boolean;
+  encrypted: boolean;
 };
 
 function formatDate(date: Date): string {
@@ -62,7 +65,7 @@ export default function ArchiveList({ posts }: { posts: ArchivePost[] }) {
   if (groups.length === 0) {
     return (
       <div className="card bg-base-100 p-8 text-center opacity-70">
-        記事が見つかりません。
+        {t("noPosts")}
       </div>
     );
   }
@@ -95,6 +98,24 @@ export default function ArchiveList({ posts }: { posts: ArchivePost[] }) {
                   <span className="min-w-0 flex-1 truncate font-medium">
                     {post.title}
                   </span>
+                  {post.pinned ? (
+                    <span
+                      className="shrink-0 text-primary"
+                      role="img"
+                      aria-label={t("pinned")}
+                    >
+                      <Icon name="pin" className="text-sm" />
+                    </span>
+                  ) : null}
+                  {post.encrypted ? (
+                    <span
+                      className="shrink-0 opacity-60"
+                      role="img"
+                      aria-label={t("protected")}
+                    >
+                      <Icon name="lock" className="text-sm" />
+                    </span>
+                  ) : null}
                   <span className="hidden shrink-0 text-xs opacity-40 md:block">
                     {post.tags.map((tag) => `#${tag}`).join(" ")}
                   </span>

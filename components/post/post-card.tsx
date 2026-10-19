@@ -2,18 +2,23 @@ import Link from "next/link";
 
 import PostCover from "@/components/post/post-cover";
 import PostMeta from "@/components/post/post-meta";
+import { Icon } from "@/components/ui/icon";
 import type { Post } from "@/lib/content";
 import { t } from "@/lib/strings";
 import { getPostUrlBySlug } from "@/lib/utils";
 
 export default function PostCard({ post }: { post: Post }) {
   const href = getPostUrlBySlug(post.slug);
+  const hidden = post.encrypted && post.hideHomeContent;
+  const summary = hidden
+    ? t("protectedPostSummary")
+    : post.description || post.excerpt;
 
   return (
-    <article className="card card-border bg-base-100">
-      <div className="card-body gap-3 md:flex-row md:items-stretch">
-        <div className="min-w-0 flex-1">
-          <h2 className="card-title">
+    <article className="post-card card card-border bg-base-100">
+      <div className="post-card-layout">
+        <div className="post-card-body card-body gap-3">
+          <h2 className="card-title flex-wrap gap-2">
             <Link
               href={href}
               transitionTypes={["nav-forward"]}
@@ -21,17 +26,29 @@ export default function PostCard({ post }: { post: Post }) {
             >
               {post.title}
             </Link>
+            {post.pinned ? (
+              <span className="badge badge-primary badge-sm gap-1">
+                <Icon name="pin" className="text-xs" />
+                {t("pinned")}
+              </span>
+            ) : null}
+            {post.encrypted ? (
+              <span className="badge badge-warning badge-sm gap-1">
+                <Icon name="lock" className="text-xs" />
+                {t("protected")}
+              </span>
+            ) : null}
           </h2>
           <PostMeta
             published={post.published}
             updated={post.updated}
             tags={post.tags}
             category={post.category}
+            showCategory={!hidden}
+            showTags={!hidden}
             className="mt-1"
           />
-          <p className="mt-3 line-clamp-2 text-base-content/75">
-            {post.description || post.excerpt}
-          </p>
+          <p className="mt-3 line-clamp-2 text-base-content/75">{summary}</p>
           <div className="mt-3 text-xs text-base-content/50">
             {post.words} {t(post.words === 1 ? "wordCount" : "wordsCount")}
             {" · "}
@@ -44,13 +61,13 @@ export default function PostCard({ post }: { post: Post }) {
             href={href}
             aria-label={post.title}
             transitionTypes={["nav-forward"]}
-            className="block w-full shrink-0 overflow-hidden rounded-box md:w-56"
+            className="post-card-cover"
           >
             <PostCover
               cover={post.cover}
               alt=""
-              sizes="(min-width: 768px) 224px, 100vw"
-              className="h-40 w-full object-cover md:h-full"
+              sizes="(min-width: 1280px) 28rem, (min-width: 768px) 24rem, 100vw"
+              className="h-full w-full object-cover"
             />
           </Link>
         ) : null}

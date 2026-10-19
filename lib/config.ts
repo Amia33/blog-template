@@ -1,9 +1,16 @@
 import {
   LinkPreset,
+  type AnnouncementConfig,
+  type ArticleConfig,
   type LicenseConfig,
+  type MusicConfig,
   type NavBarConfig,
+  type PostListConfig,
   type ProfileConfig,
+  type SidebarConfig,
   type SiteConfig,
+  type TextureConfig,
+  type TimelineConfig,
 } from "@/lib/types/config";
 
 export const siteConfig: SiteConfig = {
@@ -35,6 +42,9 @@ export const navBarConfig: NavBarConfig = {
   links: [
     LinkPreset.Home,
     LinkPreset.Archive,
+    LinkPreset.Moments,
+    LinkPreset.Albums,
+    LinkPreset.Timeline,
     LinkPreset.About,
     {
       name: "GitHub",
@@ -71,4 +81,96 @@ export const licenseConfig: LicenseConfig = {
   enable: true,
   name: "CC BY-NC-SA 4.0",
   url: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+};
+
+export const postListConfig: PostListConfig = {
+  pageSize: 8,
+  layout: {
+    mode: "list",
+    cover: "right",
+    cardWidth: "regular",
+  },
+};
+
+export const textureConfig: TextureConfig = {
+  enable: true,
+  defaultPreset: "starlight",
+  defaultOpacity: 0.12,
+  allowMotion: true,
+};
+
+export const sidebarConfig: SidebarConfig = {
+  enable: true,
+  arrangement: "dual",
+  side: "left",
+  components: [
+    { type: "profile", column: "primary" },
+    { type: "music", column: "primary" },
+    {
+      type: "announcement",
+      column: "primary",
+      pages: ["home"],
+    },
+    {
+      type: "categories",
+      column: "primary",
+      sticky: true,
+      collapseAfter: 5,
+    },
+    {
+      type: "tags",
+      column: "primary",
+      sticky: true,
+      collapseAfter: 20,
+    },
+    {
+      type: "stats",
+      column: "secondary",
+      pages: ["home", "archive", "categories", "tags"],
+    },
+    { type: "calendar", column: "secondary" },
+    {
+      type: "toc",
+      column: "secondary",
+      sticky: true,
+      pages: ["post"],
+    },
+  ],
+};
+
+export const announcementConfig: AnnouncementConfig = {
+  title: "お知らせ",
+  content: "このサイトは Next.js 16 で動作しています。",
+  closable: true,
+  closeDuration: 7 * 24 * 60 * 60,
+  link: {
+    text: "詳しく見る",
+    url: "/about",
+  },
+};
+
+export const musicConfig: MusicConfig = {
+  enable: false,
+  tracks: [],
+  defaultVolume: 0.6,
+  defaultMode: "sequence",
+};
+
+export const articleConfig: ArticleConfig = {
+  lastUpdated: {
+    enable: true,
+    minimumAgeDays: 90,
+  },
+};
+
+export const timelineConfig: TimelineConfig = {
+  enable: true,
+  categories: [
+    { name: "Work" },
+    { name: "Education" },
+    { name: "Projects" },
+    { name: "Life" },
+  ],
+  disabledTitles: [],
+  order: "desc",
 };

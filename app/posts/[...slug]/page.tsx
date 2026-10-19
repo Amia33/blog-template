@@ -1,23 +1,41 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 import DirectionalTransition from "@/components/layout/directional-transition";
+import PageShell from "@/components/layout/page-shell";
+import LastUpdatedNotice from "@/components/post/last-updated-notice";
 import License from "@/components/post/license";
 import Lightbox from "@/components/post/lightbox";
 import Markdown from "@/components/post/markdown";
 import MdxContent from "@/components/post/mdx-content";
 import PostCover from "@/components/post/post-cover";
 import PostMeta from "@/components/post/post-meta";
+import ProtectedPostBody from "@/components/post/protected-post-body";
 import { Icon } from "@/components/ui/icon";
 import JsonLd from "@/components/ui/json-ld";
-import { getPostBySlug, getSortedPosts } from "@/lib/content";
+import { articleConfig } from "@/lib/config";
+import {
+  getLatestPostDate,
+  getPostBySlug,
+  getSortedPosts,
+} from "@/lib/content";
 import { ogImageUrl, pageAlternates } from "@/lib/seo";
 import { postJsonLd } from "@/lib/structured-data";
 import { t } from "@/lib/strings";
 import { getPostUrlBySlug } from "@/lib/utils";
 
-export const ensureStatic = "navigation";
+function ProtectedContentSkeleton() {
+  return (
+    <div className="my-6 space-y-3" aria-hidden="true">
+      <div className="skeleton h-6 w-2/3" />
+      <div className="skeleton h-4 w-full" />
+      <div className="skeleton h-4 w-11/12" />
+      <div className="skeleton h-4 w-4/5" />
+    </div>
+  );
+}
 
 export function generateStaticParams() {
   return getSortedPosts().map((post) => ({ slug: post.slug.split("/") }));
@@ -32,7 +50,10 @@ export async function generateMetadata({
   const post = getPostBySlug(slug.join("/"));
   if (!post) return {};
 
-  const description = post.description || post.excerpt;
+  const hidden = post.encrypted && post.hideHomeContent;
+  const description = hidden
+    ? t("protectedPostDescription")
+    : post.description || post.excerpt;
   const image = ogImageUrl(post);
 
   return {
@@ -46,7 +67,7 @@ export async function generateMetadata({
       url: getPostUrlBySlug(post.slug),
       publishedTime: post.published.toISOString(),
       modifiedTime: (post.updated ?? post.published).toISOString(),
-      tags: post.tags,
+      tags: hidden ? [] : post.tags,
       images: [{ url: image, alt: post.title }],
     },
     twitter: {
@@ -69,13 +90,15 @@ export default async function PostPage({
   if (!post) notFound();
 
   const postUrl = getPostUrlBySlug(post.slug);
+  const hidden = post.encrypted && post.hideHomeContent;
+  const latestPostDate = getLatestPostDate();
 
   return (
-    <DirectionalTransition>
-      <JsonLd data={postJsonLd(post)} />
-      <Lightbox>
+    <PageShell page="post">
+      <DirectionalTransition>
+        <JsonLd data={postJsonLd(post)} />
         <article className="card bg-base-100 p-6 md:p-9">
-          <div className="mb-3 flex gap-5 text-sm text-base-content/50">
+          <div className="mb-3 flex flex-wrap gap-5 text-sm text-base-content/50">
             <span className="flex items-center gap-1">
               <Icon name="notes" className="text-base" />
               {post.words} {t(post.words === 1 ? "wordCount" : "wordsCount")}
@@ -85,6 +108,18 @@ export default async function PostPage({
               {post.readingTime}{" "}
               {t(post.readingTime === 1 ? "minuteCount" : "minutesCount")}
             </span>
+            {post.pinned ? (
+              <span className="flex items-center gap-1 text-primary">
+                <Icon name="pin" className="text-base" />
+                {t("pinned")}
+              </span>
+            ) : null}
+            {post.encrypted ? (
+              <span className="flex items-center gap-1">
+                <Icon name="lock" className="text-base" />
+                {t("protected")}
+              </span>
+            ) : null}
           </div>
 
           <h1 className="mb-3 text-3xl font-bold md:text-4xl">{post.title}</h1>
@@ -94,6 +129,8 @@ export default async function PostPage({
             updated={post.updated}
             tags={post.tags}
             category={post.category}
+            showCategory={!hidden}
+            showTags={!hidden}
             className="mb-5"
           />
 
@@ -109,40 +146,56 @@ export default async function PostPage({
             <div className="mb-5 border-b border-dashed border-base-300" />
           )}
 
-          <Markdown className="mb-6">
-            <MdxContent code={post.mdx} />
-          </Markdown>
+          {post.encrypted ? (
+            <Suspense fallback={<ProtectedContentSkeleton />}>
+              <ProtectedPostBody slug={post.slug} hint={post.passwordHint} />
+            </Suspense>
+          ) : (
+            <Lightbox>
+              <Markdown className="mb-6">
+                <MdxContent code={post.mdx} />
+              </Markdown>
+            </Lightbox>
+          )}
+
+          {articleConfig.lastUpdated.enable ? (
+            <LastUpdatedNotice
+              date={post.updated ?? post.published}
+              minimumAgeDays={articleConfig.lastUpdated.minimumAgeDays}
+              reference={latestPostDate}
+            />
+          ) : null}
 
           <License title={post.title} url={postUrl} pubDate={post.published} />
         </article>
-      </Lightbox>
 
-      <div className="mt-4 flex flex-col gap-4 md:flex-row">
-        {post.nextSlug ? (
-          <Link
-            href={getPostUrlBySlug(post.nextSlug)}
-            transitionTypes={["nav-forward"]}
-            className="btn btn-soft h-auto min-h-14 flex-1 justify-start gap-3 overflow-hidden py-3 normal-case"
-          >
-            <Icon name="chevronLeft" className="text-2xl text-primary" />
-            <span className="truncate font-medium">{post.nextTitle}</span>
-          </Link>
-        ) : (
-          <span className="flex-1" />
-        )}
-        {post.prevSlug ? (
-          <Link
-            href={getPostUrlBySlug(post.prevSlug)}
-            transitionTypes={["nav-forward"]}
-            className="btn btn-soft h-auto min-h-14 flex-1 justify-end gap-3 overflow-hidden py-3 normal-case"
-          >
-            <span className="truncate font-medium">{post.prevTitle}</span>
-            <Icon name="chevronRight" className="text-2xl text-primary" />
-          </Link>
-        ) : (
-          <span className="flex-1" />
-        )}
-      </div>
-    </DirectionalTransition>
+        <div className="mt-4 flex flex-col gap-4 md:flex-row">
+          {post.nextSlug ? (
+            <Link
+              href={getPostUrlBySlug(post.nextSlug)}
+              transitionTypes={["nav-forward"]}
+              className="btn btn-soft h-auto min-h-14 flex-1 justify-start gap-3 overflow-hidden py-3 normal-case"
+            >
+              <Icon name="chevronLeft" className="text-2xl text-primary" />
+              <span className="truncate font-medium">{post.nextTitle}</span>
+            </Link>
+          ) : (
+            <span className="flex-1" />
+          )}
+          {post.prevSlug ? (
+            <Link
+              href={getPostUrlBySlug(post.prevSlug)}
+              transitionTypes={["nav-forward"]}
+              className="btn btn-soft h-auto min-h-14 flex-1 justify-end gap-3 overflow-hidden py-3 normal-case"
+            >
+              <span className="truncate font-medium">{post.prevTitle}</span>
+              <Icon name="chevronRight" className="text-2xl text-primary" />
+            </Link>
+          ) : (
+            <span className="flex-1" />
+          )}
+        </div>
+      </DirectionalTransition>
+    </PageShell>
   );
 }
