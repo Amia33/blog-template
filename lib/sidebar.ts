@@ -46,8 +46,8 @@ export function getGridClass(config: SidebarConfig, page: SidebarPage): string {
   const side = config.side === "left" ? "left" : "right";
 
   return dual
-    ? `site-grid site-grid--dual-${side}`
-    : `site-grid site-grid--single-${side}`;
+    ? `site-grid site-grid-dual-${side}`
+    : `site-grid site-grid-single-${side}`;
 }
 
 export function getPageWidth(config: SidebarConfig, page: SidebarPage): string {
