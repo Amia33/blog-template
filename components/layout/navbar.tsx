@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import DisplaySettings from "@/components/layout/display-settings";
 import NavMenu from "@/components/layout/nav-menu";
 import { Icon } from "@/components/ui/icon";
 import ThemeSwitch from "@/components/widget/theme-switch";
@@ -11,7 +12,7 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-base-300/60 bg-base-100/85 backdrop-blur">
-      <div className="navbar mx-auto min-h-16 w-full max-w-[var(--page-width)] gap-2 px-2 md:px-4">
+      <div className="navbar mx-auto min-h-16 w-full max-w-[var(--page-width-dual)] gap-2 px-2 md:px-4">
         <div className="navbar-start">
           <Link href="/" className="btn btn-ghost gap-2 px-2 text-primary">
             <Icon name="home" className="text-xl" />
@@ -42,6 +43,7 @@ export default function Navbar() {
           </ul>
         </div>
         <div className="navbar-end gap-1">
+          <DisplaySettings />
           <ThemeSwitch />
           <div className="md:hidden">
             <NavMenu links={links} />

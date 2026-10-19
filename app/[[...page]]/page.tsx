@@ -3,14 +3,17 @@ import { notFound } from "next/navigation";
 
 import Banner from "@/components/layout/banner";
 import DirectionalTransition from "@/components/layout/directional-transition";
+import PageShell from "@/components/layout/page-shell";
 import Pagination from "@/components/post/pagination";
 import PostCard from "@/components/post/post-card";
-import { PAGE_SIZE } from "@/lib/constants";
+import { postListConfig } from "@/lib/config";
 import { getSortedPosts } from "@/lib/content";
 import { pageAlternates } from "@/lib/seo";
 import { t } from "@/lib/strings";
 
 export const ensureStatic = "navigation";
+
+const PAGE_SIZE = postListConfig.pageSize;
 
 function getPagination() {
   const posts = getSortedPosts();
@@ -69,18 +72,24 @@ export default async function HomePage({
   );
 
   return (
-    <DirectionalTransition>
-      {currentPage === 1 ? <Banner /> : null}
-      <div className="flex flex-col gap-4">
-        {pagePosts.map((post) => (
-          <PostCard key={post.slug} post={post} />
-        ))}
-      </div>
-      <Pagination
-        currentPage={currentPage}
-        lastPage={lastPage}
-        className="mt-4"
-      />
-    </DirectionalTransition>
+    <PageShell page="home">
+      <DirectionalTransition>
+        {currentPage === 1 ? <Banner /> : null}
+        <div
+          className="post-list"
+          data-card-width={postListConfig.layout.cardWidth}
+          data-cover={postListConfig.layout.cover}
+        >
+          {pagePosts.map((post) => (
+            <PostCard key={post.slug} post={post} />
+          ))}
+        </div>
+        <Pagination
+          currentPage={currentPage}
+          lastPage={lastPage}
+          className="mt-4"
+        />
+      </DirectionalTransition>
+    </PageShell>
   );
 }

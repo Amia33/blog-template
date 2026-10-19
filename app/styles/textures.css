@@ -1,0 +1,128 @@
+#texture-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: var(--texture-opacity, 0.12);
+  will-change: opacity, transform;
+  transform: translateZ(0);
+  background-repeat: repeat;
+  background-position: center;
+}
+
+html[data-texture-preset="none"] #texture-canvas {
+  background-image: none;
+}
+
+html[data-texture-preset="starlight"] #texture-canvas {
+  background-image:
+    radial-gradient(
+      circle at 20% 30%,
+      color-mix(in oklch, var(--color-primary) 55%, transparent) 0 1.5px,
+      transparent 2px
+    ),
+    radial-gradient(
+      circle at 70% 60%,
+      color-mix(in oklch, var(--color-secondary) 45%, transparent) 0 1.5px,
+      transparent 2px
+    ),
+    radial-gradient(
+      circle at 40% 80%,
+      color-mix(in oklch, var(--color-accent) 35%, transparent) 0 1px,
+      transparent 2px
+    );
+  background-size:
+    180px 180px,
+    240px 240px,
+    120px 120px;
+  animation: texture-drift 40s linear infinite alternate;
+}
+
+html[data-texture-preset="cyber-dots"] #texture-canvas {
+  background-image: radial-gradient(
+    color-mix(in oklch, var(--color-primary) 45%, transparent) 1px,
+    transparent 1.5px
+  );
+  background-size: 22px 22px;
+  animation: texture-drift 55s linear infinite alternate;
+}
+
+html[data-texture-preset="topography"] #texture-canvas {
+  background-image: repeating-radial-gradient(
+    ellipse at 30% 20%,
+    transparent 0 18px,
+    color-mix(in oklch, var(--color-secondary) 28%, transparent) 19px 20px,
+    transparent 21px 42px
+  );
+  background-size: 340px 340px;
+  animation: texture-pulse 24s ease-in-out infinite alternate;
+}
+
+html[data-texture-preset="geometric"] #texture-canvas {
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      color-mix(in oklch, var(--color-primary) 22%, transparent) 0 1px,
+      transparent 1px 28px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      color-mix(in oklch, var(--color-accent) 18%, transparent) 0 1px,
+      transparent 1px 38px
+    );
+  animation: texture-drift 60s linear infinite alternate;
+}
+
+html[data-texture-preset="sakura"] #texture-canvas {
+  background-image:
+    radial-gradient(
+      circle at 25% 35%,
+      color-mix(in oklch, var(--color-accent) 40%, transparent) 0 2px,
+      transparent 3px
+    ),
+    radial-gradient(
+      circle at 75% 65%,
+      color-mix(in oklch, var(--color-primary) 28%, transparent) 0 2px,
+      transparent 3px
+    );
+  background-size:
+    160px 160px,
+    220px 220px;
+  animation: texture-pulse 30s ease-in-out infinite alternate;
+}
+
+@keyframes texture-drift {
+  from {
+    background-position:
+      0 0,
+      0 0,
+      0 0;
+  }
+
+  to {
+    background-position:
+      60px 40px,
+      -40px 30px,
+      30px -20px;
+  }
+}
+
+@keyframes texture-pulse {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(1.03);
+  }
+}
+
+html[data-motion-reduced="true"] #texture-canvas {
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #texture-canvas {
+    animation: none !important;
+  }
+}
