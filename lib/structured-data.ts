@@ -1,6 +1,7 @@
 import { profileConfig, siteConfig } from "@/lib/config";
 import type { Post } from "@/lib/content";
 import { absoluteUrl, ogImageUrl } from "@/lib/seo";
+import { t } from "@/lib/strings";
 import { getCategoryUrl, getPostUrlBySlug } from "@/lib/utils";
 
 function personJsonLd() {
@@ -27,9 +28,10 @@ export function websiteJsonLd() {
 }
 
 function breadcrumbJsonLd(post: Post) {
+  const hidden = post.encrypted && post.hideHomeContent;
   const items = [
     { name: siteConfig.title, url: absoluteUrl("/") },
-    ...(post.category
+    ...(!hidden && post.category
       ? [
           {
             name: post.category,
@@ -53,6 +55,7 @@ function breadcrumbJsonLd(post: Post) {
 
 export function postJsonLd(post: Post) {
   const url = absoluteUrl(getPostUrlBySlug(post.slug));
+  const hidden = post.encrypted && post.hideHomeContent;
 
   return {
     "@context": "https://schema.org",
@@ -60,7 +63,9 @@ export function postJsonLd(post: Post) {
       {
         "@type": "BlogPosting",
         headline: post.title,
-        description: post.description || post.excerpt,
+        description: hidden
+          ? t("protectedPostDescription")
+          : post.description || post.excerpt,
         datePublished: post.published.toISOString(),
         dateModified: (post.updated ?? post.published).toISOString(),
         inLanguage: post.lang || siteConfig.lang,
@@ -68,8 +73,10 @@ export function postJsonLd(post: Post) {
         image: ogImageUrl(post),
         url,
         mainEntityOfPage: url,
-        ...(post.tags.length > 0 ? { keywords: post.tags.join(", ") } : {}),
-        ...(post.category ? { articleSection: post.category } : {}),
+        ...(!hidden && post.tags.length > 0
+          ? { keywords: post.tags.join(", ") }
+          : {}),
+        ...(!hidden && post.category ? { articleSection: post.category } : {}),
       },
       breadcrumbJsonLd(post),
     ],
