@@ -3,12 +3,13 @@ import "server-only";
 import { verify } from "@node-rs/argon2";
 
 import { getPostBySlug, type Post } from "@/lib/content";
+import { isAcceptableArgon2id } from "@/lib/protected/argon2";
 
 export async function verifyPostPassword(
   post: Post,
   password: string,
 ): Promise<boolean> {
-  if (!post.encrypted || !post.passwordHash.startsWith("$argon2id$")) {
+  if (!post.encrypted || !isAcceptableArgon2id(post.passwordHash)) {
     return false;
   }
 

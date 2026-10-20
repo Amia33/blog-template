@@ -11,6 +11,8 @@ type MdxImageProps = {
 
 /** Any scheme (`data:`, `https:`) or a protocol-relative `//host/path`. */
 const NON_LOCAL = /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i;
+const PROTECTED = /^\/api\/protected\//;
+const SAFE_REMOTE = /^(?:https?:|data:|\/\/)/i;
 
 export function MdxImage({
   src,
@@ -20,15 +22,51 @@ export function MdxImage({
   "data-blur": blur,
   "data-priority": priority,
 }: MdxImageProps) {
-  // Sources the build-time step could not resolve (remote, data URIs) are
-  // rendered directly: next/image would need them in `images.remotePatterns`.
-  if (!src || NON_LOCAL.test(src)) {
+  if (!src) return null;
+
+  if (!src.startsWith("/") && !SAFE_REMOTE.test(src)) {
+    return null;
+  }
+
+  // The image optimizer fetches server-side without the viewer's session
+  // cookie, so protected images must go straight to the browser.
+  if (PROTECTED.test(src)) {
+    const parsedWidth = Number(width);
+    const parsedHeight = Number(height);
+
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
-        src={src ?? ""}
+        src={src}
+        alt={alt}
+        width={
+          Number.isFinite(parsedWidth) && parsedWidth > 0
+            ? parsedWidth
+            : undefined
+        }
+        height={
+          Number.isFinite(parsedHeight) && parsedHeight > 0
+            ? parsedHeight
+            : undefined
+        }
+        loading={priority === "true" ? "eager" : "lazy"}
+        fetchPriority={priority === "true" ? "high" : "auto"}
+        decoding="async"
+        className="my-4 h-auto w-full rounded-box object-cover"
+      />
+    );
+  }
+
+  // Sources the build-time step could not resolve (remote, data URIs) are
+  // rendered directly: next/image would need them in `images.remotePatterns`.
+  if (NON_LOCAL.test(src)) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={src}
         alt={alt}
         loading="lazy"
+        decoding="async"
         className="my-4 rounded-box"
       />
     );

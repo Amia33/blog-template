@@ -56,6 +56,7 @@ export async function generateMetadata({
     : DEFAULT_OG_IMAGE;
 
   return {
+    ...(album.encrypted ? { robots: { index: false, follow: false } } : {}),
     title: album.title,
     description,
     alternates: pageAlternates(`/albums/${album.slug}`),
@@ -83,9 +84,7 @@ export default async function AlbumPage({
 
   if (!album) notFound();
 
-  const photoCount = album.encrypted
-    ? album.protectedPhotos.length
-    : album.photos.length;
+  const photoCount = album.photos.length;
 
   return (
     <PageShell page="albums">
@@ -108,10 +107,13 @@ export default async function AlbumPage({
                 {album.location}
               </span>
             ) : null}
-            <span className="flex items-center gap-1">
-              <Icon name="photo" className="text-base" />
-              {photoCount} {t(photoCount === 1 ? "photoCount" : "photosCount")}
-            </span>
+            {!album.encrypted ? (
+              <span className="flex items-center gap-1">
+                <Icon name="photo" className="text-base" />
+                {photoCount}{" "}
+                {t(photoCount === 1 ? "photoCount" : "photosCount")}
+              </span>
+            ) : null}
             {album.encrypted ? (
               <span className="flex items-center gap-1 text-warning">
                 <Icon name="lock" className="text-base" />
@@ -130,7 +132,7 @@ export default async function AlbumPage({
             </div>
           ) : null}
 
-          {album.cover ? (
+          {!album.encrypted && album.cover ? (
             <PostCover
               cover={album.cover}
               alt={album.title}

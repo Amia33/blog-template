@@ -48,6 +48,10 @@ export const rehypePlugins: NonNullable<Options["rehypePlugins"]> = [
  */
 export function createRehypePlugins(
   collectionDir: string,
+  options?: {
+    protected?: boolean;
+    slug?: string;
+  },
 ): NonNullable<Options["rehypePlugins"]> {
-  return [...rehypePlugins, [rehypeImages, { collectionDir }]];
+  return [...rehypePlugins, [rehypeImages, { collectionDir, ...options }]];
 }

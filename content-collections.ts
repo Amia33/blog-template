@@ -6,9 +6,10 @@ import { compileMDX } from "@content-collections/mdx";
 import readingTime from "reading-time";
 import { z } from "zod";
 
-import { imageMeta, postSlug, resolveCover } from "./lib/images";
+import { imageMeta, postSlug, resolveCover, type Cover } from "./lib/images";
 import { extractExcerpt } from "./lib/markdown-utils";
 import { createRehypePlugins, remarkPlugins } from "./lib/mdx-plugins";
+import { isAcceptableArgon2id } from "./lib/protected/argon2";
 import { renderMarkdownHtml } from "./lib/render-markdown";
 
 const POSTS_DIRECTORY = "content/posts";
@@ -45,12 +46,34 @@ async function listImageFiles(directory: string): Promise<string[]> {
 }
 
 function assertArgon2Hash(hash: string, label: string): void {
-  if (!hash.startsWith("$argon2id$")) {
+  if (!isAcceptableArgon2id(hash)) {
     throw new Error(
-      `${label}: protected content requires an Argon2id passwordHash. ` +
+      `${label}: protected content requires an Argon2id hash with ` +
+        "m>=19456, t>=2, p>=1. " +
         'Generate one with `pnpm hash-password "your-password"`.',
     );
   }
+}
+
+const PROTECTED_POST_IMAGE_PATTERN = /\/api\/protected\/posts\?[^"'\\\s]+/g;
+
+function extractProtectedPostImages(mdx: string, slug: string): string[] {
+  const files = new Set<string>();
+
+  for (const match of mdx.matchAll(PROTECTED_POST_IMAGE_PATTERN)) {
+    try {
+      const url = new URL(match[0], "http://localhost");
+
+      if (url.searchParams.get("slug") !== slug) continue;
+
+      const file = url.searchParams.get("path");
+      if (file) files.add(file);
+    } catch {
+      // Ignore malformed URLs in generated code.
+    }
+  }
+
+  return [...files];
 }
 
 const posts = defineCollection({
@@ -79,10 +102,14 @@ const posts = defineCollection({
       assertArgon2Hash(document.passwordHash, document._meta.path);
     }
 
+    const slug = postSlug(document._meta);
     const stats = readingTime(document.content);
     const mdx = await compileMDX(context, document, {
       remarkPlugins,
-      rehypePlugins: createRehypePlugins(POSTS_DIRECTORY),
+      rehypePlugins: createRehypePlugins(
+        POSTS_DIRECTORY,
+        document.encrypted ? { protected: true, slug } : undefined,
+      ),
     });
 
     return {
@@ -91,16 +118,19 @@ const posts = defineCollection({
       // protected posts. The compiled `mdx` code is only read by a server
       // component after the session is validated.
       content: document.encrypted ? "" : document.content,
-      slug: document._meta.path.replace(/\/index$/, ""),
+      slug,
       mdx,
-      cover: await resolveCover(
-        document.image,
-        document._meta,
-        POSTS_DIRECTORY,
-      ),
+      cover: document.encrypted
+        ? null
+        : await resolveCover(document.image, document._meta, POSTS_DIRECTORY),
       excerpt: document.encrypted ? "" : extractExcerpt(document.content),
-      readingTime: Math.max(1, Math.round(stats.minutes)),
-      words: stats.words,
+      readingTime: document.encrypted
+        ? 0
+        : Math.max(1, Math.round(stats.minutes)),
+      words: document.encrypted ? 0 : stats.words,
+      protectedImages: document.encrypted
+        ? extractProtectedPostImages(mdx, slug)
+        : [],
     };
   },
 });
@@ -276,17 +306,29 @@ const albums = defineCollection({
       }),
     );
 
-    let cover = null;
+    let cover: Cover | null = null;
+    let protectedCover: (typeof protectedPhotos)[number] | null = null;
 
-    if (document.cover) {
-      const isRemote = /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(document.cover);
-      const isPublic = document.cover.startsWith("/");
+    if (document.encrypted) {
+      const normalizedCover = document.cover
+        .trim()
+        .replace(/^\.?\//, "")
+        .replace(/^photos\//, "");
 
-      // Never copy a protected album image into public/ just to use it as a
-      // cover. Protected albums need a public or remote cover, or none.
-      if (!document.encrypted || isRemote || isPublic) {
-        cover = await resolveCover(document.cover, meta, ALBUMS_DIRECTORY);
+      if (normalizedCover !== "") {
+        protectedCover =
+          protectedPhotos.find((photo) => photo.file === normalizedCover) ??
+          null;
+
+        if (!protectedCover) {
+          throw new Error(
+            `${document._meta.path}: encrypted album covers must be a file ` +
+              `under content/albums/${albumDirectory}/photos/ or empty.`,
+          );
+        }
       }
+    } else if (document.cover) {
+      cover = await resolveCover(document.cover, meta, ALBUMS_DIRECTORY);
     } else if (photos.length > 0) {
       cover = {
         src: photos[0].src,
@@ -301,6 +343,7 @@ const albums = defineCollection({
       ...document,
       slug,
       cover,
+      protectedCover,
       photos,
       protectedPhotos,
     };

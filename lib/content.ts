@@ -70,6 +70,8 @@ export function getTags(): Tag[] {
   const countMap: Record<string, number> = {};
 
   for (const post of getSortedPosts()) {
+    if (post.encrypted) continue;
+
     for (const tag of post.tags) {
       countMap[tag] = (countMap[tag] ?? 0) + 1;
     }
@@ -104,6 +106,8 @@ export function getCategories(): Category[] {
   const countMap: Record<string, number> = {};
 
   for (const post of getSortedPosts()) {
+    if (post.encrypted) continue;
+
     const name =
       post.category && post.category.trim() !== ""
         ? post.category.trim()
@@ -130,6 +134,7 @@ export function getAlbums(): Album[] {
 }
 
 export function getAlbumBySlug(slug: string): Album | undefined {
+  // `hidden` keeps an album out of listings; direct links still resolve.
   return allAlbums.find((album) => album.slug === slug);
 }
 
@@ -149,13 +154,11 @@ export function toAlbumIndexItem(album: Album): AlbumIndexItem {
     slug: album.slug,
     title: album.title,
     description: album.description,
-    cover: album.cover,
+    cover: album.encrypted ? null : album.cover,
     date: album.date.toISOString(),
     tags: album.tags,
     encrypted: album.encrypted,
-    photoCount: album.encrypted
-      ? album.protectedPhotos.length
-      : album.photos.length,
+    photoCount: album.encrypted ? 0 : album.photos.length,
   };
 }
 

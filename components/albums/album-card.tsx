@@ -54,11 +54,13 @@ export default function AlbumCard({ album }: { album: AlbumIndexItem }) {
             <Icon name="calendar" className="text-sm" />
             {formatDateToYYYYMMDD(date)}
           </span>
-          <span className="flex items-center gap-1">
-            <Icon name="photo" className="text-sm" />
-            {album.photoCount}{" "}
-            {t(album.photoCount === 1 ? "photoCount" : "photosCount")}
-          </span>
+          {!album.encrypted ? (
+            <span className="flex items-center gap-1">
+              <Icon name="photo" className="text-sm" />
+              {album.photoCount}{" "}
+              {t(album.photoCount === 1 ? "photoCount" : "photosCount")}
+            </span>
+          ) : null}
         </div>
         {album.tags.length > 0 ? (
           <div className="flex flex-wrap gap-1">

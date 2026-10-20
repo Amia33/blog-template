@@ -1,5 +1,7 @@
 import "server-only";
 
+import { connection } from "next/server";
+
 import AlbumGallery from "@/components/albums/album-gallery";
 import Lightbox from "@/components/post/lightbox";
 import PasswordGate from "@/components/post/password-gate";
@@ -19,6 +21,7 @@ export default async function ProtectedAlbum({
   title: string;
   hint: string;
 }) {
+  await connection();
   const unlocked = await hasProtectedSession(`album:${slug}`);
 
   if (!unlocked) {
@@ -29,6 +32,7 @@ export default async function ProtectedAlbum({
 
   if (!album) return null;
 
+  const cover = album.protectedCover;
   const photos = getProtectedAlbumPhotos(album).map((photo) => ({
     src: toProtectedPhotoUrl(slug, photo.file),
     width: photo.width,
@@ -41,6 +45,18 @@ export default async function ProtectedAlbum({
 
   return (
     <Lightbox>
+      {cover ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={toProtectedPhotoUrl(slug, cover.file)}
+          width={cover.width}
+          height={cover.height}
+          alt={cover.alt || title}
+          loading="lazy"
+          decoding="async"
+          className="mb-4 h-auto w-full rounded-box object-cover"
+        />
+      ) : null}
       <AlbumGallery
         photos={photos}
         layout={album.layout}

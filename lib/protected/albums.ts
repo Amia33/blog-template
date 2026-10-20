@@ -3,6 +3,7 @@ import "server-only";
 import { verify } from "@node-rs/argon2";
 
 import type { Album } from "@/lib/content";
+import { isAcceptableArgon2id } from "@/lib/protected/argon2";
 
 export type ProtectedAlbumPhoto = {
   file: string;
@@ -17,7 +18,7 @@ export async function verifyAlbumPassword(
   album: Album,
   password: string,
 ): Promise<boolean> {
-  if (!album.encrypted || !album.passwordHash.startsWith("$argon2id$")) {
+  if (!album.encrypted || !isAcceptableArgon2id(album.passwordHash)) {
     return false;
   }
 

@@ -57,6 +57,7 @@ export async function generateMetadata({
   const image = ogImageUrl(post);
 
   return {
+    ...(post.encrypted ? { robots: { index: false, follow: false } } : {}),
     title: post.title,
     description,
     alternates: pageAlternates(getPostUrlBySlug(post.slug)),
@@ -96,18 +97,23 @@ export default async function PostPage({
   return (
     <PageShell page="post">
       <DirectionalTransition>
-        <JsonLd data={postJsonLd(post)} />
+        {!post.encrypted ? <JsonLd data={postJsonLd(post)} /> : null}
         <article className="card bg-base-100 p-6 md:p-9">
           <div className="mb-3 flex flex-wrap gap-5 text-sm text-base-content/50">
-            <span className="flex items-center gap-1">
-              <Icon name="notes" className="text-base" />
-              {post.words} {t(post.words === 1 ? "wordCount" : "wordsCount")}
-            </span>
-            <span className="flex items-center gap-1">
-              <Icon name="schedule" className="text-base" />
-              {post.readingTime}{" "}
-              {t(post.readingTime === 1 ? "minuteCount" : "minutesCount")}
-            </span>
+            {!post.encrypted ? (
+              <>
+                <span className="flex items-center gap-1">
+                  <Icon name="notes" className="text-base" />
+                  {post.words}{" "}
+                  {t(post.words === 1 ? "wordCount" : "wordsCount")}
+                </span>
+                <span className="flex items-center gap-1">
+                  <Icon name="schedule" className="text-base" />
+                  {post.readingTime}{" "}
+                  {t(post.readingTime === 1 ? "minuteCount" : "minutesCount")}
+                </span>
+              </>
+            ) : null}
             {post.pinned ? (
               <span className="flex items-center gap-1 text-primary">
                 <Icon name="pin" className="text-base" />
@@ -134,7 +140,14 @@ export default async function PostPage({
             className="mb-5"
           />
 
-          {post.cover ? (
+          {post.encrypted ? (
+            <div
+              className="mb-6 flex h-48 items-center justify-center rounded-box bg-base-200"
+              aria-hidden="true"
+            >
+              <Icon name="lock" className="text-5xl opacity-30" />
+            </div>
+          ) : post.cover ? (
             <PostCover
               cover={post.cover}
               alt={post.title}
