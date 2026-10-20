@@ -83,7 +83,6 @@ export async function generateMetadata({
 function PostSkeleton() {
   return (
     <article className="card bg-base-100 p-6 md:p-9" aria-hidden="true">
-      <div className="skeleton mb-4 h-4 w-40" />
       <div className="skeleton mb-3 h-9 w-3/4" />
       <div className="skeleton mb-5 h-4 w-1/2" />
       <div className="skeleton mb-6 h-56 w-full rounded-box" />
@@ -130,7 +129,9 @@ async function PostContent({
     <>
       {!post.encrypted ? <JsonLd data={postJsonLd(post)} /> : null}
       <article className="card bg-base-100 p-6 md:p-9">
-        <div className="mb-3 flex flex-wrap gap-5 text-sm text-base-content/50">
+        <h1 className="mb-2 text-3xl font-bold md:text-4xl">{post.title}</h1>
+
+        <div className="flex flex-wrap gap-5 text-sm text-base-content/70">
           {!post.encrypted ? (
             <>
               <span className="flex items-center gap-1">
@@ -158,8 +159,6 @@ async function PostContent({
           ) : null}
         </div>
 
-        <h1 className="mb-3 text-3xl font-bold md:text-4xl">{post.title}</h1>
-
         <PostMeta
           published={post.published}
           updated={post.updated}
@@ -167,7 +166,7 @@ async function PostContent({
           category={post.category}
           showCategory={!hidden}
           showTags={!hidden}
-          className="mb-5"
+          className="mt-3 mb-5"
         />
 
         {post.encrypted ? (
