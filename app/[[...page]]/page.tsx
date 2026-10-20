@@ -6,7 +6,7 @@ import DirectionalTransition from "@/components/layout/directional-transition";
 import PageShell from "@/components/layout/page-shell";
 import Pagination from "@/components/post/pagination";
 import PostCard from "@/components/post/post-card";
-import { postListConfig } from "@/lib/config";
+import { postListConfig, siteConfig } from "@/lib/config";
 import { getSortedPosts } from "@/lib/content";
 import { pageAlternates } from "@/lib/seo";
 import { t } from "@/lib/strings";
@@ -91,6 +91,7 @@ export default async function HomePage({
   return (
     <PageShell page="home">
       <DirectionalTransition>
+        <h1 className="sr-only">{siteConfig.title}</h1>
         {currentPage === 1 ? <Banner /> : null}
         <div
           className="post-list"

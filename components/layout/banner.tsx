@@ -25,7 +25,7 @@ export default function Banner() {
         className="object-cover"
         style={{ objectPosition }}
       />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-base-100 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-base-200 to-transparent" />
       {banner.credit.enable && banner.credit.text ? (
         <a
           href={banner.credit.url || undefined}

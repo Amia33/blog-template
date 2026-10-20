@@ -35,7 +35,11 @@ export default function PageShell({
         >
           {showSidebar ? <Sidebar page={page} column="primary" /> : null}
 
-          <main className="site-main flex min-w-0 flex-col">
+          <main
+            id="main-content"
+            tabIndex={-1}
+            className="site-main flex min-w-0 flex-col"
+          >
             {children}
             <div className="mt-auto hidden lg:block">
               <Footer />

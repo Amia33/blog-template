@@ -82,7 +82,13 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className="min-h-screen bg-base-100 text-base-content antialiased">
+      <body className="min-h-screen bg-base-200 text-base-content antialiased">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-field focus:bg-base-100 focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-primary focus:shadow-lg"
+        >
+          コンテンツへスキップ
+        </a>
         <JsonLd data={websiteJsonLd()} />
         <TextureCanvas />
         <Navbar />
