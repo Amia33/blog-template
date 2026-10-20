@@ -149,31 +149,6 @@
   }
 }
 
-@keyframes fade-in-up {
-  from {
-    transform: translateY(2rem);
-    opacity: 0;
-  }
-
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-.onload-animation {
-  opacity: 0;
-  animation: 300ms fade-in-up;
-  animation-fill-mode: forwards;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .onload-animation {
-    animation: none;
-    opacity: 1;
-  }
-}
-
 /* --- Prose tweaks ------------------------------------------------------- */
 
 .prose {
@@ -365,6 +340,44 @@
   ::view-transition-new(*) {
     animation: none;
   }
+}
+
+/* daisyUI removes the outline from menu links and active items. Keyboard users
+   need to see where they are, so the project ring overrides that reset. */
+
+html
+  :is(
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    summary,
+    [tabindex]:not([tabindex="-1"])
+  ):focus-visible {
+  outline: 2px solid var(--color-primary) !important;
+  outline-offset: 2px;
+}
+
+/* iOS Safari zooms the viewport when a form control below 16px receives focus.
+   The root font-size drops to 14px on phones, so 1rem is not enough. Unlayered
+   on purpose: it outranks daisyUI's component layer. */
+
+@media (width < 40rem) {
+  input:not([type="checkbox"], [type="radio"]),
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+/* daisyUI gives `aria-current="page"` menu links a neutral fill. The site
+   navigation should carry the same primary treatment as every other selected
+   control. Unlayered on purpose: it outranks the plugin's component layer. */
+
+.menu :where(a, button)[aria-current="page"] {
+  background-color: var(--color-primary);
+  color: var(--color-primary-content);
 }
 
 /* --- Layout shell ------------------------------------------------------- */
@@ -565,9 +578,8 @@ html[data-post-list-mode="grid"] .post-card-cover {
 
 /* --- Reduced motion on the data attribute ------------------------------ */
 
-html[data-motion-reduced="true"] .onload-animation {
-  animation: none;
-  opacity: 1;
+html[data-motion-reduced="true"] .back-to-top {
+  transition: none;
 }
 
 html[data-motion-reduced="true"] * {

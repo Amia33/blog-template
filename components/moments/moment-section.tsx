@@ -4,6 +4,7 @@ import { useMemo, useState, useSyncExternalStore } from "react";
 
 import MomentCard, { type MomentItem } from "@/components/moments/moment-card";
 import Lightbox from "@/components/post/lightbox";
+import FilterChip from "@/components/ui/filter-chip";
 import { Icon } from "@/components/ui/icon";
 import { t } from "@/lib/strings";
 
@@ -119,30 +120,44 @@ export default function MomentSection({
 
         {tags.length > 0 ? (
           <div className="mt-3 flex flex-wrap gap-1">
-            <button
-              type="button"
+            <FilterChip
+              active={activeTag === ""}
               onClick={() => setActiveTag("")}
-              className={`badge badge-sm ${activeTag === "" ? "badge-primary" : "badge-ghost"}`}
             >
               {t("allTags")}
-            </button>
+            </FilterChip>
             {tags.map((tag) => (
-              <button
+              <FilterChip
                 key={tag}
-                type="button"
+                active={activeTag === tag}
                 onClick={() => setActiveTag(tag === activeTag ? "" : tag)}
-                className={`badge badge-sm ${activeTag === tag ? "badge-primary" : "badge-ghost"}`}
               >
                 #{tag}
-              </button>
+              </FilterChip>
             ))}
           </div>
         ) : null}
       </div>
 
+      <p className="sr-only" role="status" aria-live="polite">
+        {filtered.length} {t("postCount")}
+      </p>
+
       {visible.length === 0 ? (
-        <div className="card bg-base-100 p-8 text-center opacity-70">
-          {t("noResults")}
+        <div className="card bg-base-100 p-8 text-center">
+          <p className="opacity-70">{t("noResults")}</p>
+          {query || activeTag ? (
+            <button
+              type="button"
+              onClick={() => {
+                updateUrl("", "");
+                setShownCount(10);
+              }}
+              className="btn btn-sm mt-3 self-center"
+            >
+              {t("clearFilters")}
+            </button>
+          ) : null}
         </div>
       ) : (
         <Lightbox key={`${activeTag}-${query}-${shownCount}`}>

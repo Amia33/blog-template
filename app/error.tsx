@@ -17,7 +17,11 @@ export default function Error({
   }, [error]);
 
   return (
-    <main className="mx-auto flex min-h-[60vh] w-full max-w-xl flex-col items-center justify-center gap-4 px-6 py-16 text-center">
+    <main
+      id="main-content"
+      tabIndex={-1}
+      className="mx-auto flex min-h-[60vh] w-full max-w-xl flex-col items-center justify-center gap-4 px-6 py-16 text-center"
+    >
       <h1 className="text-2xl font-bold">{t("errorTitle")}</h1>
       <p className="opacity-70">{t("errorDescription")}</p>
       <div className="flex flex-wrap items-center justify-center gap-2">

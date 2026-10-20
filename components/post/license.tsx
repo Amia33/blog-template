@@ -22,15 +22,15 @@ export default function License({
       </a>
       <div className="mt-3 flex flex-wrap gap-6 text-sm">
         <div>
-          <div className="opacity-70">{t("author")}</div>
+          <div className="opacity-80">{t("author")}</div>
           <div>{profileConfig.name}</div>
         </div>
         <div>
-          <div className="opacity-70">{t("publishedAt")}</div>
+          <div className="opacity-80">{t("publishedAt")}</div>
           <div>{formatDateToYYYYMMDD(pubDate)}</div>
         </div>
         <div>
-          <div className="opacity-70">{t("license")}</div>
+          <div className="opacity-80">{t("license")}</div>
           <a
             href={licenseConfig.url}
             target="_blank"

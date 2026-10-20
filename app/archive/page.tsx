@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import DirectionalTransition from "@/components/layout/directional-transition";
 import PageShell from "@/components/layout/page-shell";
 import ArchiveList, { type ArchivePost } from "@/components/post/archive-list";
+import PageHeader from "@/components/ui/page-header";
 import { getSortedPosts } from "@/lib/content";
 import { pageAlternates, pageOpenGraph, pageTwitter } from "@/lib/seo";
 import { t } from "@/lib/strings";
@@ -28,10 +29,17 @@ export default function ArchivePage() {
   return (
     <PageShell page="archive">
       <DirectionalTransition>
+        <PageHeader
+          title={t("archive")}
+          count={`${posts.length} ${t("postCount")}`}
+        />
         <Suspense
           fallback={
-            <div className="card bg-base-100 p-8 text-center opacity-70">
-              読み込み中&hellip;
+            <div
+              role="status"
+              className="card bg-base-100 p-8 text-center opacity-70"
+            >
+              アーカイブを読み込んでいます&hellip;
             </div>
           }
         >

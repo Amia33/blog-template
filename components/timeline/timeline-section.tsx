@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 
 import TimelineCard from "@/components/timeline/timeline-card";
+import FilterChip from "@/components/ui/filter-chip";
 import { t } from "@/lib/strings";
 import type { TimelineCategory, TimelineItem } from "@/lib/types/config";
 
@@ -31,37 +32,44 @@ export default function TimelineSection({
     <div>
       <div className="card mb-4 bg-base-100 p-4">
         <div className="flex flex-wrap gap-1">
-          <button
-            type="button"
+          <FilterChip
+            active={activeCategory === ""}
             onClick={() => setActiveCategory("")}
-            className={`badge badge-sm ${activeCategory === "" ? "badge-primary" : "badge-ghost"}`}
           >
             {t("allTags")} ({items.length})
-          </button>
+          </FilterChip>
           {categories.map((category) => (
-            <button
+            <FilterChip
               key={category.name}
-              type="button"
+              active={activeCategory === category.name}
               onClick={() =>
                 setActiveCategory(
                   category.name === activeCategory ? "" : category.name,
                 )
               }
-              className={`badge badge-sm ${
-                activeCategory === category.name
-                  ? "badge-primary"
-                  : "badge-ghost"
-              }`}
             >
               {category.name} ({counts[category.name] ?? 0})
-            </button>
+            </FilterChip>
           ))}
         </div>
       </div>
 
+      <p className="sr-only" role="status" aria-live="polite">
+        {filtered.length} {t("postCount")}
+      </p>
+
       {filtered.length === 0 ? (
-        <div className="card bg-base-100 p-8 text-center opacity-70">
-          {t("noTimeline")}
+        <div className="card bg-base-100 p-8 text-center">
+          <p className="opacity-70">{t("noTimeline")}</p>
+          {activeCategory ? (
+            <button
+              type="button"
+              onClick={() => setActiveCategory("")}
+              className="btn btn-sm mt-3 self-center"
+            >
+              {t("clearFilters")}
+            </button>
+          ) : null}
         </div>
       ) : (
         <div className="flex flex-col gap-4">

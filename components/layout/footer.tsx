@@ -3,7 +3,7 @@ import { profileConfig } from "@/lib/config";
 
 export default function Footer() {
   return (
-    <footer className="mt-10 border-t border-dashed border-base-300 pt-6 pb-2 text-center text-sm opacity-70">
+    <footer className="mt-10 border-t border-dashed border-base-300 pt-6 pb-2 text-center text-sm opacity-80">
       <p>
         &copy; <CopyrightYear /> {profileConfig.name}. All Rights Reserved.
       </p>

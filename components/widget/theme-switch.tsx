@@ -80,14 +80,14 @@ export default function ThemeSwitch() {
 
   return (
     <div className="dropdown dropdown-end">
-      <div
-        tabIndex={0}
-        role="button"
+      <button
+        type="button"
         className="btn btn-ghost btn-square"
         aria-label="テーマ"
+        aria-haspopup="true"
       >
         <Icon name={current.icon} className="text-xl" />
-      </div>
+      </button>
       <ul
         tabIndex={0}
         className="menu dropdown-content z-50 mt-2 w-40 rounded-box bg-base-100 p-2 shadow"
@@ -97,10 +97,14 @@ export default function ThemeSwitch() {
             <button
               type="button"
               onClick={() => select(item.mode)}
+              aria-current={item.mode === mode ? "true" : undefined}
               className={item.mode === mode ? "active" : ""}
             >
               <Icon name={item.icon} className="text-lg" />
               {item.label}
+              {item.mode === mode ? (
+                <Icon name="check" className="ml-auto text-base" />
+              ) : null}
             </button>
           </li>
         ))}
