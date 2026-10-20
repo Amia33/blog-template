@@ -12,7 +12,7 @@ export default function PageHeader({
       <div>
         <h1 className="text-3xl font-bold">{title}</h1>
         {description ? (
-          <p className="mt-1 text-sm opacity-60">{description}</p>
+          <p className="mt-1 text-sm opacity-70">{description}</p>
         ) : null}
       </div>
       {count ? <span className="badge badge-ghost">{count}</span> : null}

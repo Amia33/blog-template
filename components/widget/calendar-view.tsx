@@ -123,7 +123,7 @@ export default function CalendarView({
         </button>
       </div>
 
-      <div className="grid grid-cols-7 gap-1 text-center text-[0.65rem] opacity-60">
+      <div className="grid grid-cols-7 gap-1 text-center text-[0.7rem] opacity-70">
         {weekdays.map((weekday, index) => (
           <span key={`${weekday}-${index}`}>{weekday}</span>
         ))}
@@ -154,7 +154,7 @@ export default function CalendarView({
               className={`flex h-7 items-center justify-center rounded-field text-xs transition-colors ${
                 hasPosts
                   ? "bg-primary/10 text-primary hover:bg-primary hover:text-primary-content"
-                  : "opacity-40"
+                  : "opacity-60"
               } ${isToday ? "ring-1 ring-primary" : ""} ${
                 isSelected ? "font-bold" : ""
               }`}

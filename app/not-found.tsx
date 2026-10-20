@@ -23,7 +23,7 @@ export default function NotFound() {
           className="relative mx-auto mb-4 text-5xl text-primary"
         />
         <h1 className="relative text-2xl font-bold">{t("pageNotFound")}</h1>
-        <p className="relative mt-2 opacity-60">
+        <p className="relative mt-2 opacity-70">
           {t("pageNotFoundDescription")}
         </p>
         <div className="relative mt-6 flex flex-wrap justify-center gap-2">

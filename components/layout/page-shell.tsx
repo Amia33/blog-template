@@ -25,19 +25,19 @@ export default function PageShell({
   const sidebarToc = hasSidebarToc(sidebarConfig, page);
 
   return (
-    <div className="min-h-screen">
+    <div>
       <div
         className="mx-auto w-full px-2 md:px-4"
         style={{ maxWidth: getPageWidth(sidebarConfig, page) }}
       >
         <div
-          className={`mt-4 ${showSidebar ? getGridClass(sidebarConfig, page) : "site-grid"}`}
+          className={`mt-4 lg:min-h-[calc(100vh-6rem)] ${showSidebar ? getGridClass(sidebarConfig, page) : "site-grid"}`}
         >
           {showSidebar ? <Sidebar page={page} column="primary" /> : null}
 
-          <main className="site-main min-w-0">
+          <main className="site-main flex min-w-0 flex-col">
             {children}
-            <div className="hidden lg:block">
+            <div className="mt-auto hidden lg:block">
               <Footer />
             </div>
           </main>

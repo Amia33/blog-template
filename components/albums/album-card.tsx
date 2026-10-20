@@ -49,7 +49,7 @@ export default function AlbumCard({ album }: { album: AlbumIndexItem }) {
         {album.description ? (
           <p className="line-clamp-2 text-sm opacity-70">{album.description}</p>
         ) : null}
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs opacity-60">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs opacity-70">
           <span className="flex items-center gap-1">
             <Icon name="calendar" className="text-sm" />
             {formatDateToYYYYMMDD(date)}

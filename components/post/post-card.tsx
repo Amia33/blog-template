@@ -50,7 +50,7 @@ export default function PostCard({ post }: { post: Post }) {
           />
           <p className="mt-3 line-clamp-2 text-base-content/75">{summary}</p>
           {!post.encrypted ? (
-            <div className="mt-3 text-xs text-base-content/50">
+            <div className="mt-3 text-xs text-base-content/70">
               {post.words} {t(post.words === 1 ? "wordCount" : "wordsCount")}
               {" · "}
               {post.readingTime}{" "}
@@ -63,9 +63,10 @@ export default function PostCard({ post }: { post: Post }) {
             href={href}
             aria-label={post.title}
             transitionTypes={["nav-forward"]}
-            className="post-card-cover flex items-center justify-center bg-base-200"
+            className="post-card-cover protected-cover bg-base-200 text-base-content/70"
           >
-            <Icon name="lock" className="text-4xl opacity-30" />
+            <Icon name="lock" className="text-3xl opacity-50" />
+            <span className="text-xs font-medium">{t("protected")}</span>
           </Link>
         ) : post.cover ? (
           <Link

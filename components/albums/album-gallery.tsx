@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import type { CSSProperties } from "react";
 
 import type { AlbumLayout } from "@/lib/types/config";
 
@@ -38,19 +39,24 @@ export default function AlbumGallery({
 
   return (
     <article
-      className={isGrid ? "mt-4 grid gap-3" : "mt-4 columns-1 gap-3 [&>*]:mb-3"}
+      className={
+        isGrid ? "mt-4 grid gap-3" : "album-columns mt-4 gap-3 [&>*]:mb-3"
+      }
       style={
         isGrid
           ? {
               gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
             }
-          : { columnCount: columns }
+          : ({
+              "--album-columns": columns,
+              "--album-columns-mobile": Math.min(columns, 2),
+            } as CSSProperties)
       }
     >
       {photos.map((photo, index) => (
         <figure
           key={`${photo.src}-${index}`}
-          className={`overflow-hidden rounded-box bg-base-200 ${
+          className={`gallery-figure overflow-hidden rounded-box bg-base-200 ${
             isGrid ? "" : "break-inside-avoid"
           }`}
         >
@@ -81,7 +87,7 @@ export default function AlbumGallery({
             />
           )}
           {photo.title ? (
-            <figcaption className="px-3 py-2 text-xs opacity-60">
+            <figcaption className="px-3 py-2 text-xs opacity-70">
               {photo.title}
             </figcaption>
           ) : null}

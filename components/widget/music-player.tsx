@@ -59,7 +59,7 @@ export default function MusicPlayer() {
             {music.currentTrack.title}
           </p>
           {music.currentTrack.artist ? (
-            <p className="truncate text-xs opacity-60">
+            <p className="truncate text-xs opacity-70">
               {music.currentTrack.artist}
             </p>
           ) : null}
@@ -76,7 +76,7 @@ export default function MusicPlayer() {
         aria-label={t("play")}
         className="range range-primary range-xs mt-3 w-full"
       />
-      <div className="flex justify-between text-[0.65rem] opacity-60">
+      <div className="flex justify-between text-[0.7rem] opacity-70">
         <span>{formatTime(music.currentTime)}</span>
         <span>{formatTime(music.duration)}</span>
       </div>

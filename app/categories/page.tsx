@@ -50,7 +50,7 @@ export default function CategoriesPage() {
                   <span className="min-w-0 flex-1 truncate">
                     {category.name}
                   </span>
-                  <span className="text-sm tabular-nums opacity-50">
+                  <span className="text-sm tabular-nums opacity-70">
                     {category.count}
                   </span>
                 </Link>

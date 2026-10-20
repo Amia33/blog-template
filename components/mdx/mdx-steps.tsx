@@ -19,7 +19,7 @@ export function MdxStep({
     <li className="step step-primary">
       <div className="font-medium">{title}</div>
       {children ? (
-        <div className="text-xs text-base-content/60">{children}</div>
+        <div className="text-xs text-base-content/70">{children}</div>
       ) : null}
     </li>
   );

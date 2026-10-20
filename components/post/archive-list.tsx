@@ -78,7 +78,7 @@ export default function ArchiveList({ posts }: { posts: ArchivePost[] }) {
             <span className="text-2xl font-bold tabular-nums">
               {group.year}
             </span>
-            <span className="text-sm opacity-50">
+            <span className="text-sm opacity-70">
               {group.items.length}{" "}
               {t(group.items.length === 1 ? "postCount" : "postsCount")}
             </span>
@@ -92,7 +92,7 @@ export default function ArchiveList({ posts }: { posts: ArchivePost[] }) {
                   transitionTypes={["nav-forward"]}
                   className="flex-wrap gap-x-4"
                 >
-                  <span className="w-14 shrink-0 text-sm tabular-nums opacity-60">
+                  <span className="w-14 shrink-0 text-sm tabular-nums opacity-70">
                     {formatDate(post.published)}
                   </span>
                   <span className="min-w-0 flex-1 truncate font-medium">
@@ -109,14 +109,14 @@ export default function ArchiveList({ posts }: { posts: ArchivePost[] }) {
                   ) : null}
                   {post.encrypted ? (
                     <span
-                      className="shrink-0 opacity-60"
+                      className="shrink-0 opacity-70"
                       role="img"
                       aria-label={t("protected")}
                     >
                       <Icon name="lock" className="text-sm" />
                     </span>
                   ) : null}
-                  <span className="hidden shrink-0 text-xs opacity-40 md:block">
+                  <span className="hidden shrink-0 text-xs opacity-70 md:block">
                     {post.tags.map((tag) => `#${tag}`).join(" ")}
                   </span>
                 </Link>
