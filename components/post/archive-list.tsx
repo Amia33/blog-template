@@ -19,8 +19,8 @@ export type ArchivePost = {
 };
 
 function formatDate(date: Date): string {
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
+  const day = date.getUTCDate().toString().padStart(2, "0");
   return `${month}-${day}`;
 }
 
@@ -51,7 +51,7 @@ export default function ArchiveList({ posts }: { posts: ArchivePost[] }) {
 
     const map = new Map<number, ArchivePost[]>();
     for (const post of filtered) {
-      const year = post.published.getFullYear();
+      const year = post.published.getUTCFullYear();
       const bucket = map.get(year);
       if (bucket) bucket.push(post);
       else map.set(year, [post]);

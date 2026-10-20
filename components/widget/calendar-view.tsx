@@ -64,11 +64,13 @@ export default function CalendarView({
   const monthLabel = new Intl.DateTimeFormat(locale, {
     year: "numeric",
     month: "long",
+    timeZone: "UTC",
   }).format(new Date(Date.UTC(year, monthNumber - 1, 1)));
 
   const weekdays = useMemo(() => {
     const formatter = new Intl.DateTimeFormat(locale, {
       weekday: "short",
+      timeZone: "UTC",
     });
     return Array.from({ length: 7 }, (_, index) => {
       const day = new Date(Date.UTC(2024, 0, 7 + index + startOfWeek));
