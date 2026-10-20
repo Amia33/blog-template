@@ -134,7 +134,7 @@ export default function DisplaySettings() {
         <h2 className="mb-3 text-sm font-bold">{t("displaySettings")}</h2>
 
         <div className="mb-3">
-          <div className="mb-1 text-xs font-semibold opacity-60">
+          <div className="mb-1 text-xs font-semibold opacity-70">
             {t("postLayout")}
           </div>
           <div className="join w-full">
@@ -162,7 +162,7 @@ export default function DisplaySettings() {
         {textureConfig.enable ? (
           <>
             <div className="mb-3">
-              <div className="mb-1 text-xs font-semibold opacity-60">
+              <div className="mb-1 text-xs font-semibold opacity-70">
                 {t("backgroundTexture")}
               </div>
               <div className="grid grid-cols-3 gap-1">
@@ -172,13 +172,16 @@ export default function DisplaySettings() {
                     type="button"
                     aria-pressed={preset === item.value}
                     onClick={() => applyPreset(item.value)}
-                    className={`rounded-field border p-2 text-[0.65rem] transition-colors ${
+                    className={`rounded-field border p-2 text-[0.7rem] transition-colors ${
                       preset === item.value
                         ? "border-primary bg-primary/10 text-primary"
                         : "border-base-300 hover:border-primary/50"
                     }`}
                   >
-                    <span className="mb-1 block h-6 rounded-field bg-base-200" />
+                    <span
+                      data-preview={item.value}
+                      className="texture-preview mb-1 block h-6 rounded-field border border-base-300 bg-base-200"
+                    />
                     {item.label}
                   </button>
                 ))}
@@ -188,7 +191,7 @@ export default function DisplaySettings() {
             <div className="mb-3">
               <label
                 htmlFor="texture-opacity"
-                className="mb-1 block text-xs font-semibold opacity-60"
+                className="mb-1 block text-xs font-semibold opacity-70"
               >
                 {t("textureOpacity")}
               </label>

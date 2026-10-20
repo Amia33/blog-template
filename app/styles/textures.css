@@ -10,11 +10,18 @@
   background-position: center;
 }
 
-html[data-texture-preset="none"] #texture-canvas {
+.texture-preview {
+  background-repeat: repeat;
+  background-position: center;
+}
+
+html[data-texture-preset="none"] #texture-canvas,
+.texture-preview[data-preview="none"] {
   background-image: none;
 }
 
-html[data-texture-preset="starlight"] #texture-canvas {
+html[data-texture-preset="starlight"] #texture-canvas,
+.texture-preview[data-preview="starlight"] {
   background-image:
     radial-gradient(
       circle at 20% 30%,
@@ -38,7 +45,8 @@ html[data-texture-preset="starlight"] #texture-canvas {
   animation: texture-drift 40s linear infinite alternate;
 }
 
-html[data-texture-preset="cyber-dots"] #texture-canvas {
+html[data-texture-preset="cyber-dots"] #texture-canvas,
+.texture-preview[data-preview="cyber-dots"] {
   background-image: radial-gradient(
     color-mix(in oklch, var(--color-primary) 45%, transparent) 1px,
     transparent 1.5px
@@ -47,7 +55,8 @@ html[data-texture-preset="cyber-dots"] #texture-canvas {
   animation: texture-drift 55s linear infinite alternate;
 }
 
-html[data-texture-preset="topography"] #texture-canvas {
+html[data-texture-preset="topography"] #texture-canvas,
+.texture-preview[data-preview="topography"] {
   background-image: repeating-radial-gradient(
     ellipse at 30% 20%,
     transparent 0 18px,
@@ -58,7 +67,8 @@ html[data-texture-preset="topography"] #texture-canvas {
   animation: texture-pulse 24s ease-in-out infinite alternate;
 }
 
-html[data-texture-preset="geometric"] #texture-canvas {
+html[data-texture-preset="geometric"] #texture-canvas,
+.texture-preview[data-preview="geometric"] {
   background-image:
     repeating-linear-gradient(
       45deg,
@@ -73,7 +83,8 @@ html[data-texture-preset="geometric"] #texture-canvas {
   animation: texture-drift 60s linear infinite alternate;
 }
 
-html[data-texture-preset="sakura"] #texture-canvas {
+html[data-texture-preset="sakura"] #texture-canvas,
+.texture-preview[data-preview="sakura"] {
   background-image:
     radial-gradient(
       circle at 25% 35%,
@@ -117,12 +128,14 @@ html[data-texture-preset="sakura"] #texture-canvas {
   }
 }
 
-html[data-motion-reduced="true"] #texture-canvas {
+html[data-motion-reduced="true"] #texture-canvas,
+html[data-motion-reduced="true"] .texture-preview {
   animation: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #texture-canvas {
+  #texture-canvas,
+  .texture-preview {
     animation: none !important;
   }
 }
