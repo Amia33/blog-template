@@ -64,8 +64,13 @@ export default function ArchiveList({ posts }: { posts: ArchivePost[] }) {
 
   if (groups.length === 0) {
     return (
-      <div className="card bg-base-100 p-8 text-center opacity-70">
-        {t("noPosts")}
+      <div className="card bg-base-100 p-8 text-center">
+        <p className="opacity-70">{t("noPosts")}</p>
+        {paramsKey ? (
+          <Link href="/archive" className="btn btn-sm mt-3 self-center">
+            {t("clearFilters")}
+          </Link>
+        ) : null}
       </div>
     );
   }
