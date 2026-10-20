@@ -48,7 +48,7 @@ export default function PasswordGate({
             {title ||
               (kind === "post" ? t("protectedPost") : t("protectedAlbum"))}
           </h2>
-          <p className="text-sm opacity-60">
+          <p className="text-sm opacity-70">
             {kind === "post" ? t("protectedBody") : t("protectedAlbumBody")}
           </p>
         </div>
@@ -82,7 +82,7 @@ export default function PasswordGate({
         </label>
 
         {hint ? (
-          <p className="text-xs opacity-60">
+          <p className="text-xs opacity-70">
             {t("passwordHint")}: {hint}
           </p>
         ) : null}

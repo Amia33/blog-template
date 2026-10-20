@@ -122,7 +122,7 @@ async function AlbumContent({ params }: { params: Promise<{ slug: string }> }) {
         <p className="mt-2 opacity-70">{album.description}</p>
       ) : null}
 
-      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm opacity-60">
+      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm opacity-70">
         <span className="flex items-center gap-1">
           <Icon name="calendar" className="text-base" />
           {formatDateToYYYYMMDD(album.date)}

@@ -28,7 +28,7 @@ export default function TimelineCard({
       >
         <div className="flex flex-wrap items-center gap-2 text-xs">
           <span className="badge badge-primary badge-sm">{item.category}</span>
-          <time className="opacity-60">{item.date}</time>
+          <time className="opacity-70">{item.date}</time>
           {item.featured ? (
             <span className="badge badge-secondary badge-sm">Featured</span>
           ) : null}
@@ -40,7 +40,7 @@ export default function TimelineCard({
         ) : null}
 
         {item.location ? (
-          <p className="mt-1 flex items-center gap-1 text-xs opacity-60">
+          <p className="mt-1 flex items-center gap-1 text-xs opacity-70">
             <Icon name="location" className="text-sm" />
             {item.location}
           </p>

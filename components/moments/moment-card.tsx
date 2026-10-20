@@ -68,7 +68,7 @@ export default function MomentCard({
             ) : null}
             {moment.mood ? <span aria-hidden="true">{moment.mood}</span> : null}
           </div>
-          <div className="flex flex-wrap items-center gap-x-3 text-xs opacity-60">
+          <div className="flex flex-wrap items-center gap-x-3 text-xs opacity-70">
             <time dateTime={moment.published}>{formattedDate}</time>
             {moment.location ? (
               <span className="flex items-center gap-1">

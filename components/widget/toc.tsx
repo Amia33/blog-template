@@ -152,7 +152,7 @@ export default function Toc() {
 
   return (
     <aside className="fixed top-24 right-4 z-30 hidden max-h-[calc(100vh-8rem)] w-56 overflow-y-auto 2xl:block">
-      <p className="mb-1 px-3 text-xs font-semibold tracking-wide uppercase opacity-50">
+      <p className="mb-1 px-3 text-xs font-semibold tracking-wide uppercase opacity-70">
         {t("contents")}
       </p>
       <TocList headings={headings} active={active} />

@@ -25,7 +25,7 @@ export default function PostMeta({
 
   return (
     <div
-      className={`flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-base-content/60 ${className}`}
+      className={`flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-base-content/70 ${className}`}
     >
       <span className="flex items-center gap-1">
         <Icon name="calendar" className="text-base" />

@@ -26,7 +26,7 @@ export default function LastUpdatedNotice({
       <div>
         <p className="font-semibold">
           {t("lastUpdated")}: {formatDateToYYYYMMDD(date)}
-          <span className="ml-2 font-normal opacity-60">
+          <span className="ml-2 font-normal opacity-70">
             ({days} {t("daysAgo")})
           </span>
         </p>
