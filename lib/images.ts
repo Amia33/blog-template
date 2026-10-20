@@ -57,9 +57,20 @@ export function postSlug(meta: PostMeta): string {
   return meta.path.replace(/\/index$/, "");
 }
 
+export function isPathInside(baseDir: string, target: string): boolean {
+  const relative = path.relative(baseDir, target);
+  return (
+    relative !== "" &&
+    relative !== ".." &&
+    !relative.startsWith(`..${path.sep}`) &&
+    !path.isAbsolute(relative)
+  );
+}
+
 export async function resolveSource(
   src: string,
   postDir: string,
+  options: { confineTo?: string; rejectPublic?: boolean } = {},
 ): Promise<ImageSource> {
   const value = src.trim();
 
@@ -68,10 +79,33 @@ export async function resolveSource(
   }
 
   if (value.startsWith("/")) {
-    return { kind: "file", absolutePath: path.join(PUBLIC_DIR, value) };
+    if (options.rejectPublic) {
+      throw new Error(
+        `Encrypted content cannot reference public images: ${value}`,
+      );
+    }
+
+    const absolutePath = path.join(PUBLIC_DIR, value);
+
+    if (!isPathInside(PUBLIC_DIR, absolutePath)) {
+      throw new Error(`Image path escapes public/: ${value}`);
+    }
+
+    return { kind: "file", absolutePath };
   }
 
-  return { kind: "file", absolutePath: path.resolve(postDir, value) };
+  const absolutePath = path.resolve(postDir, value);
+
+  if (options.confineTo && !isPathInside(options.confineTo, absolutePath)) {
+    throw new Error(`Image path escapes ${options.confineTo}: ${value}`);
+  }
+
+  return { kind: "file", absolutePath };
+}
+
+export function toProtectedPostImageUrl(slug: string, file: string): string {
+  const params = new URLSearchParams({ slug, path: file });
+  return `/api/protected/posts?${params.toString()}`;
 }
 
 /**
@@ -149,7 +183,13 @@ export async function resolveCover(
   meta: PostMeta,
   collectionDir: string,
 ): Promise<Cover | null> {
-  const source = await resolveSource(image, postDirectory(meta, collectionDir));
+  const source = await resolveSource(
+    image,
+    postDirectory(meta, collectionDir),
+    {
+      confineTo: path.join(process.cwd(), collectionDir),
+    },
+  );
 
   if (source.kind === "remote") {
     if (source.src === "") return null;

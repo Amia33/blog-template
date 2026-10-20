@@ -1,9 +1,12 @@
+import path from "node:path";
+
 import {
   type PostMeta,
   imageMeta,
   postDirectory,
   postSlug,
   resolveSource,
+  toProtectedPostImageUrl,
   toPublicUrl,
 } from "@/lib/images";
 
@@ -36,7 +39,15 @@ function collectImages(node: Node, found: Node[]): void {
  * `collectionDir` is the collection's directory as configured in
  * `content-collections.ts`; `_meta` alone cannot express it.
  */
-export function rehypeImages({ collectionDir }: { collectionDir: string }) {
+export function rehypeImages({
+  collectionDir,
+  protected: isProtected = false,
+  slug: protectedSlug,
+}: {
+  collectionDir: string;
+  protected?: boolean;
+  slug?: string;
+}) {
   return async (tree: Node, file: VFileLike): Promise<void> => {
     // Injected by `@content-collections/mdx` as the first remark plugin.
     const meta = file.data._meta as PostMeta | undefined;
@@ -47,15 +58,53 @@ export function rehypeImages({ collectionDir }: { collectionDir: string }) {
     if (images.length === 0) return;
 
     const postDir = postDirectory(meta, collectionDir);
-    const slug = postSlug(meta);
+    const slug = protectedSlug ?? postSlug(meta);
+    const collectionRoot = path.join(process.cwd(), collectionDir);
     let isFirst = true;
 
     for (const node of images) {
       const src = node.properties?.src;
       if (typeof src !== "string" || src.trim() === "") continue;
 
-      const source = await resolveSource(src, postDir);
+      const source = await resolveSource(src, postDir, {
+        confineTo: isProtected ? postDir : collectionRoot,
+        rejectPublic: isProtected,
+      });
       if (source.kind === "remote") continue;
+
+      if (isProtected) {
+        const relative = path
+          .relative(postDir, source.absolutePath)
+          .split(path.sep)
+          .join("/");
+
+        if (
+          relative === "" ||
+          relative === ".." ||
+          relative.startsWith(`..${path.sep}`) ||
+          path.isAbsolute(relative)
+        ) {
+          throw new Error(
+            `Image path escapes the encrypted post directory: ${src}`,
+          );
+        }
+
+        const { width, height, blurDataURL } = await imageMeta(
+          source.absolutePath,
+        );
+
+        node.properties = {
+          ...node.properties,
+          src: toProtectedPostImageUrl(slug, relative),
+          width,
+          height,
+          "data-blur": blurDataURL,
+          "data-priority": isFirst ? "true" : "false",
+        };
+
+        isFirst = false;
+        continue;
+      }
 
       const url = await toPublicUrl(source.absolutePath, slug);
       const { width, height, blurDataURL } = await imageMeta(

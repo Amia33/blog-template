@@ -22,7 +22,10 @@ function getSessionOptions() {
   }
 
   return {
-    cookieName: "protected_session",
+    cookieName:
+      process.env.NODE_ENV === "production"
+        ? "__Host-protected_session"
+        : "protected_session",
     password,
     ttl: TTL_SECONDS,
     cookieOptions: {
@@ -50,6 +53,7 @@ export async function setProtectedSession(scope: string): Promise<void> {
 
 export async function hasProtectedSession(scope: string): Promise<boolean> {
   const session = await getSession();
+  if (session.v !== 1) return false;
   return (session.scopes?.[scope] ?? 0) > Date.now();
 }
 

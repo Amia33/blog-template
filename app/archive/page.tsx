@@ -18,8 +18,8 @@ export default function ArchivePage() {
   const posts: ArchivePost[] = getSortedPosts().map((post) => ({
     slug: post.slug,
     title: post.title,
-    tags: post.tags,
-    category: post.category,
+    tags: post.encrypted ? [] : post.tags,
+    category: post.encrypted ? null : post.category,
     published: post.published,
     pinned: post.pinned,
     encrypted: post.encrypted,

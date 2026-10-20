@@ -49,14 +49,25 @@ export default function PostCard({ post }: { post: Post }) {
             className="mt-1"
           />
           <p className="mt-3 line-clamp-2 text-base-content/75">{summary}</p>
-          <div className="mt-3 text-xs text-base-content/50">
-            {post.words} {t(post.words === 1 ? "wordCount" : "wordsCount")}
-            {" · "}
-            {post.readingTime}{" "}
-            {t(post.readingTime === 1 ? "minuteCount" : "minutesCount")}
-          </div>
+          {!post.encrypted ? (
+            <div className="mt-3 text-xs text-base-content/50">
+              {post.words} {t(post.words === 1 ? "wordCount" : "wordsCount")}
+              {" · "}
+              {post.readingTime}{" "}
+              {t(post.readingTime === 1 ? "minuteCount" : "minutesCount")}
+            </div>
+          ) : null}
         </div>
-        {post.cover ? (
+        {post.encrypted ? (
+          <Link
+            href={href}
+            aria-label={post.title}
+            transitionTypes={["nav-forward"]}
+            className="post-card-cover flex items-center justify-center bg-base-200"
+          >
+            <Icon name="lock" className="text-4xl opacity-30" />
+          </Link>
+        ) : post.cover ? (
           <Link
             href={href}
             aria-label={post.title}

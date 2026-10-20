@@ -1,6 +1,6 @@
 {
   "name": "blog-template",
-  "version": "26.10.18",
+  "version": "26.10.20",
   "private": true,
   "scripts": {
     "dev": "next dev",

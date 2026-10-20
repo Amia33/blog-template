@@ -1,5 +1,7 @@
 import "server-only";
 
+import { connection } from "next/server";
+
 import Lightbox from "@/components/post/lightbox";
 import Markdown from "@/components/post/markdown";
 import MdxContent from "@/components/post/mdx-content";
@@ -14,6 +16,7 @@ export default async function ProtectedPostBody({
   slug: string;
   hint: string;
 }) {
+  await connection();
   const unlocked = await hasProtectedSession(`post:${slug}`);
 
   if (!unlocked) {

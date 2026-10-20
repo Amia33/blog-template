@@ -5,6 +5,8 @@ type Bucket = {
   resetAt: number;
 };
 
+// Best-effort per serverless instance; the Vercel Firewall is the
+// authoritative limiter across instances.
 const buckets = new Map<string, Bucket>();
 
 export type RateLimitResult = {

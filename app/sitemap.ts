@@ -20,19 +20,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }),
   );
 
-  const postRoutes: MetadataRoute.Sitemap = posts.map((post) => ({
-    url: `${siteConfig.url}${getPostUrlBySlug(post.slug)}`,
-    lastModified: post.updated ?? post.published,
-    changeFrequency: "weekly" as const,
-    priority: 0.7,
-  }));
+  const postRoutes: MetadataRoute.Sitemap = posts
+    .filter((post) => !post.encrypted)
+    .map((post) => ({
+      url: `${siteConfig.url}${getPostUrlBySlug(post.slug)}`,
+      lastModified: post.updated ?? post.published,
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    }));
 
-  const albumRoutes: MetadataRoute.Sitemap = getAlbums().map((album) => ({
-    url: `${siteConfig.url}${getAlbumUrl(album.slug)}`,
-    lastModified: album.date,
-    changeFrequency: "monthly" as const,
-    priority: 0.6,
-  }));
+  const albumRoutes: MetadataRoute.Sitemap = getAlbums()
+    .filter((album) => !album.encrypted)
+    .map((album) => ({
+      url: `${siteConfig.url}${getAlbumUrl(album.slug)}`,
+      lastModified: album.date,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    }));
 
   return [
     {
