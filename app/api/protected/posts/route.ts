@@ -2,6 +2,8 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 import { getPostBySlug } from "@/lib/content";
+import { isProtectedConfigured } from "@/lib/protected/env";
+import { protectedError, protectedFile } from "@/lib/protected/http";
 import { hasProtectedSession } from "@/lib/protected/session";
 
 const CONTENT_TYPES: Record<string, string> = {
@@ -18,33 +20,37 @@ export async function GET(request: Request) {
   const slug = searchParams.get("slug");
   const file = searchParams.get("path");
 
+  if (!isProtectedConfigured()) {
+    return protectedError(503, "Protected content is unavailable");
+  }
+
   if (!slug || !file || slug.length > 200 || file.length > 500) {
-    return new Response("Not found", { status: 404 });
+    return protectedError(404, "Not found");
   }
 
   const post = getPostBySlug(slug);
 
   if (!post || !post.encrypted) {
-    return new Response("Not found", { status: 404 });
+    return protectedError(404, "Not found");
   }
 
   if (!(await hasProtectedSession(`post:${slug}`))) {
-    return new Response("Unauthorized", { status: 401 });
+    return protectedError(401, "Unauthorized");
   }
 
   if (file.includes("..") || path.isAbsolute(file)) {
-    return new Response("Not found", { status: 404 });
+    return protectedError(404, "Not found");
   }
 
   if (!post.protectedImages.includes(file)) {
-    return new Response("Not found", { status: 404 });
+    return protectedError(404, "Not found");
   }
 
   const root = path.join(process.cwd(), "content/posts", post._meta.directory);
   const absolute = path.resolve(root, file);
 
   if (!absolute.startsWith(root + path.sep)) {
-    return new Response("Not found", { status: 404 });
+    return protectedError(404, "Not found");
   }
 
   try {
@@ -53,14 +59,8 @@ export async function GET(request: Request) {
       CONTENT_TYPES[path.extname(absolute).toLowerCase()] ??
       "application/octet-stream";
 
-    return new Response(data, {
-      headers: {
-        "Content-Type": contentType,
-        "Cache-Control": "private, no-store",
-        "X-Content-Type-Options": "nosniff",
-      },
-    });
+    return protectedFile(data, contentType);
   } catch {
-    return new Response("Not found", { status: 404 });
+    return protectedError(404, "Not found");
   }
 }

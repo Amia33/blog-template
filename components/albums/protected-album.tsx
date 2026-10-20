@@ -6,10 +6,12 @@ import AlbumGallery from "@/components/albums/album-gallery";
 import Lightbox from "@/components/post/lightbox";
 import PasswordGate from "@/components/post/password-gate";
 import { getAlbumBySlug } from "@/lib/albums";
+import ProtectedUnavailable from "@/components/protected/protected-unavailable";
 import {
   getProtectedAlbumPhotos,
   toProtectedPhotoUrl,
 } from "@/lib/protected/albums";
+import { isProtectedConfigured } from "@/lib/protected/env";
 import { hasProtectedSession } from "@/lib/protected/session";
 
 export default async function ProtectedAlbum({
@@ -22,6 +24,11 @@ export default async function ProtectedAlbum({
   hint: string;
 }) {
   await connection();
+
+  if (!isProtectedConfigured()) {
+    return <ProtectedUnavailable />;
+  }
+
   const unlocked = await hasProtectedSession(`album:${slug}`);
 
   if (!unlocked) {

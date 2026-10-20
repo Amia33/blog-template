@@ -3,6 +3,15 @@ import "server-only";
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
 
+import { getProtectedSecret, MIN_SECRET_LENGTH } from "@/lib/protected/env";
+
+export class ProtectedConfigError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ProtectedConfigError";
+  }
+}
+
 export type ProtectedSession = {
   v: 1;
   scopes: Record<string, number>;
@@ -12,12 +21,12 @@ const TTL_SECONDS = 30 * 60;
 const TTL_MS = TTL_SECONDS * 1000;
 
 function getSessionOptions() {
-  const password = process.env.PROTECTED_SESSION_SECRET;
+  const password = getProtectedSecret();
 
-  if (!password || password.length < 32) {
-    throw new Error(
-      "PROTECTED_SESSION_SECRET must be set to at least 32 characters. " +
-        "Generate one with `openssl rand -base64 32`.",
+  if (!password) {
+    throw new ProtectedConfigError(
+      `PROTECTED_SESSION_SECRET must be set to at least ${MIN_SECRET_LENGTH} ` +
+        "characters. Generate one with `openssl rand -base64 32`.",
     );
   }
 

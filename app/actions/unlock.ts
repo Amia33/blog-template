@@ -4,6 +4,7 @@ import { checkBotId } from "botid/server";
 import { headers } from "next/headers";
 
 import { getAlbumBySlug, getPostBySlug } from "@/lib/content";
+import { isProtectedConfigured } from "@/lib/protected/env";
 import { verifyAlbumPassword } from "@/lib/protected/albums";
 import { verifyPostPassword } from "@/lib/protected/posts";
 import { checkRateLimit, clearRateLimit } from "@/lib/protected/rate-limit";
@@ -66,6 +67,10 @@ export async function unlockPost(
   _previous: UnlockState,
   formData: FormData,
 ): Promise<UnlockState> {
+  if (!isProtectedConfigured()) {
+    return { ok: false, error: t("protectedUnavailableDescription") };
+  }
+
   const credentials = readCredentials(formData);
 
   if (!credentials) {
@@ -80,7 +85,7 @@ export async function unlockPost(
   }
 
   if (await isBotRequest()) {
-    return { ok: false, error: t("tooManyAttempts") };
+    return { ok: false, error: t("botRejected") };
   }
 
   const post = getPostBySlug(credentials.slug);
@@ -103,6 +108,10 @@ export async function unlockAlbum(
   _previous: UnlockState,
   formData: FormData,
 ): Promise<UnlockState> {
+  if (!isProtectedConfigured()) {
+    return { ok: false, error: t("protectedUnavailableDescription") };
+  }
+
   const credentials = readCredentials(formData);
 
   if (!credentials) {
@@ -117,7 +126,7 @@ export async function unlockAlbum(
   }
 
   if (await isBotRequest()) {
-    return { ok: false, error: t("tooManyAttempts") };
+    return { ok: false, error: t("botRejected") };
   }
 
   const album = getAlbumBySlug(credentials.slug);

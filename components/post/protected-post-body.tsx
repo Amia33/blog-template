@@ -6,6 +6,8 @@ import Lightbox from "@/components/post/lightbox";
 import Markdown from "@/components/post/markdown";
 import MdxContent from "@/components/post/mdx-content";
 import PasswordGate from "@/components/post/password-gate";
+import ProtectedUnavailable from "@/components/protected/protected-unavailable";
+import { isProtectedConfigured } from "@/lib/protected/env";
 import { getProtectedPostForRender } from "@/lib/protected/posts";
 import { hasProtectedSession } from "@/lib/protected/session";
 
@@ -17,6 +19,11 @@ export default async function ProtectedPostBody({
   hint: string;
 }) {
   await connection();
+
+  if (!isProtectedConfigured()) {
+    return <ProtectedUnavailable />;
+  }
+
   const unlocked = await hasProtectedSession(`post:${slug}`);
 
   if (!unlocked) {

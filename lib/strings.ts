@@ -51,6 +51,11 @@ export const UI = {
   invalidPassword: "パスワードが正しくありません。",
   tooManyAttempts:
     "試行回数が多すぎます。しばらく待ってからもう一度お試しください。",
+  botRejected:
+    "アクセスを確認できませんでした。時間をおいて再度お試しください。",
+  protectedUnavailable: "保護されたコンテンツを表示できません",
+  protectedUnavailableDescription:
+    "サーバーの設定が完了していないため、現在このコンテンツを表示できません。",
   showPassword: "パスワードを表示",
   hidePassword: "パスワードを隠す",
   loadMore: "もっと読み込む",
@@ -99,6 +104,10 @@ export const UI = {
   pageNotFound: "ページが見つかりません",
   pageNotFoundDescription:
     "お探しのページは移動したか、削除された可能性があります。",
+  errorTitle: "エラーが発生しました",
+  errorDescription:
+    "ページを表示できませんでした。時間をおいて再度お試しください。",
+  retry: "再試行",
   backHome: "ホームへ戻る",
   goToArchive: "アーカイブを見る",
   momentsDescription: "日々の短い記録。写真やタグを添えて。",

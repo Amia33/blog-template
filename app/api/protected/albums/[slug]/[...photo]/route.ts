@@ -2,6 +2,8 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 import { getAlbumBySlug } from "@/lib/albums";
+import { isProtectedConfigured } from "@/lib/protected/env";
+import { protectedError, protectedFile } from "@/lib/protected/http";
 import { hasProtectedSession } from "@/lib/protected/session";
 
 const CONTENT_TYPES: Record<string, string> = {
@@ -22,14 +24,19 @@ export async function GET(
   },
 ) {
   const { slug, photo } = await params;
+
+  if (!isProtectedConfigured()) {
+    return protectedError(503, "Protected content is unavailable");
+  }
+
   const album = getAlbumBySlug(slug);
 
   if (!album || !album.encrypted) {
-    return new Response("Not found", { status: 404 });
+    return protectedError(404, "Not found");
   }
 
   if (!(await hasProtectedSession(`album:${slug}`))) {
-    return new Response("Unauthorized", { status: 401 });
+    return protectedError(401, "Unauthorized");
   }
 
   const requested = photo.join("/");
@@ -39,7 +46,7 @@ export async function GET(
     requested.includes("..") ||
     path.isAbsolute(requested)
   ) {
-    return new Response("Not found", { status: 404 });
+    return protectedError(404, "Not found");
   }
 
   const allowed = album.protectedPhotos.some(
@@ -47,14 +54,14 @@ export async function GET(
   );
 
   if (!allowed) {
-    return new Response("Not found", { status: 404 });
+    return protectedError(404, "Not found");
   }
 
   const root = path.join(process.cwd(), "content/albums", slug, "photos");
   const absolute = path.resolve(root, requested);
 
   if (!absolute.startsWith(root + path.sep)) {
-    return new Response("Not found", { status: 404 });
+    return protectedError(404, "Not found");
   }
 
   try {
@@ -63,14 +70,8 @@ export async function GET(
       CONTENT_TYPES[path.extname(absolute).toLowerCase()] ??
       "application/octet-stream";
 
-    return new Response(data, {
-      headers: {
-        "Content-Type": contentType,
-        "Cache-Control": "private, no-store",
-        "X-Content-Type-Options": "nosniff",
-      },
-    });
+    return protectedFile(data, contentType);
   } catch {
-    return new Response("Not found", { status: 404 });
+    return protectedError(404, "Not found");
   }
 }
