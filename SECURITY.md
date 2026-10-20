@@ -30,9 +30,8 @@ To report a vulnerability, please send an E-mail to `admin#amia.work` (change
   `Referrer-Policy`, `X-Frame-Options`, and `Permissions-Policy`. CSP is
   intentionally deferred; if added, use hashes or static script files so
   static/PPR caching keeps working.
-- **Dependency overrides** in `pnpm-workspace.yaml` pin patched `katex`,
-  `toml`, `uuid`, and `postcss-selector-parser` versions. One build-time
-  advisory remains in `sprintf-js` (no patched version; reached through
-  `gray-matter`/`js-yaml`/`argparse`) and is limited to trusted repository
-  content during the build. `braces` is dev-only. Re-check after upstream
-  releases.
+- **Dependencies:** no pnpm overrides are currently pinned. Run `pnpm audit` after dependency
+  changes and pin patched versions only when an advisory affects a shipped path.
+- **Protected content configuration:** production builds fail if
+  `PROTECTED_SESSION_SECRET` is missing or shorter than 32 characters. Preview and local
+  development render protected content as unavailable instead of failing.
