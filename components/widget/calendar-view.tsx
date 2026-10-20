@@ -96,7 +96,7 @@ export default function CalendarView({
       <div className="mb-2 flex items-center justify-between gap-2">
         <button
           type="button"
-          className="btn btn-ghost btn-xs btn-square"
+          className="relative btn btn-ghost btn-xs btn-square after:absolute after:-inset-2.5 after:content-['']"
           aria-label={t("previous")}
           disabled={monthIndex <= 0}
           onClick={() => {
@@ -110,7 +110,7 @@ export default function CalendarView({
         <span className="text-sm font-semibold">{monthLabel}</span>
         <button
           type="button"
-          className="btn btn-ghost btn-xs btn-square"
+          className="relative btn btn-ghost btn-xs btn-square after:absolute after:-inset-2.5 after:content-['']"
           aria-label={t("next")}
           disabled={monthIndex < 0 || monthIndex >= months.length - 1}
           onClick={() => {
@@ -123,7 +123,7 @@ export default function CalendarView({
         </button>
       </div>
 
-      <div className="grid grid-cols-7 gap-1 text-center text-[0.7rem] opacity-70">
+      <div className="grid grid-cols-7 gap-1 text-center text-xs opacity-70">
         {weekdays.map((weekday, index) => (
           <span key={`${weekday}-${index}`}>{weekday}</span>
         ))}
@@ -154,7 +154,7 @@ export default function CalendarView({
               className={`flex h-7 items-center justify-center rounded-field text-xs transition-colors ${
                 hasPosts
                   ? "bg-primary/10 text-primary hover:bg-primary hover:text-primary-content"
-                  : "opacity-60"
+                  : "opacity-70"
               } ${isToday ? "ring-1 ring-primary" : ""} ${
                 isSelected ? "font-bold" : ""
               }`}

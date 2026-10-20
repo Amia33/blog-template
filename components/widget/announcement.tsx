@@ -62,7 +62,7 @@ export default function Announcement() {
           <button
             type="button"
             aria-label={t("close")}
-            className="btn btn-ghost btn-xs btn-square"
+            className="relative btn btn-ghost btn-xs btn-square after:absolute after:-inset-2.5 after:content-['']"
             onClick={() => {
               localStorage.setItem(STORAGE_KEY, String(Date.now()));
               emit();
