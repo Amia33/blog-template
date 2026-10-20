@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import DisplaySettings from "@/components/layout/display-settings";
+import NavLink from "@/components/layout/nav-link";
 import NavMenu from "@/components/layout/nav-menu";
 import { Icon } from "@/components/ui/icon";
 import ThemeSwitch from "@/components/widget/theme-switch";
@@ -23,21 +24,7 @@ export default function Navbar() {
           <ul className="menu menu-horizontal gap-1 px-1">
             {links.map((link) => (
               <li key={link.name}>
-                {link.external ? (
-                  <a
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="gap-1 font-medium"
-                  >
-                    {link.name}
-                    <Icon name="external" className="text-xs opacity-50" />
-                  </a>
-                ) : (
-                  <Link href={link.url} className="font-medium">
-                    {link.name}
-                  </Link>
-                )}
+                <NavLink link={link} className="gap-1 font-medium" />
               </li>
             ))}
           </ul>

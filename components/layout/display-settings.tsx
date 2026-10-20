@@ -119,14 +119,14 @@ export default function DisplaySettings() {
 
   return (
     <div className="dropdown dropdown-end">
-      <div
-        tabIndex={0}
-        role="button"
+      <button
+        type="button"
         className="btn btn-ghost btn-square"
         aria-label={t("displaySettings")}
+        aria-haspopup="true"
       >
         <Icon name="palette" className="text-xl" />
-      </div>
+      </button>
       <div
         tabIndex={0}
         className="dropdown-content z-50 mt-2 w-72 rounded-box bg-base-100 p-4 shadow"
@@ -180,8 +180,14 @@ export default function DisplaySettings() {
                   >
                     <span
                       data-preview={item.value}
-                      className="texture-preview mb-1 block h-6 rounded-field border border-base-300 bg-base-200"
-                    />
+                      className="texture-preview relative mb-1 block h-6 rounded-field border border-base-300 bg-base-200"
+                    >
+                      {preset === item.value ? (
+                        <span className="absolute inset-0 flex items-center justify-center">
+                          <Icon name="check" className="text-sm text-primary" />
+                        </span>
+                      ) : null}
+                    </span>
                     {item.label}
                   </button>
                 ))}
