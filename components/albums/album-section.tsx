@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 
 import AlbumCard from "@/components/albums/album-card";
+import FilterChip from "@/components/ui/filter-chip";
 import { Icon } from "@/components/ui/icon";
 import type { AlbumIndexItem } from "@/lib/content";
 import { t } from "@/lib/strings";
@@ -61,36 +62,51 @@ export default function AlbumSection({ albums }: { albums: AlbumIndexItem[] }) {
 
         {tags.length > 0 ? (
           <div className="mt-3 flex flex-wrap gap-1">
-            <button
-              type="button"
+            <FilterChip
+              active={activeTag === ""}
               onClick={() => {
                 setActiveTag("");
                 setShownCount(12);
               }}
-              className={`badge badge-sm ${activeTag === "" ? "badge-primary" : "badge-ghost"}`}
             >
               {t("allTags")}
-            </button>
+            </FilterChip>
             {tags.map((tag) => (
-              <button
+              <FilterChip
                 key={tag}
-                type="button"
+                active={activeTag === tag}
                 onClick={() => {
                   setActiveTag(tag === activeTag ? "" : tag);
                   setShownCount(12);
                 }}
-                className={`badge badge-sm ${activeTag === tag ? "badge-primary" : "badge-ghost"}`}
               >
                 #{tag}
-              </button>
+              </FilterChip>
             ))}
           </div>
         ) : null}
       </div>
 
+      <p className="sr-only" role="status" aria-live="polite">
+        {filtered.length} {t("postCount")}
+      </p>
+
       {visible.length === 0 ? (
-        <div className="card bg-base-100 p-8 text-center opacity-70">
-          {t("noResults")}
+        <div className="card bg-base-100 p-8 text-center">
+          <p className="opacity-70">{t("noResults")}</p>
+          {query || activeTag ? (
+            <button
+              type="button"
+              onClick={() => {
+                setQuery("");
+                setActiveTag("");
+                setShownCount(12);
+              }}
+              className="btn btn-sm mt-3 self-center"
+            >
+              {t("clearFilters")}
+            </button>
+          ) : null}
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
