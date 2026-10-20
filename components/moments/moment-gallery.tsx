@@ -18,12 +18,19 @@ export default function MomentGallery({
 }) {
   if (images.length === 0) return null;
 
+  const galleryColumns =
+    images.length === 1
+      ? "max-w-md grid-cols-1"
+      : images.length === 2
+        ? "grid-cols-2"
+        : "grid-cols-2 sm:grid-cols-3";
+
   return (
-    <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+    <div className={`mt-3 grid gap-2 ${galleryColumns}`}>
       {images.map((image, index) => (
         <figure
           key={`${image.src}-${index}`}
-          className="overflow-hidden rounded-box bg-base-200"
+          className="gallery-figure overflow-hidden rounded-box bg-base-200"
         >
           {image.remote || image.width === 0 || image.height === 0 ? (
             // eslint-disable-next-line @next/next/no-img-element
