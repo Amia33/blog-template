@@ -21,7 +21,7 @@ export default function Banner() {
         alt=""
         fill
         priority
-        sizes="100vw"
+        sizes="(min-width: 1280px) 52rem, (min-width: 1024px) calc(100vw - 19rem), 100vw"
         className="object-cover"
         style={{ objectPosition }}
       />

@@ -1,38 +1,67 @@
-# Amia33/blog-template
+# Blog
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+A Next.js 16 (App Router) blog built with content-collections, Tailwind CSS 4 + daisyUI 5,
+MDX + Expressive Code, and Argon2-protected posts and albums. Deployed on Vercel at
+`https://446256.xyz`.
 
-## Getting Started
+## Requirements
 
-First, run the development server:
+- Node.js >= 20.9
+- pnpm 12 (see `packageManager` in `package.json`)
+
+## Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+env -u NODE_ENV pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open <http://localhost:3000>. If your shell exports `NODE_ENV=production`, unset it for
+development; Next expects `development` under `next dev`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Name                       | Required   | Notes                                                            |
+| -------------------------- | ---------- | ---------------------------------------------------------------- |
+| `PROTECTED_SESSION_SECRET` | Production | At least 32 characters. Generate with `openssl rand -base64 32`. |
 
-## Learn More
+Production builds fail when the secret is missing or too short. Preview deployments and local
+development render protected content as unavailable instead of failing the build.
 
-To learn more about Next.js, take a look at the following resources:
+## Scripts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `pnpm dev` — start the development server.
+- `pnpm build` — production build (also runs the content-collections and image steps).
+- `pnpm start` — serve the production build locally.
+- `pnpm lint` — ESLint.
+- `pnpm typecheck` — TypeScript without emitting.
+- `pnpm new-post` — scaffold a new post.
+- `pnpm hash-password "your-password"` — generate an Argon2id hash for protected content.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Content
 
-## Deploy on Vercel
+- `content/posts/**` — Markdown/MDX posts. Colocate post images with `index.md` and reference
+  them relatively.
+- `content/moments/*.md` — short moment entries.
+- `content/albums/<slug>/index.md` — flat albums only. Public photos live under
+  `public/images/albums/<slug>/`; protected photos live under
+  `content/albums/<slug>/photos/`.
+- `content/spec/about.mdx` — the about page.
+- `public/content/` is generated during the build; do not edit it by hand.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Nested album directories are rejected at build time because the album routes and the protected
+photo API only match a single slug segment.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Protected content
+
+Set `encrypted: true` and a `passwordHash` using Argon2id with `m >= 19456`, `t >= 2`, `p >= 1`.
+Protected images are served through `/api/protected/posts` and `/api/protected/albums` only after
+the session check. The sample encrypted post and album use demo credentials; replace or remove
+them before using this as a real personal blog.
+
+## Deployment
+
+- `master` deploys to production on Vercel.
+- Work on a feature branch, run `pnpm lint && pnpm typecheck && pnpm build`, then verify the
+  Vercel preview before merging.
+- No CI workflow is configured by choice; the checks above are run locally before merging.

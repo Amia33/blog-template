@@ -208,6 +208,9 @@ const moments = defineCollection({
   },
 });
 
+// Albums are intentionally flat: routes and the protected-photo API only match
+// a single slug segment. Nested directories fail the build below instead of
+// silently producing an unreachable URL.
 const albums = defineCollection({
   name: "albums",
   directory: ALBUMS_DIRECTORY,
@@ -244,6 +247,14 @@ const albums = defineCollection({
 
     const meta = document._meta;
     const slug = postSlug(meta);
+
+    if (slug.includes("/")) {
+      throw new Error(
+        `${meta.path}: nested albums are not supported. ` +
+          "Move the album to content/albums/<slug>/index.md.",
+      );
+    }
+
     const albumDirectory = meta.directory;
     const publicRoot = path.join(
       process.cwd(),

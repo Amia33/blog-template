@@ -2,6 +2,15 @@ import { withContentCollections } from "@content-collections/next";
 import { withBotId } from "botid/next/config";
 import type { NextConfig } from "next";
 
+import { isProtectedConfigured } from "./lib/protected/env";
+
+if (process.env.VERCEL_ENV === "production" && !isProtectedConfigured()) {
+  throw new Error(
+    "PROTECTED_SESSION_SECRET must be set to at least 32 characters for " +
+      "production builds. Generate one with `openssl rand -base64 32`.",
+  );
+}
+
 const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,

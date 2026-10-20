@@ -74,11 +74,39 @@ export async function generateMetadata({
   };
 }
 
-export default async function AlbumPage({
+function AlbumPageSkeleton() {
+  return (
+    <article className="card bg-base-100 p-6 md:p-9" aria-hidden="true">
+      <div className="skeleton mb-3 h-9 w-2/3" />
+      <div className="skeleton mb-3 h-4 w-1/2" />
+      <div className="skeleton mb-5 h-4 w-40" />
+      <div className="skeleton mb-5 h-64 w-full rounded-box" />
+      <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3">
+        {Array.from({ length: 6 }, (_, index) => (
+          <div key={index} className="skeleton aspect-[4/3] rounded-box" />
+        ))}
+      </div>
+    </article>
+  );
+}
+
+export default function AlbumPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  return (
+    <PageShell page="albums">
+      <DirectionalTransition>
+        <Suspense fallback={<AlbumPageSkeleton />}>
+          <AlbumContent params={params} />
+        </Suspense>
+      </DirectionalTransition>
+    </PageShell>
+  );
+}
+
+async function AlbumContent({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const album = getAlbumBySlug(slug);
 
@@ -87,80 +115,75 @@ export default async function AlbumPage({
   const photoCount = album.photos.length;
 
   return (
-    <PageShell page="albums">
-      <DirectionalTransition>
-        <article className="card bg-base-100 p-6 md:p-9">
-          <h1 className="text-3xl font-bold md:text-4xl">{album.title}</h1>
+    <article className="card bg-base-100 p-6 md:p-9">
+      <h1 className="text-3xl font-bold md:text-4xl">{album.title}</h1>
 
-          {album.description ? (
-            <p className="mt-2 opacity-70">{album.description}</p>
-          ) : null}
+      {album.description ? (
+        <p className="mt-2 opacity-70">{album.description}</p>
+      ) : null}
 
-          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm opacity-60">
-            <span className="flex items-center gap-1">
-              <Icon name="calendar" className="text-base" />
-              {formatDateToYYYYMMDD(album.date)}
+      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm opacity-60">
+        <span className="flex items-center gap-1">
+          <Icon name="calendar" className="text-base" />
+          {formatDateToYYYYMMDD(album.date)}
+        </span>
+        {album.location ? (
+          <span className="flex items-center gap-1">
+            <Icon name="location" className="text-base" />
+            {album.location}
+          </span>
+        ) : null}
+        {!album.encrypted ? (
+          <span className="flex items-center gap-1">
+            <Icon name="photo" className="text-base" />
+            {photoCount} {t(photoCount === 1 ? "photoCount" : "photosCount")}
+          </span>
+        ) : null}
+        {album.encrypted ? (
+          <span className="flex items-center gap-1 text-warning">
+            <Icon name="lock" className="text-base" />
+            {t("protected")}
+          </span>
+        ) : null}
+      </div>
+
+      {album.tags.length > 0 ? (
+        <div className="mt-2 flex flex-wrap gap-1">
+          {album.tags.map((tag) => (
+            <span key={tag} className="badge badge-ghost badge-sm">
+              #{tag}
             </span>
-            {album.location ? (
-              <span className="flex items-center gap-1">
-                <Icon name="location" className="text-base" />
-                {album.location}
-              </span>
-            ) : null}
-            {!album.encrypted ? (
-              <span className="flex items-center gap-1">
-                <Icon name="photo" className="text-base" />
-                {photoCount}{" "}
-                {t(photoCount === 1 ? "photoCount" : "photosCount")}
-              </span>
-            ) : null}
-            {album.encrypted ? (
-              <span className="flex items-center gap-1 text-warning">
-                <Icon name="lock" className="text-base" />
-                {t("protected")}
-              </span>
-            ) : null}
-          </div>
+          ))}
+        </div>
+      ) : null}
 
-          {album.tags.length > 0 ? (
-            <div className="mt-2 flex flex-wrap gap-1">
-              {album.tags.map((tag) => (
-                <span key={tag} className="badge badge-ghost badge-sm">
-                  #{tag}
-                </span>
-              ))}
-            </div>
-          ) : null}
+      {!album.encrypted && album.cover ? (
+        <PostCover
+          cover={album.cover}
+          alt={album.title}
+          sizes="(min-width: 768px) 768px, 100vw"
+          priority
+          className="mt-5 h-auto w-full rounded-box object-cover"
+        />
+      ) : null}
 
-          {!album.encrypted && album.cover ? (
-            <PostCover
-              cover={album.cover}
-              alt={album.title}
-              sizes="(min-width: 768px) 768px, 100vw"
-              priority
-              className="mt-5 h-auto w-full rounded-box object-cover"
-            />
-          ) : null}
-
-          {album.encrypted ? (
-            <Suspense fallback={<GallerySkeleton />}>
-              <ProtectedAlbum
-                slug={album.slug}
-                title={album.title}
-                hint={album.passwordHint}
-              />
-            </Suspense>
-          ) : (
-            <Lightbox>
-              <AlbumGallery
-                photos={toGalleryPhotos(album)}
-                layout={album.layout}
-                columns={album.columns}
-              />
-            </Lightbox>
-          )}
-        </article>
-      </DirectionalTransition>
-    </PageShell>
+      {album.encrypted ? (
+        <Suspense fallback={<GallerySkeleton />}>
+          <ProtectedAlbum
+            slug={album.slug}
+            title={album.title}
+            hint={album.passwordHint}
+          />
+        </Suspense>
+      ) : (
+        <Lightbox>
+          <AlbumGallery
+            photos={toGalleryPhotos(album)}
+            layout={album.layout}
+            columns={album.columns}
+          />
+        </Lightbox>
+      )}
+    </article>
   );
 }

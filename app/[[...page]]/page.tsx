@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 
 import Banner from "@/components/layout/banner";
 import DirectionalTransition from "@/components/layout/directional-transition";
@@ -11,9 +11,18 @@ import { getSortedPosts } from "@/lib/content";
 import { pageAlternates } from "@/lib/seo";
 import { t } from "@/lib/strings";
 
+// Unknown pagination params must wait for their static result (a 404 or the /1
+// redirect) instead of serving the Partial Prerender shell as a 200.
 export const ensureStatic = "navigation";
 
 const PAGE_SIZE = postListConfig.pageSize;
+const PAGE_SEGMENT = /^\d{1,6}$/;
+
+function parsePageSegment(page?: string[]): number | null {
+  if (!page || page.length === 0) return 1;
+  if (page.length > 1 || !PAGE_SEGMENT.test(page[0])) return null;
+  return Number(page[0]);
+}
 
 function getPagination() {
   const posts = getSortedPosts();
@@ -29,7 +38,7 @@ export function generateStaticParams() {
       page: [String(index + 2)],
     }),
   );
-  return [{ page: [] }, ...pages];
+  return [{ page: [] }, { page: ["1"] }, ...pages];
 }
 
 export async function generateMetadata({
@@ -38,7 +47,9 @@ export async function generateMetadata({
   params: Promise<{ page?: string[] }>;
 }): Promise<Metadata> {
   const { page } = await params;
-  const currentPage = page && page.length > 0 ? Number(page[0]) : 1;
+  const currentPage = parsePageSegment(page);
+
+  if (currentPage === null) return {};
 
   return {
     alternates: pageAlternates(currentPage > 1 ? `/${currentPage}` : "/"),
@@ -54,7 +65,13 @@ export default async function HomePage({
   params: Promise<{ page?: string[] }>;
 }) {
   const { page } = await params;
-  const currentPage = page && page.length > 0 ? Number(page[0]) : 1;
+  const currentPage = parsePageSegment(page);
+
+  if (currentPage === null) notFound();
+
+  if (currentPage === 1 && page && page.length === 1) {
+    permanentRedirect("/");
+  }
 
   const { posts, lastPage } = getPagination();
 

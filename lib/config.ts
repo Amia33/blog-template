@@ -14,8 +14,8 @@ import {
 } from "@/lib/types/config";
 
 export const siteConfig: SiteConfig = {
-  title: "Fuwari",
-  subtitle: "デモサイト",
+  title: "ブログ",
+  subtitle: "日々の記録",
   lang: "ja",
   url: "https://446256.xyz",
   themeColor: {
@@ -46,35 +46,14 @@ export const navBarConfig: NavBarConfig = {
     LinkPreset.Albums,
     LinkPreset.Timeline,
     LinkPreset.About,
-    {
-      name: "GitHub",
-      url: "https://github.com/saicaca/fuwari",
-      external: true,
-    },
   ],
 };
 
 export const profileConfig: ProfileConfig = {
   avatar: "/avatar.png",
-  name: "Lorem Ipsum",
-  bio: "Fuwari テーマのデモサイトです。日々の学びを書き留めています。",
-  links: [
-    {
-      name: "Twitter",
-      icon: "twitter",
-      url: "https://twitter.com",
-    },
-    {
-      name: "Steam",
-      icon: "steam",
-      url: "https://store.steampowered.com",
-    },
-    {
-      name: "GitHub",
-      icon: "github",
-      url: "https://github.com/saicaca/fuwari",
-    },
-  ],
+  name: "Your Name",
+  bio: "ここに自己紹介を入力してください。",
+  links: [],
 };
 
 export const licenseConfig: LicenseConfig = {
@@ -140,7 +119,7 @@ export const sidebarConfig: SidebarConfig = {
 
 export const announcementConfig: AnnouncementConfig = {
   title: "お知らせ",
-  content: "このサイトは Next.js 16 で動作しています。",
+  content: "ここにお知らせを入力できます。",
   closable: true,
   closeDuration: 7 * 24 * 60 * 60,
   link: {
