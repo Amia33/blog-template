@@ -1,5 +1,6 @@
 "use server";
 
+import { checkBotId } from "botid/server";
 import { headers } from "next/headers";
 
 import { getAlbumBySlug, getPostBySlug } from "@/lib/content";
@@ -23,6 +24,18 @@ async function getClientKey(scope: string): Promise<string> {
     "unknown";
 
   return `${ip}:${scope}`;
+}
+
+async function isBotRequest(): Promise<boolean> {
+  if (process.env.VERCEL !== "1") return false;
+
+  try {
+    const { isBot } = await checkBotId();
+    return isBot;
+  } catch (error) {
+    console.error("BotID check failed", error);
+    return false;
+  }
 }
 
 function readCredentials(
@@ -66,6 +79,10 @@ export async function unlockPost(
     return { ok: false, error: t("tooManyAttempts") };
   }
 
+  if (await isBotRequest()) {
+    return { ok: false, error: t("tooManyAttempts") };
+  }
+
   const post = getPostBySlug(credentials.slug);
 
   if (!post || !post.encrypted) {
@@ -96,6 +113,10 @@ export async function unlockAlbum(
   const rateLimit = checkRateLimit(key);
 
   if (!rateLimit.allowed) {
+    return { ok: false, error: t("tooManyAttempts") };
+  }
+
+  if (await isBotRequest()) {
     return { ok: false, error: t("tooManyAttempts") };
   }
 
