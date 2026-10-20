@@ -70,6 +70,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       className={`${mPlus1.variable} ${mPlus1Code.variable} ${notoSansSC.variable}`}
       data-texture-preset={textureConfig.defaultPreset}
       data-post-list-mode={postListConfig.layout.mode}
+      data-scroll-behavior="smooth"
       data-motion-reduced="false"
       style={
         {

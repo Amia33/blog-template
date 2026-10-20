@@ -7,7 +7,7 @@ import { getPostUrlBySlug } from "@/lib/utils";
 
 async function buildRssFeed(): Promise<string> {
   "use cache";
-  cacheLife("max");
+  cacheLife("days");
 
   // Protected posts are intentionally excluded. Their body is server-gated, so
   // publishing even a summary here would leak more than the site exposes.
