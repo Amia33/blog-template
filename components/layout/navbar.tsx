@@ -19,7 +19,7 @@ export default function Navbar() {
             <span className="text-base font-bold">{siteConfig.title}</span>
           </Link>
         </div>
-        <div className="navbar-center hidden md:flex">
+        <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal gap-1 px-1">
             {links.map((link) => (
               <li key={link.name}>
@@ -45,7 +45,7 @@ export default function Navbar() {
         <div className="navbar-end gap-1">
           <DisplaySettings />
           <ThemeSwitch />
-          <div className="md:hidden">
+          <div className="lg:hidden">
             <NavMenu links={links} />
           </div>
         </div>
