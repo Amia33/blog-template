@@ -1,13 +1,11 @@
 "use server";
 
 import { checkBotId } from "botid/server";
-import { headers } from "next/headers";
 
 import { getAlbumBySlug, getPostBySlug } from "@/lib/content";
 import { isProtectedConfigured } from "@/lib/protected/env";
 import { verifyAlbumPassword } from "@/lib/protected/albums";
 import { verifyPostPassword } from "@/lib/protected/posts";
-import { checkRateLimit, clearRateLimit } from "@/lib/protected/rate-limit";
 import { setProtectedSession } from "@/lib/protected/session";
 import { t } from "@/lib/strings";
 
@@ -16,17 +14,6 @@ export type UnlockState = {
   error?: string;
 };
 
-async function getClientKey(scope: string): Promise<string> {
-  const requestHeaders = await headers();
-  const forwarded = requestHeaders.get("x-forwarded-for");
-  const ip =
-    forwarded?.split(",")[0]?.trim() ||
-    requestHeaders.get("x-real-ip") ||
-    "unknown";
-
-  return `${ip}:${scope}`;
-}
-
 async function isBotRequest(): Promise<boolean> {
   if (process.env.VERCEL !== "1") return false;
 
@@ -34,8 +21,9 @@ async function isBotRequest(): Promise<boolean> {
     const { isBot } = await checkBotId();
     return isBot;
   } catch (error) {
+    // Fail closed: if BotID cannot classify the request, do not unlock.
     console.error("BotID check failed", error);
-    return false;
+    return true;
   }
 }
 
@@ -77,13 +65,6 @@ export async function unlockPost(
     return { ok: false, error: t("invalidPassword") };
   }
 
-  const key = await getClientKey(`post:${credentials.slug}`);
-  const rateLimit = checkRateLimit(key);
-
-  if (!rateLimit.allowed) {
-    return { ok: false, error: t("tooManyAttempts") };
-  }
-
   if (await isBotRequest()) {
     return { ok: false, error: t("botRejected") };
   }
@@ -99,7 +80,6 @@ export async function unlockPost(
   }
 
   await setProtectedSession(`post:${credentials.slug}`);
-  clearRateLimit(key);
 
   return { ok: true };
 }
@@ -118,13 +98,6 @@ export async function unlockAlbum(
     return { ok: false, error: t("invalidPassword") };
   }
 
-  const key = await getClientKey(`album:${credentials.slug}`);
-  const rateLimit = checkRateLimit(key);
-
-  if (!rateLimit.allowed) {
-    return { ok: false, error: t("tooManyAttempts") };
-  }
-
   if (await isBotRequest()) {
     return { ok: false, error: t("botRejected") };
   }
@@ -140,7 +113,6 @@ export async function unlockAlbum(
   }
 
   await setProtectedSession(`album:${credentials.slug}`);
-  clearRateLimit(key);
 
   return { ok: true };
 }
