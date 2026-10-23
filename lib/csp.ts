@@ -22,7 +22,8 @@ const directives = [
   "base-uri 'self'",
   "form-action 'self'",
   "frame-ancestors 'none'",
-  "upgrade-insecure-requests",
+  // Browsers ignore this directive in report-only policies; add it back when
+  // the header becomes an enforcing Content-Security-Policy.
   `report-uri ${CSP_REPORT_PATH}`,
 ];
 
