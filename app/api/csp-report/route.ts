@@ -49,7 +49,7 @@ export async function POST(request: Request) {
   const body = await request.text();
 
   if (body.length > MAX_BODY_SIZE) {
-    return new Response(null, { status: 413 });
+    return new Response("CSP report exceeds 16 KB\n", { status: 413 });
   }
 
   let payload: unknown;
@@ -57,7 +57,7 @@ export async function POST(request: Request) {
   try {
     payload = JSON.parse(body);
   } catch {
-    return new Response(null, { status: 400 });
+    return new Response("Expected a JSON CSP report\n", { status: 400 });
   }
 
   for (const report of toReports(payload)) {
