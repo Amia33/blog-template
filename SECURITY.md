@@ -32,7 +32,9 @@ To report a vulnerability, please send an E-mail to `admin#amia.work` (change
   stay allowed because Next.js inlines bootstrap/RSC payload scripts per page;
   a nonce would force dynamic rendering and disable static/PPR caching. Inline
   event-handler attributes are blocked with `script-src-attr 'none'`, and
-  violations are reported to `/api/csp-report`.
+  violations are reported to `/api/csp-report`. `media-src` is limited to the
+  site plus the media bucket (`oss.446256.xyz`), which is also allowed in
+  `connect-src` for Video.js streams.
 - **Dependencies:** no pnpm overrides are currently pinned. Run `pnpm audit` after dependency
   changes and pin patched versions only when an advisory affects a shipped path.
 - **Protected content configuration:** production builds fail if

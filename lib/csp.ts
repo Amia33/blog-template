@@ -2,6 +2,10 @@ const isDevelopment = process.env.NODE_ENV === "development";
 
 export const CSP_REPORT_PATH = "/api/csp-report";
 
+// Video.js plays self-hosted clips from the media bucket. Add another origin
+// here (and to `media-src`) when media moves.
+const MEDIA_ORIGIN = "https://oss.446256.xyz";
+
 const directives = [
   "default-src 'self'",
   // Next.js inlines bootstrap and RSC payload scripts into every page, and a
@@ -14,9 +18,12 @@ const directives = [
   // Covers and body images may point at arbitrary remote hosts.
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
-  "media-src 'self' blob: https:",
+  // Media is restricted to the bucket used by the Video.js players. `blob:`
+  // keeps Media Source Extensions working for adaptive streams.
+  `media-src 'self' blob: ${MEDIA_ORIGIN}`,
   "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com",
-  `connect-src 'self'${
+  // HLS/DASH manifests and segments are fetched with XHR/fetch by Video.js.
+  `connect-src 'self' ${MEDIA_ORIGIN}${
     isDevelopment ? " ws: wss: https://va.vercel-scripts.com" : ""
   }`,
   "worker-src 'self' blob:",
