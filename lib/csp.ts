@@ -4,9 +4,12 @@ export const CSP_REPORT_PATH = "/api/csp-report";
 
 const directives = [
   "default-src 'self'",
-  // Nonces would force dynamic rendering and break PPR, so inline scripts and
-  // styles stay allowed. The policy still restricts where scripts can load from.
+  // Next.js inlines bootstrap and RSC payload scripts into every page, and a
+  // nonce would force dynamic rendering, losing static and PPR caching. Inline
+  // <script> elements stay allowed; inline event-handler attributes do not.
   `script-src 'self' 'unsafe-inline'${isDevelopment ? " 'unsafe-eval'" : ""}`,
+  "script-src-attr 'none'",
+  // Inline style attributes are used throughout the UI and MDX output.
   "style-src 'self' 'unsafe-inline'",
   // Covers and body images may point at arbitrary remote hosts.
   "img-src 'self' data: blob: https:",
@@ -22,9 +25,9 @@ const directives = [
   "base-uri 'self'",
   "form-action 'self'",
   "frame-ancestors 'none'",
-  // Browsers ignore this directive in report-only policies; add it back when
-  // the header becomes an enforcing Content-Security-Policy.
+  // Local development runs over plain HTTP, so only upgrade on the deployed site.
+  ...(isDevelopment ? [] : ["upgrade-insecure-requests"]),
   `report-uri ${CSP_REPORT_PATH}`,
 ];
 
-export const CSP_REPORT_ONLY = directives.join("; ");
+export const CSP = directives.join("; ");

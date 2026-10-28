@@ -2,7 +2,7 @@ import { withContentCollections } from "@content-collections/next";
 import { withBotId } from "botid/next/config";
 import type { NextConfig } from "next";
 
-import { CSP_REPORT_ONLY } from "./lib/csp";
+import { CSP } from "./lib/csp";
 import { isProtectedConfigured } from "./lib/protected/env";
 
 if (process.env.VERCEL_ENV === "production" && !isProtectedConfigured()) {
@@ -29,9 +29,8 @@ const nextConfig: NextConfig = {
     ],
   },
   async headers() {
-    // Report-only for now: violations are logged by /api/csp-report but
-    // nothing is blocked. Once the reports are clean, rename the header below
-    // to "Content-Security-Policy" to enforce it.
+    // Enforced policy. Violations are still logged by /api/csp-report so any
+    // directive that is too strict shows up in production logs.
     return [
       {
         source: "/:path*",
@@ -44,10 +43,7 @@ const nextConfig: NextConfig = {
             value:
               "camera=(), microphone=(), geolocation=(), browsing-topics=()",
           },
-          {
-            key: "Content-Security-Policy-Report-Only",
-            value: CSP_REPORT_ONLY,
-          },
+          { key: "Content-Security-Policy", value: CSP },
         ],
       },
     ];

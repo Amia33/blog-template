@@ -27,9 +27,12 @@ To report a vulnerability, please send an E-mail to `admin#amia.work` (change
 - **Unlock rate limiting** is enforced at the Vercel Firewall; the in-process
   limiter is a best-effort fallback. BotID adds a second signal on Vercel.
 - **Headers:** Vercel provides HSTS. The app adds `X-Content-Type-Options`,
-  `Referrer-Policy`, `X-Frame-Options`, and `Permissions-Policy`. CSP is
-  intentionally deferred; if added, use hashes or static script files so
-  static/PPR caching keeps working.
+  `Referrer-Policy`, `X-Frame-Options`, `Permissions-Policy`, and an enforcing
+  `Content-Security-Policy`. Inline `<script>` elements and inline styles must
+  stay allowed because Next.js inlines bootstrap/RSC payload scripts per page;
+  a nonce would force dynamic rendering and disable static/PPR caching. Inline
+  event-handler attributes are blocked with `script-src-attr 'none'`, and
+  violations are reported to `/api/csp-report`.
 - **Dependencies:** no pnpm overrides are currently pinned. Run `pnpm audit` after dependency
   changes and pin patched versions only when an advisory affects a shipped path.
 - **Protected content configuration:** production builds fail if
