@@ -1,10 +1,8 @@
+import { MEDIA_ORIGIN } from "./media";
+
 const isDevelopment = process.env.NODE_ENV === "development";
 
 export const CSP_REPORT_PATH = "/api/csp-report";
-
-// Video.js plays self-hosted clips from the media bucket. Add another origin
-// here (and to `media-src`) when media moves.
-const MEDIA_ORIGIN = "https://oss.446256.xyz";
 
 const directives = [
   "default-src 'self'",
@@ -15,8 +13,9 @@ const directives = [
   "script-src-attr 'none'",
   // Inline style attributes are used throughout the UI and MDX output.
   "style-src 'self' 'unsafe-inline'",
-  // Covers and body images may point at arbitrary remote hosts.
-  "img-src 'self' data: blob: https:",
+  // Local images, inline blur placeholders, and the media bucket. Add another
+  // origin here if covers or post bodies reference images from other hosts.
+  `img-src 'self' data: blob: ${MEDIA_ORIGIN}`,
   "font-src 'self' data:",
   // Media is restricted to the bucket used by the Video.js players. `blob:`
   // keeps Media Source Extensions working for adaptive streams.
