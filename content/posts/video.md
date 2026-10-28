@@ -1,34 +1,43 @@
 ---
 title: Include Video in the Posts
 published: 2023-08-01
-description: This post demonstrates how to include embedded video in a blog post.
+description: This post demonstrates how to include video and audio in a blog post.
 tags: [Example, Video]
 category: Examples
 draft: false
 ---
 
-Just copy the embed code from YouTube or other platforms, and paste the `src` into an `Embed` component.
+`Video` and `Audio` are powered by Video.js 10. Pass a direct media URL and an
+optional poster image; both may live on another origin.
 
 ```mdx
-<Embed
-  src="https://www.youtube.com/embed/5gIf0_xpFPI?si=N1WTorLKL0uwLsU_"
-  title="YouTube video player"
+<Video
+  src="https://oss.446256.xyz/uzN0taK8eC4.mp4"
+  poster="https://oss.446256.xyz/uzN0taK8eC4.webp"
+  title="Video.js demo"
 />
 ```
 
-## YouTube
+## Video
 
-<Embed
-  src="https://www.youtube.com/embed/5gIf0_xpFPI?si=N1WTorLKL0uwLsU_"
-  title="YouTube video player"
+<Video
+  src="https://oss.446256.xyz/uzN0taK8eC4.mp4"
+  poster="https://oss.446256.xyz/uzN0taK8eC4.webp"
+  title="Video.js demo"
 />
 
-## Bilibili
+## Audio
 
-<Embed
-  src="//player.bilibili.com/player.html?bvid=BV1fK4y1s7Qf&p=1"
-  title="Bilibili video player"
+<Audio
+  src="https://oss.446256.xyz/uzN0taK8eC4.mp3"
+  poster="https://oss.446256.xyz/uzN0taK8eC4.webp"
+  title="Video.js demo"
 />
 
-Raw `<iframe>` snippets still work, but they keep the width and height from the
-snippet instead of scaling to a 16:9 box.
+## Captions
+
+`Video` accepts a WebVTT track through `caption`:
+
+```mdx
+<Video src="..." poster="..." caption="/captions/demo.ja.vtt" />
+```

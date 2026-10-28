@@ -1,4 +1,5 @@
 import { MdxAlert } from "@/components/mdx/mdx-alert";
+import { MdxAudio } from "@/components/mdx/mdx-audio";
 import { MdxBadge } from "@/components/mdx/mdx-badge";
 import { MdxCard } from "@/components/mdx/mdx-card";
 import { MdxCollapse } from "@/components/mdx/mdx-collapse";
@@ -9,6 +10,7 @@ import { MdxLink } from "@/components/mdx/mdx-link";
 import { MdxStep, MdxSteps } from "@/components/mdx/mdx-steps";
 import { MdxTable } from "@/components/mdx/mdx-table";
 import { MdxTabs } from "@/components/mdx/mdx-tabs";
+import { MdxVideo } from "@/components/mdx/mdx-video";
 
 // Applied to every MDX document. Note that MDX resolves *all* HTML elements
 // through this map, including the ones rehype plugins generate, which is why
@@ -20,6 +22,8 @@ export const mdxComponents = {
   table: MdxTable,
   iframe: MdxEmbed,
   Embed: MdxEmbed,
+  Video: MdxVideo,
+  Audio: MdxAudio,
   Card: MdxCard,
   Alert: MdxAlert,
   Collapse: MdxCollapse,

@@ -86,6 +86,10 @@ Markdown files are compiled as MDX, so you can use the components below anywhere
   <Step title="Deploy">Run `pnpm build`.</Step>
 </Steps>
 
-<Embed src="https://www.youtube.com/embed/5gIf0_xpFPI" title="YouTube video player" />
+<Video
+  src="https://oss.446256.xyz/uzN0taK8eC4.mp4"
+  poster="https://oss.446256.xyz/uzN0taK8eC4.webp"
+  title="Video.js demo"
+/>
 
 Press <Kbd>Ctrl</Kbd> + <Kbd>K</Kbd> to search.

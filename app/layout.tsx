@@ -26,6 +26,8 @@ import {
 import { websiteJsonLd } from "@/lib/structured-data";
 
 import "./globals.css";
+import "@videojs/react/audio/skin.css";
+import "@videojs/react/video/skin.css";
 import "katex/dist/katex.css";
 
 const themeScript = `(function(){
