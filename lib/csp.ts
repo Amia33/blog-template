@@ -21,7 +21,7 @@ const directives = [
   // Media is restricted to the bucket used by the Video.js players. `blob:`
   // keeps Media Source Extensions working for adaptive streams.
   `media-src 'self' blob: ${MEDIA_ORIGIN}`,
-  "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com",
+  "frame-src 'self'",
   // HLS/DASH manifests and segments are fetched with XHR/fetch by Video.js.
   `connect-src 'self' ${MEDIA_ORIGIN}${
     isDevelopment ? " ws: wss: https://va.vercel-scripts.com" : ""
