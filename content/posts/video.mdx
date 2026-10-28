@@ -2,6 +2,7 @@
 title: Include Video in the Posts
 published: 2023-08-01
 description: This post demonstrates how to include video and audio in a blog post.
+image: "https://oss.446256.xyz/uzN0taK8eC4.webp"
 tags: [Example, Video]
 category: Examples
 draft: false
@@ -41,3 +42,11 @@ optional poster image; both may live on another origin.
 ```mdx
 <Video src="..." poster="..." caption="/captions/demo.ja.vtt" />
 ```
+
+## Remote images
+
+Normal Markdown image syntax works for the media bucket. The build reads the
+intrinsic size and a blur placeholder, so the image is optimized by
+`next/image`:
+
+![Video.js poster](https://oss.446256.xyz/uzN0taK8eC4.webp)
