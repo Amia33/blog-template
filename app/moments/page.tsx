@@ -38,6 +38,7 @@ export default function MomentsPage() {
       height: image.height ?? 0,
       blurDataURL: image.blurDataURL ?? "",
       remote: image.remote ?? false,
+      optimizable: image.optimizable ?? false,
     })),
   }));
 

@@ -1,5 +1,7 @@
 import Image from "next/image";
 
+import { isMediaUrl } from "@/lib/media";
+
 type MdxImageProps = {
   src?: string;
   alt?: string;
@@ -28,64 +30,72 @@ export function MdxImage({
     return null;
   }
 
+  const parsedWidth = Number(width);
+  const parsedHeight = Number(height);
+  const hasSize =
+    Number.isFinite(parsedWidth) &&
+    parsedWidth > 0 &&
+    Number.isFinite(parsedHeight) &&
+    parsedHeight > 0;
+  const isPriority = priority === "true";
+
   // The image optimizer fetches server-side without the viewer's session
   // cookie, so protected images must go straight to the browser.
   if (PROTECTED.test(src)) {
-    const parsedWidth = Number(width);
-    const parsedHeight = Number(height);
-
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={src}
         alt={alt}
-        width={
-          Number.isFinite(parsedWidth) && parsedWidth > 0
-            ? parsedWidth
-            : undefined
-        }
-        height={
-          Number.isFinite(parsedHeight) && parsedHeight > 0
-            ? parsedHeight
-            : undefined
-        }
-        loading={priority === "true" ? "eager" : "lazy"}
-        fetchPriority={priority === "true" ? "high" : "auto"}
+        width={hasSize ? parsedWidth : undefined}
+        height={hasSize ? parsedHeight : undefined}
+        loading={isPriority ? "eager" : "lazy"}
+        fetchPriority={isPriority ? "high" : "auto"}
         decoding="async"
         className="my-4 h-auto w-full rounded-box object-cover"
       />
     );
   }
 
-  // Sources the build-time step could not resolve (remote, data URIs) are
-  // rendered directly: next/image would need them in `images.remotePatterns`.
+  // Remote sources are optimized only when the build step resolved their
+  // dimensions and the host is in `images.remotePatterns`.
   if (NON_LOCAL.test(src)) {
+    if (isMediaUrl(src) && hasSize) {
+      return (
+        <Image
+          src={src}
+          alt={alt}
+          width={parsedWidth}
+          height={parsedHeight}
+          sizes="(min-width: 768px) 768px, 100vw"
+          loading={isPriority ? "eager" : "lazy"}
+          fetchPriority={isPriority ? "high" : "auto"}
+          placeholder={blur ? "blur" : "empty"}
+          blurDataURL={blur || undefined}
+          className="my-4 h-auto w-full rounded-box object-cover"
+        />
+      );
+    }
+
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={src}
         alt={alt}
-        loading="lazy"
+        loading={isPriority ? "eager" : "lazy"}
+        fetchPriority={isPriority ? "high" : "auto"}
         decoding="async"
         className="my-4 rounded-box"
       />
     );
   }
 
-  const parsedWidth = Number(width);
-  const parsedHeight = Number(height);
-  const isPriority = priority === "true";
-
   return (
     <Image
       src={src}
       alt={alt}
-      width={
-        Number.isFinite(parsedWidth) && parsedWidth > 0 ? parsedWidth : 1200
-      }
-      height={
-        Number.isFinite(parsedHeight) && parsedHeight > 0 ? parsedHeight : 630
-      }
+      width={hasSize ? parsedWidth : 1200}
+      height={hasSize ? parsedHeight : 630}
       sizes="(min-width: 768px) 768px, 100vw"
       // `priority` is deprecated in Next 16; the first image in a post body is
       // the likely LCP candidate when there is no cover.

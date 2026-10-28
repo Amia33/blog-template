@@ -3,6 +3,7 @@ import { withBotId } from "botid/next/config";
 import type { NextConfig } from "next";
 
 import { CSP } from "./lib/csp";
+import { MEDIA_HOSTNAME } from "./lib/media";
 import { isProtectedConfigured } from "./lib/protected/env";
 
 if (process.env.VERCEL_ENV === "production" && !isProtectedConfigured()) {
@@ -21,6 +22,15 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     // Next 16 restricts quality values to this list, defaulting to [75].
     qualities: [75, 90],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: MEDIA_HOSTNAME,
+        port: "",
+        pathname: "/**",
+        // `search` is omitted so signed URLs can be optimized too.
+      },
+    ],
   },
   outputFileTracingIncludes: {
     "/api/protected/**": [

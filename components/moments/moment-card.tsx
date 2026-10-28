@@ -21,6 +21,7 @@ export type MomentItem = {
     height: number;
     blurDataURL: string;
     remote: boolean;
+    optimizable: boolean;
   }[];
 };
 

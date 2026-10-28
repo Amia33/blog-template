@@ -9,6 +9,7 @@ type MomentImageData = {
   height: number;
   blurDataURL: string;
   remote: boolean;
+  optimizable: boolean;
 };
 
 export default function MomentGallery({
@@ -32,7 +33,7 @@ export default function MomentGallery({
           key={`${image.src}-${index}`}
           className="gallery-figure overflow-hidden rounded-box bg-base-200"
         >
-          {image.remote || image.width === 0 || image.height === 0 ? (
+          {!image.optimizable || image.width === 0 || image.height === 0 ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={image.src}

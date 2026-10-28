@@ -5,6 +5,7 @@ import {
   imageMeta,
   postDirectory,
   postSlug,
+  remoteImageMeta,
   resolveSource,
   toProtectedPostImageUrl,
   toPublicUrl,
@@ -70,7 +71,29 @@ export function rehypeImages({
         confineTo: isProtected ? postDir : collectionRoot,
         rejectPublic: isProtected,
       });
-      if (source.kind === "remote") continue;
+
+      if (source.kind === "remote") {
+        // Never fetch remote assets for encrypted posts: their body is not
+        // public, and the build should not touch external URLs on their behalf.
+        if (isProtected) continue;
+
+        const remote = await remoteImageMeta(source.src);
+
+        node.properties = {
+          ...node.properties,
+          ...(remote
+            ? {
+                width: remote.width,
+                height: remote.height,
+                "data-blur": remote.blurDataURL,
+              }
+            : {}),
+          "data-priority": isFirst ? "true" : "false",
+        };
+
+        isFirst = false;
+        continue;
+      }
 
       if (isProtected) {
         const relative = path

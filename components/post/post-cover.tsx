@@ -15,13 +15,14 @@ export default function PostCover({
   className?: string;
   priority?: boolean;
 }) {
-  if (cover.remote) {
+  if (!cover.optimizable) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={cover.src}
         alt={alt}
         loading={priority ? "eager" : "lazy"}
+        decoding="async"
         className={className}
       />
     );

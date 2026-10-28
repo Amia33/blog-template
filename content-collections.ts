@@ -192,6 +192,7 @@ const moments = defineCollection({
             height: 0,
             blurDataURL: "",
             remote: false,
+            optimizable: false,
           };
         }
 
@@ -347,6 +348,7 @@ const albums = defineCollection({
         height: photos[0].height,
         blurDataURL: photos[0].blurDataURL,
         remote: false,
+        optimizable: true,
       };
     }
 

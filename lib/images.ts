@@ -4,6 +4,8 @@ import path from "node:path";
 
 import sharp from "sharp";
 
+import { isMediaUrl } from "./media";
+
 export type PostMeta = {
   filePath: string;
   fileName: string;
@@ -21,6 +23,7 @@ export type ImageMeta = {
 export type Cover = ImageMeta & {
   src: string;
   remote: boolean;
+  optimizable: boolean;
 };
 
 type ImageSource =
@@ -178,6 +181,78 @@ export function imageMeta(absolutePath: string): Promise<ImageMeta> {
   return pending;
 }
 
+const REMOTE_IMAGE_TIMEOUT_MS = 10_000;
+const REMOTE_IMAGE_MAX_BYTES = 10 * 1024 * 1024;
+
+const remoteMetaCache = new Map<string, Promise<ImageMeta | null>>();
+
+async function fetchRemoteImageMeta(src: string): Promise<ImageMeta | null> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REMOTE_IMAGE_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(src, {
+      signal: controller.signal,
+      headers: { accept: "image/*" },
+      // Never turn a build-time metadata read into an arbitrary fetch.
+      redirect: "error",
+    });
+
+    if (!response.ok || !isMediaUrl(response.url)) return null;
+
+    const contentType = (
+      response.headers.get("content-type") ?? ""
+    ).toLowerCase();
+    if (!contentType.startsWith("image/") || contentType.includes("svg")) {
+      return null;
+    }
+
+    const declaredSize = Number(response.headers.get("content-length") ?? "0");
+    if (declaredSize > REMOTE_IMAGE_MAX_BYTES) return null;
+
+    const buffer = Buffer.from(await response.arrayBuffer());
+    if (buffer.byteLength > REMOTE_IMAGE_MAX_BYTES) return null;
+
+    const image = sharp(buffer);
+    const { width, height } = await image.metadata();
+    if (!width || !height) return null;
+
+    const blur = await image
+      .clone()
+      .resize(16)
+      .webp({ quality: 40 })
+      .toBuffer();
+
+    return {
+      width,
+      height,
+      blurDataURL: `data:image/webp;base64,${blur.toString("base64")}`,
+    };
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+/**
+ * Reads dimensions and a blur placeholder for an image on the media bucket.
+ * Returns `null` for other origins or when the image cannot be fetched, so
+ * callers can fall back to a plain `<img>`.
+ */
+export function remoteImageMeta(src: string): Promise<ImageMeta | null> {
+  if (!isMediaUrl(src)) return Promise.resolve(null);
+
+  let pending = remoteMetaCache.get(src);
+
+  if (!pending) {
+    pending = fetchRemoteImageMeta(src);
+    remoteMetaCache.set(src, pending);
+  }
+
+  return pending;
+}
+
 export async function resolveCover(
   image: string,
   meta: PostMeta,
@@ -194,17 +269,36 @@ export async function resolveCover(
   if (source.kind === "remote") {
     if (source.src === "") return null;
 
+    const meta = await remoteImageMeta(source.src);
+
+    if (meta) {
+      return {
+        src: source.src,
+        ...meta,
+        remote: true,
+        optimizable: true,
+      };
+    }
+
     return {
       src: source.src,
       width: 1200,
       height: 630,
       blurDataURL: "",
       remote: true,
+      optimizable: false,
     };
   }
 
   const src = await toPublicUrl(source.absolutePath, postSlug(meta));
   const { width, height, blurDataURL } = await imageMeta(source.absolutePath);
 
-  return { src, width, height, blurDataURL, remote: false };
+  return {
+    src,
+    width,
+    height,
+    blurDataURL,
+    remote: false,
+    optimizable: true,
+  };
 }
