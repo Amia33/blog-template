@@ -22,8 +22,10 @@ export function MdxVideo({
   return (
     <VideoPlayer title={title} poster={poster}>
       <VideoSkin
-        className="my-6"
-        style={{ width: "100%", aspectRatio: "16 / 9" }}
+        className="not-prose my-6"
+        // The skin sets `height: 100%`, which makes it fill the stretched
+        // article column. `height: auto` lets the aspect ratio size it.
+        style={{ width: "100%", height: "auto", aspectRatio: "16 / 9" }}
       >
         <Video src={src} poster={poster} playsInline preload="metadata">
           {caption ? (

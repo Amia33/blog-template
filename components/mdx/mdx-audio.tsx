@@ -11,7 +11,7 @@ type MdxAudioProps = {
 export function MdxAudio({ src, poster, title }: MdxAudioProps) {
   return (
     <AudioPlayer title={title} poster={poster}>
-      <AudioSkin className="my-6" style={{ width: "100%" }}>
+      <AudioSkin className="not-prose my-6" style={{ width: "100%" }}>
         <Audio src={src} preload="metadata" />
       </AudioSkin>
     </AudioPlayer>
