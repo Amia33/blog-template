@@ -5,6 +5,7 @@ import { getPostBySlug } from "@/lib/content";
 import { isProtectedConfigured } from "@/lib/protected/env";
 import { protectedError, protectedFile } from "@/lib/protected/http";
 import { hasProtectedSession } from "@/lib/protected/session";
+import { limitByPolicy, resolveClientIp } from "@/lib/rate-limit";
 
 const CONTENT_TYPES: Record<string, string> = {
   ".jpg": "image/jpeg",
@@ -22,6 +23,13 @@ export async function GET(request: Request) {
 
   if (!isProtectedConfigured()) {
     return protectedError(503, "Protected content is unavailable");
+  }
+
+  const ip = await resolveClientIp(request);
+  const limit = await limitByPolicy("protectedMedia", ip);
+
+  if (!limit.allowed) {
+    return protectedError(429, "Too many requests", limit.retryAfter);
   }
 
   if (!slug || !file || slug.length > 200 || file.length > 500) {

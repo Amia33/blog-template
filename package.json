@@ -19,10 +19,12 @@
     "@expressive-code/plugin-collapsible-sections": "^0.44.3",
     "@expressive-code/plugin-line-numbers": "^0.44.3",
     "@node-rs/argon2": "^2.2.2",
+    "@upstash/ratelimit": "^2.2.0",
+    "@upstash/redis": "^1.40.0",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "@videojs/react": "10.2.0",
-    "botid": "^1.5.11",
+    "botid": "^1.5.12",
     "feed": "^6.0.0",
     "iron-session": "^9.0.1",
     "katex": "^0.19.1",
@@ -68,7 +70,7 @@
     "unified": "^11.0.5",
     "zod": "^4.6.7"
   },
-  "packageManager": "pnpm@12.15.0",
+  "packageManager": "pnpm@12.16.1",
   "lint-staged": {
     "*.css": [
       "stylelint",

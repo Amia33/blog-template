@@ -30,15 +30,15 @@ draft: false
 ---
 ```
 
-| Attribute     | Description                                                                                                                                                                                                 |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `title`       | The title of the post.                                                                                                                                                                                      |
-| `published`   | The date the post was published.                                                                                                                                                                            |
-| `description` | A short description of the post. Displayed on index page.                                                                                                                                                   |
-| `image`       | The cover image path of the post.<br/>1. Start with `http://` or `https://`: Use web image<br/>2. Start with `/`: For image in `public` dir<br/>3. With none of the prefixes: Relative to the markdown file |
-| `tags`        | The tags of the post.                                                                                                                                                                                       |
-| `category`    | The category of the post.                                                                                                                                                                                   |
-| `draft`       | If this post is still a draft, which won't be displayed.                                                                                                                                                    |
+| Attribute     | Description                                                                                                                                                                                                                                                                                                    |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `title`       | The title of the post.                                                                                                                                                                                                                                                                                         |
+| `published`   | The date the post was published.                                                                                                                                                                                                                                                                               |
+| `description` | A short description of the post. Displayed on index page.                                                                                                                                                                                                                                                      |
+| `image`       | The cover image path of the post.<br/>1. `https://oss.446256.xyz/...` (HTTPS, no query string): optimized with `next/image`<br/>2. Other `http://`/`https://` URLs: rendered as a plain image<br/>3. Start with `/`: For image in `public` dir<br/>4. With none of the prefixes: Relative to the markdown file |
+| `tags`        | The tags of the post.                                                                                                                                                                                                                                                                                          |
+| `category`    | The category of the post.                                                                                                                                                                                                                                                                                      |
+| `draft`       | If this post is still a draft, which won't be displayed.                                                                                                                                                                                                                                                       |
 
 Relative images are copied into `public/content/<slug>/` at build time under a
 content-addressed filename, then served through `next/image` with their real
@@ -92,4 +92,5 @@ Markdown files are compiled as MDX, so you can use the components below anywhere
   title="Video.js demo"
 />
 
-Press <Kbd>Ctrl</Kbd> + <Kbd>K</Kbd> to search.
+Use `<Audio src="https://oss.446256.xyz/example.mp3" title="Audio demo" />` for audio files
+on the media bucket.

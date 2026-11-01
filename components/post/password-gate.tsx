@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useRef, useState } from "react";
 
@@ -36,6 +37,30 @@ export default function PasswordGate({
       router.refresh();
     }
   }, [router, state.ok]);
+
+  if (state.blocked) {
+    return (
+      <section className="card bg-base-100 p-6 md:p-8">
+        <div className="relative overflow-hidden rounded-box border border-base-300 p-8 text-center">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 flex items-center justify-center text-[7rem] font-black opacity-5 select-none"
+          >
+            403
+          </span>
+          <span className="relative mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-error/10 text-error">
+            <Icon name="lock" className="text-2xl" />
+          </span>
+          <h2 className="relative text-xl font-bold">{t("botBlockedTitle")}</h2>
+          <p className="relative mt-2 text-sm opacity-70">{t("botRejected")}</p>
+          <Link href="/" className="btn btn-primary relative mt-6">
+            <Icon name="home" className="text-lg" />
+            {t("backHome")}
+          </Link>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="card bg-base-100 p-6 md:p-8">

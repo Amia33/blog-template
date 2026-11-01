@@ -3,11 +3,25 @@
 export const MEDIA_ORIGIN = "https://oss.446256.xyz";
 export const MEDIA_HOSTNAME = new URL(MEDIA_ORIGIN).hostname;
 
-/** True for HTTPS URLs served directly from the media bucket. */
+/**
+ * True for HTTPS URLs served directly from the media bucket.
+ *
+ * The media bucket uses a custom domain with CORS, not presigned URLs, so
+ * query strings, credentials, and non-default ports are rejected. This mirrors
+ * the `images.remotePatterns` entry (`port: ""`, `search: ""`).
+ */
 export function isMediaUrl(value: string): boolean {
   try {
     const url = new URL(value);
-    return url.protocol === "https:" && url.hostname === MEDIA_HOSTNAME;
+
+    return (
+      url.protocol === "https:" &&
+      url.hostname === MEDIA_HOSTNAME &&
+      url.port === "" &&
+      url.username === "" &&
+      url.password === "" &&
+      url.search === ""
+    );
   } catch {
     return false;
   }

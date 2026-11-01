@@ -5,6 +5,7 @@ import { getAlbumBySlug } from "@/lib/albums";
 import { isProtectedConfigured } from "@/lib/protected/env";
 import { protectedError, protectedFile } from "@/lib/protected/http";
 import { hasProtectedSession } from "@/lib/protected/session";
+import { limitByPolicy, resolveClientIp } from "@/lib/rate-limit";
 
 const CONTENT_TYPES: Record<string, string> = {
   ".jpg": "image/jpeg",
@@ -16,7 +17,7 @@ const CONTENT_TYPES: Record<string, string> = {
 };
 
 export async function GET(
-  _request: Request,
+  request: Request,
   {
     params,
   }: {
@@ -27,6 +28,13 @@ export async function GET(
 
   if (!isProtectedConfigured()) {
     return protectedError(503, "Protected content is unavailable");
+  }
+
+  const ip = await resolveClientIp(request);
+  const limit = await limitByPolicy("protectedMedia", ip);
+
+  if (!limit.allowed) {
+    return protectedError(429, "Too many requests", limit.retryAfter);
   }
 
   const album = getAlbumBySlug(slug);

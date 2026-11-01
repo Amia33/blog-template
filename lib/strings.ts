@@ -51,6 +51,7 @@ export const UI = {
   invalidPassword: "パスワードが正しくありません。",
   tooManyAttempts:
     "試行回数が多すぎます。しばらく待ってからもう一度お試しください。",
+  botBlockedTitle: "アクセスがブロックされました",
   botRejected:
     "アクセスを確認できませんでした。時間をおいて再度お試しください。",
   protectedUnavailable: "保護されたコンテンツを表示できません",

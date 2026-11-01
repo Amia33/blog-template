@@ -3,7 +3,6 @@ import { MdxAudio } from "@/components/mdx/mdx-audio";
 import { MdxBadge } from "@/components/mdx/mdx-badge";
 import { MdxCard } from "@/components/mdx/mdx-card";
 import { MdxCollapse } from "@/components/mdx/mdx-collapse";
-import { MdxEmbed } from "@/components/mdx/mdx-embed";
 import { MdxImage } from "@/components/mdx/mdx-image";
 import { MdxKbd } from "@/components/mdx/mdx-kbd";
 import { MdxLink } from "@/components/mdx/mdx-link";
@@ -20,8 +19,6 @@ export const mdxComponents = {
   a: MdxLink,
   img: MdxImage,
   table: MdxTable,
-  iframe: MdxEmbed,
-  Embed: MdxEmbed,
   Video: MdxVideo,
   Audio: MdxAudio,
   Card: MdxCard,
