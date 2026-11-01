@@ -9,48 +9,48 @@ category: "Examples"
 draft: false
 ---
 
-## 注記（Admonitions）
+## Admonitions
 
-対応している注記の種類は `note` `tip` `important` `warning` `caution` の 5 つです。
+Five admonition types are supported: `note`, `tip`, `important`, `warning`, and `caution`.
 
 :::note
-スキミングしていても目に留めるべき情報を強調します。
+Highlight information that readers should not miss even when skimming.
 :::
 
 :::tip
-ユーザーがより成功しやすくなるための補足情報です。
+Supplementary information that helps the reader succeed.
 :::
 
 :::important
-ユーザーが成功するために不可欠な情報です。
+Information that is essential to the reader's success.
 :::
 
 :::warning
-潜在的なリスクがあり、即時の注意を要する重要な内容です。
+Important content that carries a potential risk and needs immediate attention.
 :::
 
 :::caution
-操作による否定的な結果につながる可能性があります。
+Actions that may lead to a negative outcome.
 :::
 
-### カスタムタイトル
+### Custom titles
 
 :::note[MY CUSTOM TITLE]
-タイトルは自由に指定できます。
+Titles can be set freely.
 :::
 
-### GitHub 記法
+### GitHub syntax
 
 > [!TIP]
-> GitHub の記法にも対応しています。改行は行末に空白 2 つで表現します。
+> GitHub's syntax is supported too. End a line with two spaces to force a line break.
 
-## ネタバレ
+## Spoilers
 
-本文は :spoiler[こんな感じで **隠せます**]。
+Text can be hidden like this: :spoiler[**this**].
 
-## 数式
+## Math
 
-インライン数式は $\omega = d\phi / dt$ のように書けます。ディスプレイ数式は独立した行に置きます。
+Inline math can be written as $\omega = d\phi / dt$. Display math goes on its own line.
 
 $$
 I = \int \rho R^{2} dV

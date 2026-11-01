@@ -7,21 +7,21 @@ category: Examples
 draft: false
 ---
 
-ここでは [Expressive Code](https://expressive-code.com/) によるコードブロックの表示を確認します。
+This post shows how code blocks render with [Expressive Code](https://expressive-code.com/).
 
-## シンタックスハイライト
+## Syntax highlighting
 
 ```js
 console.log("This code is syntax highlighted!");
 ```
 
-## ファイル名付きフレーム
+## Frames with file names
 
 ```js title="my-test-file.js"
 console.log("Title attribute example");
 ```
 
-## 行番号
+## Line numbers
 
 ```js showLineNumbers
 // This code block will show line numbers
@@ -34,7 +34,7 @@ console.log("Greetings from line 5!");
 console.log("I am on line 6");
 ```
 
-## 行マーカー
+## Line markers
 
 ```js {1, 4, 7-8}
 // Line 1 - targeted by line number
@@ -57,7 +57,7 @@ function demo() {
 }
 ```
 
-## diff 記法
+## Diff notation
 
 ```diff
 +this line will be marked as inserted
@@ -74,7 +74,7 @@ this is a regular line
   }
 ```
 
-## 折り返し
+## Wrapping
 
 ```js wrap
 function getLongString() {
@@ -82,7 +82,7 @@ function getLongString() {
 }
 ```
 
-## 折りたたみセクション
+## Collapsible sections
 
 ```js collapse={1-5, 12-14, 21-24}
 // All this boilerplate setup code will be collapsed
