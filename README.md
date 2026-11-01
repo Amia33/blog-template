@@ -66,6 +66,13 @@ Manual generators (not wired into `package.json`):
 Nested album directories are rejected at build time because the album routes and the protected
 photo API only match a single slug segment.
 
+## Language
+
+Set `siteConfig.locale` in `lib/config.ts` to `"en"`, `"ja"`, or `"zh"`. This is a build-time
+setting: it selects the UI dictionary in `lib/i18n/<locale>.ts` and drives `<html lang>`, the
+Open Graph locale, RSS language, the web manifest, JSON-LD, date and number formatting, and the
+calendar week start. Content files are not translated.
+
 ## Media and embeds
 
 Remote images must be HTTPS URLs on the media bucket `https://oss.446256.xyz` with no query
