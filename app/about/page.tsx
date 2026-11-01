@@ -31,7 +31,7 @@ export default function AboutPage() {
               {about ? (
                 <MdxContent code={about.mdx} />
               ) : (
-                <p>このサイトについての情報が見つかりません。</p>
+                <p>{t("aboutUnavailable")}</p>
               )}
             </Markdown>
           </Lightbox>

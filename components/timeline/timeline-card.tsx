@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import { Icon } from "@/components/ui/icon";
+import { t } from "@/lib/strings";
 import type { TimelineItem } from "@/lib/types/config";
 
 export default function TimelineCard({
@@ -30,7 +31,9 @@ export default function TimelineCard({
           <span className="badge badge-primary badge-sm">{item.category}</span>
           <time className="opacity-70">{item.date}</time>
           {item.featured ? (
-            <span className="badge badge-secondary badge-sm">Featured</span>
+            <span className="badge badge-secondary badge-sm">
+              {t("featured")}
+            </span>
           ) : null}
         </div>
 

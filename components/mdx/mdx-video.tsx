@@ -2,6 +2,9 @@
 
 import { Video, VideoPlayer, VideoSkin } from "@videojs/react/video";
 
+import { siteConfig } from "@/lib/config";
+import { t } from "@/lib/strings";
+
 type MdxVideoProps = {
   src: string;
   poster?: string;
@@ -16,8 +19,8 @@ export function MdxVideo({
   poster,
   title,
   caption,
-  captionLang = "ja",
-  captionLabel = "字幕",
+  captionLang = siteConfig.locale,
+  captionLabel = t("captions"),
 }: MdxVideoProps) {
   return (
     <VideoPlayer title={title} poster={poster}>

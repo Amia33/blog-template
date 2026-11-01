@@ -3,18 +3,19 @@ import Link from "next/link";
 
 import { Icon } from "@/components/ui/icon";
 import { profileConfig } from "@/lib/config";
+import { t } from "@/lib/strings";
 
 export default function ProfileCard() {
   return (
     <section className="card bg-base-100 p-3">
       <Link
         href="/about"
-        aria-label="このサイトについて"
+        aria-label={t("about")}
         className="relative mx-auto mb-3 block max-w-[12rem] overflow-hidden rounded-box lg:max-w-none"
       >
         <Image
           src={profileConfig.avatar ?? "/avatar.png"}
-          alt={`Profile image of ${profileConfig.name}`}
+          alt={t("profileImageAlt", { name: profileConfig.name })}
           width={320}
           height={320}
           className="h-auto w-full object-cover"

@@ -1,5 +1,6 @@
 import NavLink from "@/components/layout/nav-link";
 import { Icon } from "@/components/ui/icon";
+import { t } from "@/lib/strings";
 import type { NavBarLink } from "@/lib/types/config";
 
 export default function NavMenu({ links }: { links: NavBarLink[] }) {
@@ -8,7 +9,7 @@ export default function NavMenu({ links }: { links: NavBarLink[] }) {
       <button
         type="button"
         className="btn btn-ghost btn-square"
-        aria-label="メニュー"
+        aria-label={t("menu")}
         aria-haspopup="true"
       >
         <Icon name="menu" className="text-xl" />

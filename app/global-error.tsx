@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 
+import { siteConfig } from "@/lib/config";
 import { t } from "@/lib/strings";
 
 export default function GlobalError({
@@ -16,7 +17,7 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <html lang="ja">
+    <html lang={siteConfig.locale}>
       <body
         style={{
           margin: 0,

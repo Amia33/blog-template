@@ -22,7 +22,7 @@ export function websiteJsonLd() {
     name: siteConfig.title,
     description: siteConfig.subtitle,
     url: siteConfig.url,
-    inLanguage: siteConfig.lang,
+    inLanguage: siteConfig.locale,
     author: personJsonLd(),
   };
 }
@@ -68,7 +68,7 @@ export function postJsonLd(post: Post) {
           : post.description || post.excerpt,
         datePublished: post.published.toISOString(),
         dateModified: (post.updated ?? post.published).toISOString(),
-        inLanguage: post.lang || siteConfig.lang,
+        inLanguage: post.lang || siteConfig.locale,
         author: personJsonLd(),
         image: ogImageUrl(post),
         url,

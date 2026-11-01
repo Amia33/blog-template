@@ -4,6 +4,8 @@ import Image from "next/image";
 
 import MomentGallery from "@/components/moments/moment-gallery";
 import { Icon } from "@/components/ui/icon";
+import { siteConfig } from "@/lib/config";
+import { INTL_LOCALE } from "@/lib/i18n/locales";
 import { t } from "@/lib/strings";
 
 export type MomentItem = {
@@ -35,12 +37,15 @@ export default function MomentCard({
   onTagClick: (tag: string) => void;
 }) {
   const date = new Date(moment.published);
-  const formattedDate = new Intl.DateTimeFormat("ja-JP", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    timeZone: "UTC",
-  }).format(date);
+  const formattedDate = new Intl.DateTimeFormat(
+    INTL_LOCALE[siteConfig.locale],
+    {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      timeZone: "UTC",
+    },
+  ).format(date);
 
   return (
     <article id={moment.slug} className="card bg-base-100 p-4">

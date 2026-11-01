@@ -4,6 +4,7 @@ import Image from "next/image";
 import type { CSSProperties } from "react";
 
 import type { AlbumLayout } from "@/lib/types/config";
+import { t } from "@/lib/strings";
 
 export type AlbumGalleryPhoto = {
   src: string;
@@ -30,7 +31,7 @@ export default function AlbumGallery({
   if (photos.length === 0) {
     return (
       <div className="card bg-base-100 p-8 text-center opacity-70">
-        写真がありません。
+        {t("noPhotos")}
       </div>
     );
   }

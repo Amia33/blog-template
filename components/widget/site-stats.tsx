@@ -1,21 +1,24 @@
 import WidgetCard from "@/components/widget/widget-card";
+import { siteConfig } from "@/lib/config";
+import { INTL_LOCALE } from "@/lib/i18n/locales";
 import { getSiteStats } from "@/lib/stats";
 import { t } from "@/lib/strings";
 import { formatDateToYYYYMMDD } from "@/lib/utils";
 
 export default function SiteStats() {
   const stats = getSiteStats();
+  const locale = INTL_LOCALE[siteConfig.locale];
 
   const rows = [
-    { label: t("posts"), value: stats.posts.toLocaleString("ja-JP") },
-    { label: t("moments"), value: stats.moments.toLocaleString("ja-JP") },
+    { label: t("posts"), value: stats.posts.toLocaleString(locale) },
+    { label: t("moments"), value: stats.moments.toLocaleString(locale) },
     {
       label: t("categories"),
-      value: stats.categories.toLocaleString("ja-JP"),
+      value: stats.categories.toLocaleString(locale),
     },
-    { label: t("tags"), value: stats.tags.toLocaleString("ja-JP") },
-    { label: t("words"), value: stats.words.toLocaleString("ja-JP") },
-    { label: t("days"), value: stats.days.toLocaleString("ja-JP") },
+    { label: t("tags"), value: stats.tags.toLocaleString(locale) },
+    { label: t("words"), value: stats.words.toLocaleString(locale) },
+    { label: t("days"), value: stats.days.toLocaleString(locale) },
     {
       label: t("lastUpdated"),
       value: stats.lastUpdated ? formatDateToYYYYMMDD(stats.lastUpdated) : "-",

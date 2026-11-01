@@ -54,7 +54,7 @@ export async function generateMetadata({
   return {
     alternates: pageAlternates(currentPage > 1 ? `/${currentPage}` : "/"),
     ...(currentPage > 1
-      ? { title: `${t("home")}（${currentPage}ページ目）` }
+      ? { title: t("homePageNumbered", { page: currentPage }) }
       : {}),
   };
 }

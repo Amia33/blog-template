@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { Icon } from "@/components/ui/icon";
+import { t } from "@/lib/strings";
 
 export default function BackToTop() {
   const [visible, setVisible] = useState(false);
@@ -17,7 +18,7 @@ export default function BackToTop() {
   return (
     <button
       type="button"
-      aria-label="トップへ戻る"
+      aria-label={t("backToTop")}
       onClick={() => {
         const reduced =
           document.documentElement.dataset.motionReduced === "true" ||

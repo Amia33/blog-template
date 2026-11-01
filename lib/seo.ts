@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { profileConfig, siteConfig } from "@/lib/config";
 import type { Post } from "@/lib/content";
+import { OG_LOCALE } from "@/lib/i18n/locales";
 
 export const SITE_TITLE = `${siteConfig.title} - ${siteConfig.subtitle}`;
 export const SITE_DESCRIPTION = siteConfig.subtitle;
@@ -52,7 +53,7 @@ export function pageOpenGraph({
     title,
     description,
     url,
-    locale: siteConfig.lang,
+    locale: OG_LOCALE[siteConfig.locale],
     images: [{ url: image, width: 1200, height: 630, alt: title }],
   };
 }

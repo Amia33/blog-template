@@ -6,18 +6,19 @@ import {
   type RehypeExpressiveCodeRenderer,
 } from "rehype-expressive-code";
 
-import { pluginJapaneseTexts } from "@/lib/expressive-code-texts";
+import { siteConfig } from "@/lib/config";
+import { pluginLocalizedTexts } from "@/lib/expressive-code-texts";
 
 const baseOptions: RehypeExpressiveCodeOptions = {
   themes: ["github-light", "github-dark"],
   themeCssSelector: (theme) =>
     `[data-theme="${theme.type === "dark" ? "fuwari-dark" : "fuwari"}"]`,
   useDarkModeMediaQuery: false,
-  defaultLocale: "ja",
+  defaultLocale: siteConfig.locale,
   plugins: [
     pluginCollapsibleSections(),
     pluginLineNumbers(),
-    pluginJapaneseTexts(),
+    pluginLocalizedTexts(siteConfig.locale),
   ],
   defaultProps: {
     wrap: true,

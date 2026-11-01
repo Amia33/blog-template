@@ -11,6 +11,7 @@ import { expressiveCodeOptions } from "@/lib/expressive-code";
 import { rehypeAlertOptions, rehypeGithubAlerts } from "@/lib/rehype-alerts";
 import { rehypeImages } from "@/lib/rehype-images";
 import { remarkDirectives } from "@/lib/remark-directives";
+import { t } from "@/lib/strings";
 
 // Order matters:
 //   remark: gfm -> math -> directive -> our directive shim (alerts / spoilers)
@@ -35,7 +36,7 @@ export const rehypePlugins: NonNullable<Options["rehypePlugins"]> = [
       behavior: "append",
       properties: {
         className: ["anchor"],
-        ariaLabel: "この見出しへのリンク",
+        ariaLabel: t("headingLink"),
       },
       content: { type: "text", value: "#" },
     },

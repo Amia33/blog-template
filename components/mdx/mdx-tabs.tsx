@@ -2,6 +2,8 @@
 
 import { Children, type ReactNode, useState } from "react";
 
+import { t } from "@/lib/strings";
+
 export function MdxTabs({
   labels,
   children,
@@ -26,7 +28,7 @@ export function MdxTabs({
             className={index === current ? "tab tab-active" : "tab"}
             onClick={() => setActive(index)}
           >
-            {names[index] ?? `Tab ${index + 1}`}
+            {names[index] ?? t("tabLabel", { n: index + 1 })}
           </button>
         ))}
       </div>

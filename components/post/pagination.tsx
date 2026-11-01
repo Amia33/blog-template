@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { Icon } from "@/components/ui/icon";
+import { t } from "@/lib/strings";
 
 const HIDDEN = -1;
 const ADJ_DIST = 2;
@@ -50,7 +51,7 @@ export default function Pagination({
 
   return (
     <nav
-      aria-label="ページネーション"
+      aria-label={t("pagination")}
       className={`flex justify-center ${className}`}
     >
       <div className="join">
@@ -59,7 +60,7 @@ export default function Pagination({
             href={getPageUrl(currentPage - 1)}
             transitionTypes={["nav-back"]}
             className="join-item btn"
-            aria-label="前のページ"
+            aria-label={t("previousPage")}
           >
             <Icon name="chevronLeft" className="text-xl" />
           </Link>
@@ -67,7 +68,7 @@ export default function Pagination({
           <button
             type="button"
             className="btn join-item btn-disabled"
-            aria-label="前のページ"
+            aria-label={t("previousPage")}
           >
             <Icon name="chevronLeft" className="text-xl" />
           </button>
@@ -98,7 +99,7 @@ export default function Pagination({
                 page > currentPage ? "nav-forward" : "nav-back",
               ]}
               className="join-item btn"
-              aria-label={`${page} ページ目`}
+              aria-label={t("pageNumber", { n: page })}
             >
               {page}
             </Link>
@@ -109,7 +110,7 @@ export default function Pagination({
             href={getPageUrl(currentPage + 1)}
             transitionTypes={["nav-forward"]}
             className="join-item btn"
-            aria-label="次のページ"
+            aria-label={t("nextPage")}
           >
             <Icon name="chevronRight" className="text-xl" />
           </Link>
@@ -117,7 +118,7 @@ export default function Pagination({
           <button
             type="button"
             className="btn join-item btn-disabled"
-            aria-label="次のページ"
+            aria-label={t("nextPage")}
           >
             <Icon name="chevronRight" className="text-xl" />
           </button>
