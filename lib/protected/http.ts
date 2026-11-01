@@ -5,13 +5,21 @@ const BASE_HEADERS = {
   "X-Content-Type-Options": "nosniff",
 };
 
-export function protectedError(status: number, message: string): Response {
+export function protectedError(
+  status: number,
+  message: string,
+  retryAfter?: number,
+): Response {
   return new Response(message, {
     status,
     headers: {
       ...BASE_HEADERS,
       "Content-Type": "text/plain; charset=utf-8",
-      ...(status === 503 ? { "Retry-After": "60" } : {}),
+      ...(retryAfter !== undefined
+        ? { "Retry-After": String(retryAfter) }
+        : status === 503
+          ? { "Retry-After": "60" }
+          : {}),
     },
   });
 }

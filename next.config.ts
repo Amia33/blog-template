@@ -5,11 +5,20 @@ import type { NextConfig } from "next";
 import { CSP } from "./lib/csp";
 import { MEDIA_HOSTNAME } from "./lib/media";
 import { isProtectedConfigured } from "./lib/protected/env";
+import { isRateLimitConfigured } from "./lib/rate-limit-config";
 
 if (process.env.VERCEL_ENV === "production" && !isProtectedConfigured()) {
   throw new Error(
     "PROTECTED_SESSION_SECRET must be set to at least 32 characters for " +
       "production builds. Generate one with `openssl rand -base64 32`.",
+  );
+}
+
+if (process.env.VERCEL_ENV === "production" && !isRateLimitConfigured()) {
+  throw new Error(
+    "UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN must be set for " +
+      "production builds. Add the Upstash integration in Vercel or set them " +
+      "in the project environment variables.",
   );
 }
 
@@ -28,7 +37,9 @@ const nextConfig: NextConfig = {
         hostname: MEDIA_HOSTNAME,
         port: "",
         pathname: "/**",
-        // `search` is omitted so signed URLs can be optimized too.
+        // The media bucket uses a custom domain with CORS, not presigned URLs,
+        // so query strings are not allowed.
+        search: "",
       },
     ],
   },
@@ -39,8 +50,8 @@ const nextConfig: NextConfig = {
     ],
   },
   async headers() {
-    // Enforced policy. Violations are still logged by /api/csp-report so any
-    // directive that is too strict shows up in production logs.
+    // Enforced policy. There is no reporting endpoint; CSP violations are not
+    // collected by the application.
     return [
       {
         source: "/:path*",

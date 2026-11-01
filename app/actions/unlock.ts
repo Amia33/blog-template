@@ -7,23 +7,27 @@ import { isProtectedConfigured } from "@/lib/protected/env";
 import { verifyAlbumPassword } from "@/lib/protected/albums";
 import { verifyPostPassword } from "@/lib/protected/posts";
 import { setProtectedSession } from "@/lib/protected/session";
+import { limitByPolicy, resolveClientIp } from "@/lib/rate-limit";
 import { t } from "@/lib/strings";
 
 export type UnlockState = {
   ok: boolean;
   error?: string;
+  blocked?: boolean;
 };
 
-async function isBotRequest(): Promise<boolean> {
-  if (process.env.VERCEL !== "1") return false;
+type BotVerdict = "human" | "bot" | "unavailable";
+
+async function detectBot(): Promise<BotVerdict> {
+  if (process.env.VERCEL !== "1") return "human";
 
   try {
     const { isBot } = await checkBotId();
-    return isBot;
+    return isBot ? "bot" : "human";
   } catch (error) {
     // Fail closed: if BotID cannot classify the request, do not unlock.
     console.error("BotID check failed", error);
-    return true;
+    return "unavailable";
   }
 }
 
@@ -51,6 +55,37 @@ function readCredentials(
   return { slug: trimmedSlug, password };
 }
 
+async function guardUnlock(
+  kind: "post" | "album",
+  slug: string,
+): Promise<UnlockState | null> {
+  const ip = await resolveClientIp();
+
+  const perIp = await limitByPolicy("unlockIp", ip);
+
+  if (!perIp.allowed) {
+    return { ok: false, error: t("tooManyAttempts") };
+  }
+
+  const perSlug = await limitByPolicy("unlockSlug", `${kind}:${slug}`);
+
+  if (!perSlug.allowed) {
+    return { ok: false, error: t("tooManyAttempts") };
+  }
+
+  const bot = await detectBot();
+
+  if (bot === "bot") {
+    return { ok: false, blocked: true };
+  }
+
+  if (bot === "unavailable") {
+    return { ok: false, error: t("botRejected") };
+  }
+
+  return null;
+}
+
 export async function unlockPost(
   _previous: UnlockState,
   formData: FormData,
@@ -65,9 +100,9 @@ export async function unlockPost(
     return { ok: false, error: t("invalidPassword") };
   }
 
-  if (await isBotRequest()) {
-    return { ok: false, error: t("botRejected") };
-  }
+  const guard = await guardUnlock("post", credentials.slug);
+
+  if (guard) return guard;
 
   const post = getPostBySlug(credentials.slug);
 
@@ -98,9 +133,9 @@ export async function unlockAlbum(
     return { ok: false, error: t("invalidPassword") };
   }
 
-  if (await isBotRequest()) {
-    return { ok: false, error: t("botRejected") };
-  }
+  const guard = await guardUnlock("album", credentials.slug);
+
+  if (guard) return guard;
 
   const album = getAlbumBySlug(credentials.slug);
 
