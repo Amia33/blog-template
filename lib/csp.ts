@@ -2,8 +2,6 @@ import { MEDIA_ORIGIN } from "./media";
 
 const isDevelopment = process.env.NODE_ENV === "development";
 
-export const CSP_REPORT_PATH = "/api/csp-report";
-
 const directives = [
   "default-src 'self'",
   // Next.js inlines bootstrap and RSC payload scripts into every page, and a
@@ -33,7 +31,6 @@ const directives = [
   "frame-ancestors 'none'",
   // Local development runs over plain HTTP, so only upgrade on the deployed site.
   ...(isDevelopment ? [] : ["upgrade-insecure-requests"]),
-  `report-uri ${CSP_REPORT_PATH}`,
 ];
 
 export const CSP = directives.join("; ");
