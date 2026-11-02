@@ -1,0 +1,133 @@
+---
+title: Post authoring guide
+published: 2024-04-01
+updated: 2026-11-01
+description: "How posts, assets, and MDX components are organized in this blog."
+image: "./guide-cover.jpeg"
+tags: ["Guides", "MDX", "Content"]
+category: Guides
+draft: false
+---
+
+> Cover image source: [Source](<https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/208fc754-890d-4adb-9753-2c963332675d/width=2048/01651-1456859105-(colour_1.5),girl,_Blue,yellow,green,cyan,purple,red,pink,_best,8k,UHD,masterpiece,male%20focus,%201boy,gloves,%20ponytail,%20long%20hair,.jpeg>)
+
+Posts are MDX and always live in their own folder. The folder name is the URL slug, and image
+assets sit beside `index.mdx`.
+
+```
+content/posts/
+├── my-post/
+│   ├── index.mdx
+│   ├── cover.webp
+│   └── diagram.png
+└── another-post/
+    └── index.mdx
+```
+
+`content/posts/my-post/index.mdx` is served at `/posts/my-post`.
+
+`pnpm new-post my-post` scaffolds `content/posts/my-post/index.mdx`. Pass `--title`, `--tags`,
+`--category`, or `--draft` to fill the front matter. Posts are MDX-only; flat files and `.md`
+files under `content/posts/` are not collected.
+
+## Front matter
+
+```yaml
+---
+title: My First Blog Post
+published: 2026-11-01
+description: This is the first post of my new Next.js blog.
+image: ./cover.webp
+tags: [Foo, Bar]
+category: Front-end
+draft: false
+---
+```
+
+| Attribute         | Description                                                                            |
+| ----------------- | -------------------------------------------------------------------------------------- |
+| `title`           | The title of the post.                                                                 |
+| `published`       | The date the post was published.                                                       |
+| `updated`         | Optional update date, shown when it differs from `published`.                          |
+| `description`     | Short description used in listings and metadata.                                       |
+| `image`           | Cover image. Relative to `index.mdx`, absolute under `public/`, or a media-bucket URL. |
+| `tags`            | Tags used by the tag pages.                                                            |
+| `category`        | Category used by the category pages.                                                   |
+| `lang`            | Only when the post language differs from `siteConfig.locale`.                          |
+| `pinned`          | Pins the post to the top of listings and the home page.                                |
+| `draft`           | Drafts are hidden in production builds.                                                |
+| `encrypted`       | Requires `passwordHash` and `passwordHint`; see Protected posts.                       |
+| `hideHomeContent` | Hides the body on the home page for protected posts.                                   |
+
+Relative images are copied into `public/content/<slug>/` at build time under a
+content-addressed filename, then served through `next/image` with their real intrinsic
+dimensions.
+
+## Assets
+
+Keep image assets in the post folder:
+
+- `./cover.webp` in front matter
+- `![Diagram](./diagram.png)` in the body
+- `/banner.jpg` for files already under `public/`
+- `https://oss.446256.xyz/...` for the media bucket
+
+The build rewrites relative and public images; media-bucket URLs are measured when the host is
+in `images.remotePatterns`. Videos and audio are passed straight to Video.js, so their `src` and
+`poster` props are not rewritten: put self-hosted media under `public/` and use an absolute
+path, or use a media-bucket URL.
+
+## Writing
+
+Markdown is compiled as MDX. The examples are split by feature:
+
+- [Markdown and GFM](/posts/markdown) — text, lists, tables, task lists, images, footnotes.
+- [Expressive Code](/posts/expressive-code) — titles, line numbers, markers, diffs, wrapping, collapsing.
+- [MDX components](/posts/markdown-extended) — admonitions, spoilers, math, and daisyUI components.
+- [Video and audio](/posts/video) — Video.js players and captions.
+
+## Components
+
+The component map is `components/mdx/index.ts`. Available components are `Alert`, `Badge`,
+`Card`, `Collapse`, `Tabs`, `Steps`/`Step`, `Kbd`, `Video`, and `Audio`; `a`, `img`, and `table`
+are upgraded automatically.
+
+```mdx
+<Alert variant="tip" title="Callout">
+  Callouts use the same styling as the `:::tip` directive.
+</Alert>
+
+<Badge variant="success">Badge</Badge>
+
+<Collapse title="Collapsed section">
+  Everything in here is hidden until the summary is expanded.
+</Collapse>
+```
+
+## Protected posts
+
+Set `encrypted: true`, `passwordHash`, and `passwordHint` in the front matter. Generate the hash
+with:
+
+```bash
+pnpm hash-password "your-password"
+```
+
+The body is excluded from the generated collection and rendered only after the session check.
+Images for an encrypted post must also live in its folder; they are served through
+`/api/protected/posts` and are limited to files under that post's directory. Public images
+cannot be referenced from an encrypted post.
+
+## Locale
+
+The UI locale is fixed per deployment by `siteConfig.locale` in `lib/config.ts`. It selects the
+dictionary in `lib/i18n/`, the date and number formatting, and the Expressive Code labels.
+Content files are not translated automatically; use the optional `lang` field when a post is
+written in a different language.
+
+## Cover
+
+The cover above comes from `image: "./guide-cover.jpeg"`, and the same file is embedded in the
+body:
+
+![The cover image, embedded from the post body](./guide-cover.jpeg)

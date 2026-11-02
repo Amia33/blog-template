@@ -79,7 +79,7 @@ function extractProtectedPostImages(mdx: string, slug: string): string[] {
 const posts = defineCollection({
   name: "posts",
   directory: POSTS_DIRECTORY,
-  include: "**/*.{md,mdx}",
+  include: "**/index.mdx",
   schema: z.object({
     title: z.string(),
     published: z.coerce.date(),

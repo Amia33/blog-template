@@ -54,8 +54,8 @@ Manual generators (not wired into `package.json`):
 
 ## Content
 
-- `content/posts/**` — Markdown/MDX posts. Colocate post images with `index.md` and reference
-  them relatively.
+- `content/posts/<slug>/index.mdx` — MDX-only posts. The folder name is the URL slug.
+  Colocate post images in the same directory and reference them relatively (`./cover.webp`).
 - `content/moments/*.md` — short moment entries.
 - `content/albums/<slug>/index.md` — flat albums only. Public photos live under
   `public/images/albums/<slug>/`; protected photos live under
@@ -80,7 +80,9 @@ string; `images.remotePatterns` and `lib/media.ts` both enforce this. Images fro
 host render as plain `<img>` without `next/image` optimization.
 
 Use the Video.js components `<Video src="..." poster="..." />` and `<Audio src="..." />` for
-media. There is no `<Embed>`/iframe MDX component.
+media. Their `src` and `poster` props are passed through unchanged, so self-hosted media must
+live under `public/` (for example `/media/sample.mp4`) and cannot be colocated with a post's
+`index.mdx`. There is no `<Embed>`/iframe MDX component.
 
 ## Protected content
 

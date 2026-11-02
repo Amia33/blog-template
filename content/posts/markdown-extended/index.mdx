@@ -1,0 +1,159 @@
+---
+title: MDX components
+published: 2024-05-01
+updated: 2026-11-01
+description: "Admonitions, spoilers, math, and the daisyUI-based MDX components."
+tags: [MDX, Components, daisyUI, Demo]
+category: Examples
+draft: false
+---
+
+Posts are compiled as MDX, so Markdown and React components can be mixed. The component map is
+`components/mdx/index.ts`; the components below are daisyUI components or thin wrappers around
+them, and they can be used anywhere in a post.
+
+## Admonitions
+
+The `:::note`, `:::tip`, `:::important`, `:::warning`, and `:::caution` directives map to the
+`Alert` component.
+
+:::note
+Highlight information that readers should not miss even when skimming.
+:::
+
+:::tip
+Supplementary information that helps the reader succeed.
+:::
+
+:::important
+Information that is essential to the reader's success.
+:::
+
+:::warning
+Important content that carries a potential risk and needs immediate attention.
+:::
+
+:::caution
+Actions that may lead to a negative outcome.
+:::
+
+A custom title overrides the localized default:
+
+:::note[Custom title]
+The label after the directive name becomes the alert title.
+:::
+
+GitHub's alert syntax produces the same component:
+
+> [!TIP]
+> End a line with two spaces to force a line break.
+
+## Alert
+
+<Alert variant="tip" title="Alert component">
+
+Use the `Alert` component directly when the directive syntax is not convenient.
+
+</Alert>
+
+Supported variants: `note`, `tip`, `important`, `warning`, and `caution`.
+
+## Badge
+
+<Badge variant="primary">Primary</Badge>
+<Badge variant="success">Success</Badge>
+<Badge variant="warning">Warning</Badge> <Badge variant="error">Error</Badge>
+
+## Card
+
+<Card title="Card with a link" href="https://nextjs.org/docs">
+
+Cards render as links when `href` is given.
+
+</Card>
+
+<Card title="Card without a link">
+
+Without `href`, the same markup renders as a static card.
+
+</Card>
+
+## Collapse
+
+<Collapse title="Collapsed section">
+
+Everything in here is hidden until the summary is expanded.
+
+</Collapse>
+
+## Tabs
+
+<Tabs labels="npm|pnpm|yarn">
+  <div>npm install</div>
+  <div>pnpm install</div>
+  <div>yarn install</div>
+</Tabs>
+
+## Steps
+
+<Steps>
+  <Step title="Write">
+
+Add `content/posts/my-post/index.mdx`.
+
+  </Step>
+  <Step title="Preview">
+
+Run `pnpm dev`.
+
+  </Step>
+  <Step title="Deploy">
+
+Run `pnpm build`.
+
+  </Step>
+</Steps>
+
+## Kbd
+
+Press <Kbd>Ctrl</Kbd> + <Kbd>K</Kbd> to open search.
+
+## Tables
+
+GFM tables are wrapped in a horizontally scrollable container by `MdxTable`:
+
+| Component  | daisyUI class | Notes                     |
+| ---------- | ------------- | ------------------------- |
+| `Alert`    | `alert`       | Five variants             |
+| `Badge`    | `badge`       | Soft colors               |
+| `Collapse` | `collapse`    | Native details element    |
+| `Tabs`     | `tabs`        | Client component          |
+| `Steps`    | `steps`       | Vertical on small screens |
+
+## Links and images
+
+`a` is rendered by `MdxLink` and `img` by `MdxImage`. External links get `target="_blank"` and an
+external icon; local images are copied and sized at build time.
+
+## Spoilers
+
+Inline text can be hidden: :spoiler[**this is hidden until hover**].
+
+## Math
+
+Inline math uses dollar signs and display math uses a double-dollar block:
+
+Inline: $\omega = d\phi / dt$
+
+$$
+I = \int \rho R^{2} dV
+$$
+
+$$
+\begin{equation*}
+\pi
+=3.1415926535
+\;8979323846\;2643383279\;5028841971
+\;\ldots
+\end{equation*}
+$$

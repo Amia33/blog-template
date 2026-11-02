@@ -1,0 +1,87 @@
+---
+title: Markdown and GFM
+published: 2023-10-01
+updated: 2026-11-01
+description: A tour of the GitHub Flavored Markdown syntax supported by this blog.
+tags: [Markdown, GFM, Demo]
+category: Examples
+draft: false
+---
+
+GitHub Flavored Markdown is enabled by `remark-gfm`, so tables, task lists, strikethrough,
+autolinks, and footnotes work in every post. This post covers that syntax. For fenced code, see
+[Expressive Code](/posts/expressive-code); for components, see
+[MDX components](/posts/markdown-extended).
+
+## Text
+
+Paragraphs are separated by a blank line. **Bold**, _italic_, `inline code`, and
+~~strikethrough~~ all work. An em-dash is written as three dashes --- and a range as two
+(chapters 12--14).
+
+## Lists
+
+- Unordered item
+- Another item
+  - Nested item
+
+1. Ordered item
+2. Another item
+
+Task lists:
+
+- [x] Convert the post to `content/posts/<slug>/index.mdx`
+- [x] Keep assets beside the post file
+- [ ] Publish
+
+## Blockquotes
+
+> Quotes can span multiple paragraphs.
+>
+> Like this.
+
+## Tables
+
+| Feature    | Enabled by   | Works in MDX |
+| ---------- | ------------ | ------------ |
+| Tables     | `remark-gfm` | Yes          |
+| Task lists | `remark-gfm` | Yes          |
+| Footnotes  | `remark-gfm` | Yes          |
+| Autolinks  | `remark-gfm` | Yes          |
+
+## Images
+
+Local images are resolved relative to this file. The build copies them into
+`public/content/<slug>/` under a content-addressed name and passes the intrinsic size and a blur
+placeholder to `next/image`.
+
+![A local sample image](./sample.webp)
+
+Remote images must be HTTPS URLs on the media bucket. Other hosts render as plain images.
+
+## Footnotes
+
+GFM footnotes are supported.[^gfm]
+
+[^gfm]: The reference and the definition both use the `[^label]` syntax.
+
+## Fenced code
+
+A fenced block without Expressive Code metadata is still syntax-highlighted:
+
+```python
+import time
+
+for i in range(10):
+    time.sleep(0.5)
+    print(i)
+```
+
+## Autolinks
+
+Bare URLs such as https://nextjs.org/docs become links automatically. Explicit links use the
+usual `[text](url)` form and open external destinations in a new tab.
+
+---
+
+Unicode and CJK are supported: 你好，世界 — こんにちは — 안녕하세요 ☺
