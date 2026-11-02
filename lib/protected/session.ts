@@ -65,12 +65,3 @@ export async function hasProtectedSession(scope: string): Promise<boolean> {
   if (session.v !== 1) return false;
   return (session.scopes?.[scope] ?? 0) > Date.now();
 }
-
-export async function clearProtectedSession(scope: string): Promise<void> {
-  const session = await getSession();
-
-  if (session.scopes?.[scope]) {
-    delete session.scopes[scope];
-    await session.save();
-  }
-}
