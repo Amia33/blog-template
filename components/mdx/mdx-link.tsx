@@ -12,6 +12,17 @@ export function MdxLink({
   children,
   ...rest
 }: AnchorHTMLAttributes<HTMLAnchorElement>) {
+  // Hash-only links must stay native anchors. Routing a same-page jump through
+  // next/link turns it into a router navigation, which snapshots the article
+  // in a view transition while the window scrolls to the footnote.
+  if (href.startsWith("#")) {
+    return (
+      <a href={href} className={className} {...rest}>
+        {children}
+      </a>
+    );
+  }
+
   // rehype-autolink-headings appends `a.anchor` to every heading. Those must
   // stay plain in-page links, not become router navigations.
   if (typeof className === "string" && className.includes("anchor")) {
