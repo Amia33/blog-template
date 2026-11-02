@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 
-import { profileConfig, siteConfig } from "@/lib/config";
+import { siteConfig } from "@/lib/config";
 import type { Post } from "@/lib/content";
 import { OG_LOCALE } from "@/lib/i18n/locales";
 
 export const SITE_TITLE = `${siteConfig.title} - ${siteConfig.subtitle}`;
 export const SITE_DESCRIPTION = siteConfig.subtitle;
-export const DEFAULT_OG_IMAGE = "/og-default.jpg";
+export const DEFAULT_OG_IMAGE = siteConfig.ogImage ?? siteConfig.banner.src;
 
 // Metadata is merged shallowly between segments, so any page that sets
 // `alternates` or `openGraph` replaces the root layout's value wholesale. These
@@ -19,15 +19,6 @@ export function absoluteUrl(path: string): string {
 
 export function pageAlternates(canonical: string): Metadata["alternates"] {
   return { canonical, types: RSS_TYPES };
-}
-
-function twitterCreator(): string | undefined {
-  const link = profileConfig.links.find((item) => item.icon === "twitter");
-  const handle = link
-    ? /(?:twitter|x)\.com\/@?([A-Za-z0-9_]{1,15})\/?$/.exec(link.url)
-    : null;
-
-  return handle ? `@${handle[1]}` : undefined;
 }
 
 export function ogImageUrl(post: Post): string {
@@ -54,7 +45,7 @@ export function pageOpenGraph({
     description,
     url,
     locale: OG_LOCALE[siteConfig.locale],
-    images: [{ url: image, width: 1200, height: 630, alt: title }],
+    images: [{ url: image, alt: title }],
   };
 }
 
@@ -67,13 +58,10 @@ export function pageTwitter({
   description?: string;
   image?: string;
 } = {}): Metadata["twitter"] {
-  const creator = twitterCreator();
-
   return {
     card: "summary_large_image",
     title,
     description,
     images: [image],
-    ...(creator ? { creator } : {}),
   };
 }

@@ -23,7 +23,6 @@ export const ja = {
   postsCount: "件",
   photoCount: "枚",
   photosCount: "枚",
-  themeColor: "テーマカラー",
   lightMode: "ライト",
   darkMode: "ダーク",
   systemMode: "システム",

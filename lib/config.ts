@@ -18,10 +18,7 @@ export const siteConfig: SiteConfig = {
   subtitle: "Daily notes",
   locale: "en",
   url: "https://446256.xyz",
-  themeColor: {
-    hue: 250,
-    fixed: false,
-  },
+  ogImage: "/banner.jpg",
   banner: {
     enable: true,
     src: "/banner.jpg",
@@ -53,7 +50,6 @@ export const profileConfig: ProfileConfig = {
   avatar: "/avatar.png",
   name: "Your Name",
   bio: "Add your introduction here.",
-  links: [],
 };
 
 export const licenseConfig: LicenseConfig = {
@@ -153,8 +149,16 @@ export const announcementConfig: AnnouncementConfig = {
 };
 
 export const musicConfig: MusicConfig = {
-  enable: false,
-  tracks: [],
+  enable: true,
+  tracks: [
+    {
+      id: "sample",
+      title: "Sample Track",
+      artist: "Sample Artist",
+      source: "/media/sample.mp3",
+      cover: "/media/sample.webp",
+    },
+  ],
   defaultVolume: 0.6,
   defaultMode: "sequence",
 };

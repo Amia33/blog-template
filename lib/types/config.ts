@@ -6,10 +6,7 @@ export type SiteConfig = {
   subtitle: string;
   locale: Locale;
   url: string;
-  themeColor: {
-    hue: number;
-    fixed: boolean;
-  };
+  ogImage?: string;
   banner: {
     enable: boolean;
     src: string;
@@ -33,8 +30,6 @@ export enum LinkPreset {
   Moments = 3,
   Albums = 4,
   Timeline = 5,
-  Categories = 6,
-  Tags = 7,
 }
 
 export type NavBarLink = {
@@ -51,11 +46,6 @@ export type ProfileConfig = {
   avatar?: string;
   name: string;
   bio?: string;
-  links: {
-    name: string;
-    url: string;
-    icon: IconName;
-  }[];
 };
 
 export type LicenseConfig = {

@@ -47,11 +47,6 @@ The rate limiter also accepts the legacy `KV_REST_API_URL` and `KV_REST_API_TOKE
 - `pnpm hash-password "your-password"` — generate an Argon2id hash for protected content.
 - `pnpm prepare` — install Husky hooks (runs automatically after `pnpm install`).
 
-Manual generators (not wired into `package.json`):
-
-- `node scripts/generate-icons.mjs`
-- `node scripts/generate-og-image.mjs`
-
 ## Content
 
 - `content/posts/<slug>/index.mdx` — MDX-only posts. The folder name is the URL slug.

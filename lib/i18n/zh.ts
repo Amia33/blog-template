@@ -23,7 +23,6 @@ export const zh = {
   postsCount: "项",
   photoCount: "张",
   photosCount: "张",
-  themeColor: "主题色",
   lightMode: "浅色",
   darkMode: "深色",
   systemMode: "跟随系统",

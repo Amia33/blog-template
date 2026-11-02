@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { Icon } from "@/components/ui/icon";
 import { profileConfig } from "@/lib/config";
 import { t } from "@/lib/strings";
 
@@ -28,20 +27,6 @@ export default function ProfileCard() {
         {profileConfig.bio ? (
           <p className="mb-3 text-sm opacity-70">{profileConfig.bio}</p>
         ) : null}
-        <div className="flex flex-wrap justify-center gap-2">
-          {profileConfig.links.map((item) => (
-            <a
-              key={item.name}
-              href={item.url}
-              target="_blank"
-              rel="noopener noreferrer me"
-              aria-label={item.name}
-              className="btn btn-ghost btn-square btn-sm"
-            >
-              <Icon name={item.icon} className="text-xl" />
-            </a>
-          ))}
-        </div>
       </div>
     </section>
   );

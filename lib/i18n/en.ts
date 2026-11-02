@@ -21,7 +21,6 @@ export const en = {
   postsCount: "items",
   photoCount: "photos",
   photosCount: "photos",
-  themeColor: "Theme color",
   lightMode: "Light",
   darkMode: "Dark",
   systemMode: "System",
