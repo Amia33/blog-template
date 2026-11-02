@@ -49,8 +49,7 @@ export const metadata: Metadata = {
   twitter: pageTwitter(),
   // No `icons` key on purpose: setting it makes Next skip the file-based icon
   // metadata (resolve-metadata.js:418). `app/icon.svg` carries its own
-  // light/dark variants, with `app/favicon.ico` and `app/apple-icon.png` as
-  // fallbacks, and `app/manifest.ts` covers install icons.
+  // light/dark variants and `app/favicon.ico` is the legacy fallback.
 };
 
 // Mirrors the `--color-base-100` tokens in app/globals.css.
