@@ -1,3 +1,5 @@
+import { notFound } from "next/navigation";
+
 import DirectionalTransition from "@/components/layout/directional-transition";
 import PageShell from "@/components/layout/page-shell";
 import TimelineSection from "@/components/timeline/timeline-section";
@@ -24,6 +26,8 @@ export const metadata = {
 };
 
 export default function TimelinePage() {
+  if (!timelineConfig.enable) notFound();
+
   const items = timelineData
     .filter(
       (item) =>

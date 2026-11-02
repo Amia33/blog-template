@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-import { postListConfig, siteConfig } from "@/lib/config";
+import { postListConfig, siteConfig, timelineConfig } from "@/lib/config";
 import { getAlbums, getSortedPosts } from "@/lib/content";
 import { getAlbumUrl, getPostUrlBySlug } from "@/lib/utils";
 
@@ -60,11 +60,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.7,
     },
-    {
-      url: `${siteConfig.url}/timeline`,
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
+    ...(timelineConfig.enable
+      ? [
+          {
+            url: `${siteConfig.url}/timeline`,
+            changeFrequency: "monthly" as const,
+            priority: 0.6,
+          },
+        ]
+      : []),
     {
       url: `${siteConfig.url}/categories`,
       changeFrequency: "weekly",
