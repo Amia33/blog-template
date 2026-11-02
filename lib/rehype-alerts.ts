@@ -1,12 +1,14 @@
 import type { DefaultBuildType, IOptions } from "rehype-github-alerts";
 import { rehypeGithubAlerts } from "rehype-github-alerts";
 
+import { t } from "@/lib/strings";
+
 export const ALERT_TITLE: Record<string, string> = {
-  NOTE: "補足",
-  TIP: "ヒント",
-  IMPORTANT: "重要",
-  WARNING: "注意",
-  CAUTION: "警告",
+  NOTE: t("alertNote"),
+  TIP: t("alertTip"),
+  IMPORTANT: t("alertImportant"),
+  WARNING: t("alertWarning"),
+  CAUTION: t("alertCaution"),
 };
 
 export const ALERT_KEYWORDS = Object.keys(ALERT_TITLE);

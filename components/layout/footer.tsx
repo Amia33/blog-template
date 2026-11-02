@@ -1,14 +1,15 @@
 import CopyrightYear from "@/components/ui/copyright-year";
 import { profileConfig } from "@/lib/config";
+import { t } from "@/lib/strings";
 
 export default function Footer() {
   return (
     <footer className="mt-10 border-t border-dashed border-base-300 pt-6 pb-2 text-center text-sm opacity-80">
       <p>
-        &copy; <CopyrightYear /> {profileConfig.name}. All Rights Reserved.
+        &copy; <CopyrightYear /> {profileConfig.name}. {t("allRightsReserved")}
       </p>
       <p className="mt-1">
-        Powered by{" "}
+        {t("poweredBy")}{" "}
         <a
           className="link link-primary"
           href="https://nextjs.org"

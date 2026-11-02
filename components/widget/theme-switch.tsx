@@ -83,7 +83,7 @@ export default function ThemeSwitch() {
       <button
         type="button"
         className="btn btn-ghost btn-square"
-        aria-label="テーマ"
+        aria-label={t("theme")}
         aria-haspopup="true"
       >
         <Icon name={current.icon} className="text-xl" />

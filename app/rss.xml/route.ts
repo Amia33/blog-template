@@ -18,7 +18,7 @@ async function buildRssFeed(): Promise<string> {
     description: siteConfig.subtitle,
     id: siteConfig.url,
     link: siteConfig.url,
-    language: siteConfig.lang,
+    language: siteConfig.locale,
     feedLinks: { rss: `${siteConfig.url}/rss.xml` },
   });
 

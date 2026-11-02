@@ -1,0 +1,55 @@
+---
+title: Video and audio
+published: 2023-08-01
+updated: 2026-11-01
+description: Embedding Video.js 10 video and audio in a post.
+image: "https://oss.446256.xyz/uzN0taK8eC4.webp"
+tags: [Example, Video, Audio]
+category: Examples
+draft: false
+---
+
+`Video` and `Audio` are Video.js 10 players registered in `components/mdx/index.ts`. Media props
+are passed straight to Video.js, so they are not resolved relative to the post file. Put
+self-hosted files under `public/` and use an absolute path, or use a media-bucket URL.
+
+## Video
+
+<Video
+  src="/media/sample.mp4"
+  poster="/media/sample.webp"
+  title="Sample video"
+  caption="/captions/demo.vtt"
+  captionLang="en"
+/>
+
+## Audio
+
+<Audio
+  src="/media/sample.mp3"
+  poster="/media/sample.webp"
+  title="Sample audio"
+/>
+
+## Captions
+
+`caption` adds a WebVTT track. `captionLang` defaults to `siteConfig.locale` and `captionLabel`
+defaults to the active UI dictionary, so both can be omitted when the caption file matches the
+site language.
+
+```mdx
+<Video
+  src="/media/sample.mp4"
+  poster="/media/sample.webp"
+  title="Sample video"
+  caption="/captions/demo.vtt"
+  captionLang="en"
+/>
+```
+
+## Images
+
+Markdown images on the media bucket are measured at build time and rendered through
+`next/image`:
+
+![Video.js poster](https://oss.446256.xyz/uzN0taK8eC4.webp)

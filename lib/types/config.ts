@@ -1,9 +1,10 @@
+import type { Locale } from "@/lib/i18n/locales";
 import type { IconName } from "@/lib/icons";
 
 export type SiteConfig = {
   title: string;
   subtitle: string;
-  lang: string;
+  locale: Locale;
   url: string;
   themeColor: {
     hue: number;

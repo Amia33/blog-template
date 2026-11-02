@@ -1,0 +1,25 @@
+---
+title: Draft example
+published: 2022-07-01
+updated: 2026-11-01
+description: A post that is only visible during development.
+tags: [Markdown, MDX, Demo]
+category: Examples
+draft: true
+---
+
+This post is a draft. Production builds filter it out, so it does not appear in listings, the RSS
+feed, the sitemap, or search. It stays visible under `pnpm dev` so it can be reviewed before
+publication.
+
+Set `draft: false` in the front matter when the post is ready:
+
+```yaml
+---
+title: Draft example
+published: 2026-11-01
+tags: [Markdown, MDX, Demo]
+category: Examples
+draft: false
+---
+```

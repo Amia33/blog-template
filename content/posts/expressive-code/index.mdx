@@ -1,0 +1,101 @@
+---
+title: Expressive Code
+published: 2024-04-10
+updated: 2026-11-01
+description: How fenced code blocks are rendered with Expressive Code.
+tags: [MDX, Expressive Code, Demo]
+category: Examples
+draft: false
+---
+
+Every fenced code block is rendered by [Expressive Code](https://expressive-code.com/). The
+renderer is configured in `lib/expressive-code.ts` with the `github-light` and `github-dark`
+themes, dark-mode selection through `[data-theme]`, and the collapsible-sections and
+line-numbers plugins. Copy and collapse labels are localized in
+`lib/expressive-code-texts.ts` using `siteConfig.locale`.
+
+## Title frames and line numbers
+
+```ts title="lib/strings.ts" showLineNumbers
+export function t(key: UIKey, params?: Record<string, string | number>) {
+  const template = UI[key];
+  if (!params) return template;
+  return template.replace(/\{(\w+)\}/g, (match, name) =>
+    name in params ? String(params[name]) : match,
+  );
+}
+```
+
+Add `startLineNumber=5` to begin the count elsewhere:
+
+```ts title="lib/config.ts" showLineNumbers startLineNumber=5
+export const siteConfig: SiteConfig = {
+  title: "Blog",
+  subtitle: "Daily notes",
+  locale: "en",
+};
+```
+
+## Line markers
+
+Highlight individual lines or ranges with braces:
+
+```ts title="lib/config.ts" {2, 5-6}
+export const siteConfig: SiteConfig = {
+  title: "Blog",
+  subtitle: "Daily notes",
+  url: "https://446256.xyz",
+  themeColor: { hue: 250, fixed: false },
+};
+```
+
+Mark insertions and deletions with `ins` and `del`:
+
+```ts title="lib/media.ts" del={2} ins={3-4}
+export function isMediaUrl(value: string) {
+  return value.startsWith("https://");
+  const url = new URL(value);
+  return url.protocol === "https:";
+}
+```
+
+## Diff notation
+
+A `diff` fence marks added and removed lines. Add `lang="ts"` to keep syntax highlighting:
+
+```diff lang="ts"
+- const locale = "ja";
++ const locale = "en";
+```
+
+## Wrapping
+
+Long lines wrap by default because `lib/expressive-code.ts` sets
+`defaultProps: { wrap: true }`. The `wrap` meta is only needed if that default changes:
+
+```ts wrap
+const message =
+  "This line is deliberately long so the renderer has to decide what to do with the overflow.";
+```
+
+## Collapsible sections
+
+Collapse line ranges with the collapsible-sections plugin:
+
+```ts collapse={1-4, 12-14}
+import { getSortedPosts } from "@/lib/content";
+
+const posts = getSortedPosts();
+console.log(posts.length);
+
+function summarize() {
+  const first = posts[0];
+  const last = posts[posts.length - 1];
+  return { first, last };
+}
+
+const summary = summarize();
+console.log(summary);
+```
+
+The collapsed ranges stay in the DOM and expand in place; the label uses the active locale.

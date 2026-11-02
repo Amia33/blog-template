@@ -14,9 +14,9 @@ import {
 } from "@/lib/types/config";
 
 export const siteConfig: SiteConfig = {
-  title: "ブログ",
-  subtitle: "日々の記録",
-  lang: "ja",
+  title: "Blog",
+  subtitle: "Daily notes",
+  locale: "en",
   url: "https://446256.xyz",
   themeColor: {
     hue: 250,
@@ -52,7 +52,7 @@ export const navBarConfig: NavBarConfig = {
 export const profileConfig: ProfileConfig = {
   avatar: "/avatar.png",
   name: "Your Name",
-  bio: "ここに自己紹介を入力してください。",
+  bio: "Add your introduction here.",
   links: [],
 };
 
@@ -142,12 +142,12 @@ export const sidebarConfig: SidebarConfig = {
 };
 
 export const announcementConfig: AnnouncementConfig = {
-  title: "お知らせ",
-  content: "ここにお知らせを入力できます。",
+  title: "Announcement",
+  content: "Add an announcement here.",
   closable: true,
   closeDuration: 7 * 24 * 60 * 60,
   link: {
-    text: "詳しく見る",
+    text: "Learn more",
     url: "/about",
   },
 };

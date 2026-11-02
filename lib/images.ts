@@ -52,7 +52,7 @@ function safeSlug(slug: string): string {
 /** Absolute directory holding a collection document, used to resolve relative paths. */
 export function postDirectory(meta: PostMeta, collectionDir: string): string {
   // Both `filePath` and `directory` are relative to the collection's own
-  // directory, e.g. `content/posts/guide/index.md` has `directory: "guide"`.
+  // directory, e.g. `content/posts/guide/index.mdx` has `directory: "guide"`.
   return path.join(process.cwd(), collectionDir, meta.directory);
 }
 

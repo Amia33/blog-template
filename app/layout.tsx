@@ -23,6 +23,7 @@ import {
   pageOpenGraph,
   pageTwitter,
 } from "@/lib/seo";
+import { t } from "@/lib/strings";
 import { websiteJsonLd } from "@/lib/structured-data";
 
 import "./globals.css";
@@ -68,7 +69,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
 
   return (
     <html
-      lang={siteConfig.lang.replace("_", "-")}
+      lang={siteConfig.locale}
       className={`${mPlus1.variable} ${mPlus1Code.variable} ${notoSansSC.variable}`}
       data-texture-preset={textureConfig.defaultPreset}
       data-post-list-mode={postListConfig.layout.mode}
@@ -89,7 +90,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-field focus:bg-base-100 focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-primary focus:shadow-lg"
         >
-          コンテンツへスキップ
+          {t("skipToContent")}
         </a>
         <JsonLd data={websiteJsonLd()} />
         <TextureCanvas />

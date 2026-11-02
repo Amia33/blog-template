@@ -39,7 +39,7 @@ export default function ArchivePage() {
               role="status"
               className="card bg-base-100 p-8 text-center opacity-70"
             >
-              アーカイブを読み込んでいます&hellip;
+              {t("archiveLoading")}
             </div>
           }
         >

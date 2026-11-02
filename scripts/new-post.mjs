@@ -6,9 +6,8 @@
 //   pnpm new-post guides/getting-started
 //   pnpm new-post                      # prompt for every field
 //
-// Posts are folders by default (`content/posts/<slug>/index.md`) so images sit
-// next to them and `image: "./cover.png"` resolves; pass --flat for the single
-// file form.
+// Posts are folders (`content/posts/<slug>/index.mdx`) so images sit next to
+// them and `image: "./cover.webp"` resolves. Posts are MDX-only.
 
 import { existsSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
@@ -26,18 +25,11 @@ Options:
   --category <text>     Category name
   --lang <code>         Language code, when it differs from the site language
   --draft               Mark the post as a draft
-  --flat                Write content/posts/<slug>.md instead of <slug>/index.md
   --force               Overwrite the post if it already exists
   -i, --interactive     Prompt for every field, even when a slug is given
   -h, --help            Show this message`;
 
-const BOOLEAN_FLAGS = new Set([
-  "draft",
-  "flat",
-  "force",
-  "interactive",
-  "help",
-]);
+const BOOLEAN_FLAGS = new Set(["draft", "force", "interactive", "help"]);
 const VALUE_FLAGS = new Set([
   "title",
   "description",
@@ -207,10 +199,7 @@ if (!slug) {
   );
 }
 
-const file =
-  values.flat === true
-    ? path.join(POSTS_DIR, `${slug}.md`)
-    : path.join(POSTS_DIR, slug, "index.md");
+const file = path.join(POSTS_DIR, slug, "index.mdx");
 
 if (existsSync(file) && values.force !== true) {
   fail(`${file} already exists. Pass --force to overwrite it.`);
